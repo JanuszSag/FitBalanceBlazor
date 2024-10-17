@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitBalanceBlazor", "FitBalanceBlazor\FitBalanceBlazor\FitBalanceBlazor.csproj", "{C75FE3CA-A23C-428A-BA68-842148D77517}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitBalanceBlazor.Client", "FitBalanceBlazor\FitBalanceBlazor.Client\FitBalanceBlazor.Client.csproj", "{6BCB4A4A-0E92-42BE-AE93-52A77B96037F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C75FE3CA-A23C-428A-BA68-842148D77517}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C75FE3CA-A23C-428A-BA68-842148D77517}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C75FE3CA-A23C-428A-BA68-842148D77517}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C75FE3CA-A23C-428A-BA68-842148D77517}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BCB4A4A-0E92-42BE-AE93-52A77B96037F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BCB4A4A-0E92-42BE-AE93-52A77B96037F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BCB4A4A-0E92-42BE-AE93-52A77B96037F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BCB4A4A-0E92-42BE-AE93-52A77B96037F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
