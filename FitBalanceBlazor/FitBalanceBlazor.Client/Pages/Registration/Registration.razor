@@ -1,22 +1,17 @@
-@page "/registration"
-@using MudBlazor
-
-<MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background-color: #DFFFD6; border-radius: 20px;">
+<MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background:rgb(223,243,156); border-radius: 20px;">
     <MudText Typo="Typo.h4" Class="mb-4" Align="Align.Center">Zarejestruj się</MudText>
 
     <MudForm>
         <MudTextField Label="Login*" @bind-Value="login" Required="true" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="E-mail*" @bind-Value="email" Required="true" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="Data urodzenia*" @bind-Value="birthDate" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Class="mb-3" />
-
         <!--
- <MudSelect Label="Płeć" @bind-Value="gender" Variant="Variant.Outlined" Class="mb-3">
-     <MudSelectItem Value="Mężczyzna">Mężczyzna</MudSelectItem>
-     <MudSelectItem Value="Kobieta">Kobieta</MudSelectItem>
-     <MudSelectItem Value="Inne">Inne</MudSelectItem>
- </MudSelect>
- -->
-        
+        <MudSelect Label="Płeć" @bind-Value="gender" Variant="Variant.Outlined" Class="mb-3">
+            <MudSelectItem Value="Mężczyzna">"Mężczyzna"</MudSelectItem>
+            <MudSelectItem Value="Kobieta">"Kobieta"</MudSelectItem>
+            <MudSelectItem Value="Inne">"Inne"</MudSelectItem>
+        </MudSelect>
+        -->
         <MudTextField Label="Wzrost (cm)" @bind-Value="height" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="Waga (kg)" @bind-Value="weight" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="Hasło*" @bind-Value="password" InputType="InputType.Password" Required="true" Variant="Variant.Outlined" Class="mb-3" />
@@ -32,8 +27,8 @@
     private string email = string.Empty;
     private DateTime birthDate;
     private string gender = string.Empty;
-    private int? height;
-    private int? weight;
+    private int height;
+    private int weight;
     private string password = string.Empty;
     private bool acceptTerms = false;
 }
