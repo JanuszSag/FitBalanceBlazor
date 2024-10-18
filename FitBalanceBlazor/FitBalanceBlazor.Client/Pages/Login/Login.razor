@@ -1,0 +1,25 @@
+@page "/login"
+@using MudBlazor
+
+<MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background-color: #e4f5ac; border-radius: 20px;">
+    <div style="text-align: center;">
+        <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" Color="Color.Primary" />
+    </div>
+
+    <MudTextField T="string" Label="login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" @bind-Value="login" />
+    <MudTextField T="string" Label="hasło" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" @bind-Value="password" />
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Style="background-color: #FF9966; color: black;">zaloguj</MudButton>
+
+    <div class="mt-3" style="text-align: center;">
+        <MudText Typo="Typo.body2" Align="Align.Center">
+            Nie masz konta? 
+            <MudLink Href="/registration">Zarejestruj się</MudLink>
+        </MudText>
+    </div>
+</MudPaper>
+
+@code {
+    private string login = string.Empty;
+    private string password = string.Empty;
+}
