@@ -11,7 +11,7 @@ public partial class Danie
 
     public int Kalorie { get; set; }
 
-    public virtual ICollection<ProduktDanie> ProduktDanies { get; set; } = new List<ProduktDanie>();
+    public virtual ICollection<ProduktDanie> ProduktDanie { get; set; } = new List<ProduktDanie>();
 
     public virtual ICollection<Dieta> DietaIdDieta { get; set; } = new List<Dieta>();
 

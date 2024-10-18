@@ -16,31 +16,31 @@ public partial class MyDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Adres> Adres { get; set; }
+    public virtual DbSet<Adres> Adresy { get; set; }
 
-    public virtual DbSet<Danie> Danies { get; set; }
+    public virtual DbSet<Danie> Dania { get; set; }
 
-    public virtual DbSet<Dieta> Dieta { get; set; }
+    public virtual DbSet<Dieta> Diety { get; set; }
 
-    public virtual DbSet<Opinia> Opinia { get; set; }
+    public virtual DbSet<Opinia> Opinie { get; set; }
 
-    public virtual DbSet<PomiarWagi> PomiarWagis { get; set; }
+    public virtual DbSet<PomiarWagi> PomiaryWagi { get; set; }
 
-    public virtual DbSet<Pracownik> Pracowniks { get; set; }
+    public virtual DbSet<Pracownik> Pracownicy { get; set; }
 
-    public virtual DbSet<Produkt> Produkts { get; set; }
+    public virtual DbSet<Produkt> Produkty { get; set; }
 
-    public virtual DbSet<ProduktDanie> ProduktDanies { get; set; }
+    public virtual DbSet<ProduktDanie> ProduktDanie { get; set; }
 
-    public virtual DbSet<Programy> Programs { get; set; }
+    public virtual DbSet<Programy> Programy { get; set; }
 
-    public virtual DbSet<PrzypisanaDieta> PrzypisanaDieta { get; set; }
+    public virtual DbSet<PrzypisanaDieta> PrzypisaneDiety { get; set; }
 
-    public virtual DbSet<Raport> Raports { get; set; }
+    public virtual DbSet<Raport> Raporty { get; set; }
 
-    public virtual DbSet<Rodzaj> Rodzajs { get; set; }
+    public virtual DbSet<Rodzaj> Rodzaje { get; set; }
 
-    public virtual DbSet<Uzytkownik> Uzytkowniks { get; set; }
+    public virtual DbSet<Uzytkownik> Uzytkownicy { get; set; }
 
     public virtual DbSet<WypitaWoda> WypitaWoda { get; set; }
 
@@ -91,7 +91,7 @@ public partial class MyDbContext : DbContext
                 .HasColumnType("text")
                 .HasColumnName("nazwa");
 
-            entity.HasMany(d => d.DietaIdDieta).WithMany(p => p.DanieIdDanies)
+            entity.HasMany(d => d.DietaIdDieta).WithMany(p => p.DanieIdDanie)
                 .UsingEntity<Dictionary<string, object>>(
                     "DietaDanie",
                     r => r.HasOne<Dieta>().WithMany()
@@ -138,7 +138,7 @@ public partial class MyDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Dieta_Rodzaj");
 
-            entity.HasMany(d => d.IdProdukts).WithMany(p => p.IdDieta)
+            entity.HasMany(d => d.IdProdukt).WithMany(p => p.IdDieta)
                 .UsingEntity<Dictionary<string, object>>(
                     "ProduktDietum",
                     r => r.HasOne<Produkt>().WithMany()
@@ -197,7 +197,7 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.IdUzytkownik).HasColumnName("id_uzytkownik");
             entity.Property(e => e.Waga).HasColumnName("waga");
 
-            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.PomiarWagis)
+            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.PomiarWagi)
                 .HasForeignKey(d => d.IdUzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Pomiar_Wagi_Uzytkownik");
@@ -227,7 +227,7 @@ public partial class MyDbContext : DbContext
                 .HasColumnType("text")
                 .HasColumnName("stanowisko");
 
-            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.Pracowniks)
+            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.Pracownicy)
                 .HasForeignKey(d => d.IdUzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Pracownik_Uzytkownik");
@@ -257,12 +257,12 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.IdDanie).HasColumnName("id_danie");
             entity.Property(e => e.Ilosc).HasColumnName("ilosc");
 
-            entity.HasOne(d => d.IdDanieNavigation).WithMany(p => p.ProduktDanies)
+            entity.HasOne(d => d.IdDanieNavigation).WithMany(p => p.ProduktDanie)
                 .HasForeignKey(d => d.IdDanie)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Table_19_Danie");
 
-            entity.HasOne(d => d.IdProduktNavigation).WithMany(p => p.ProduktDanies)
+            entity.HasOne(d => d.IdProduktNavigation).WithMany(p => p.ProduktDanie)
                 .HasForeignKey(d => d.IdProdukt)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Table_19_Produkt");
@@ -310,7 +310,7 @@ public partial class MyDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Przypisana_dieta_Uzytkownik");
 
-            entity.HasMany(d => d.IdDanies).WithMany(p => p.IdPrzypisanaDieta)
+            entity.HasMany(d => d.IdDanie).WithMany(p => p.IdPrzypisanaDieta)
                 .UsingEntity<Dictionary<string, object>>(
                     "PrzypisanaDietaDanie",
                     r => r.HasOne<Danie>().WithMany()
@@ -343,12 +343,12 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.Dieta).HasColumnName("dieta");
             entity.Property(e => e.Uzytkownik).HasColumnName("uzytkownik");
 
-            entity.HasOne(d => d.DietaNavigation).WithMany(p => p.Raports)
+            entity.HasOne(d => d.DietaNavigation).WithMany(p => p.Raporty)
                 .HasForeignKey(d => d.Dieta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Raport_Dieta");
 
-            entity.HasOne(d => d.UzytkownikNavigation).WithMany(p => p.Raports)
+            entity.HasOne(d => d.UzytkownikNavigation).WithMany(p => p.Raporty)
                 .HasForeignKey(d => d.Uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Raport_Uzytkownik");

@@ -19,5 +19,5 @@ public partial class PrzypisanaDieta
 
     public virtual Uzytkownik IdUzytkownikNavigation { get; set; } = null!;
 
-    public virtual ICollection<Danie> IdDanies { get; set; } = new List<Danie>();
+    public virtual ICollection<Danie> IdDanie { get; set; } = new List<Danie>();
 }

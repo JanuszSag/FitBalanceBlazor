@@ -27,13 +27,13 @@ public partial class Uzytkownik
 
     public virtual ICollection<Opinia> Opinia { get; set; } = new List<Opinia>();
 
-    public virtual ICollection<PomiarWagi> PomiarWagis { get; set; } = new List<PomiarWagi>();
+    public virtual ICollection<PomiarWagi> PomiarWagi { get; set; } = new List<PomiarWagi>();
 
-    public virtual ICollection<Pracownik> Pracowniks { get; set; } = new List<Pracownik>();
+    public virtual ICollection<Pracownik> Pracownicy { get; set; } = new List<Pracownik>();
 
     public virtual ICollection<PrzypisanaDieta> PrzypisanaDieta { get; set; } = new List<PrzypisanaDieta>();
 
-    public virtual ICollection<Raport> Raports { get; set; } = new List<Raport>();
+    public virtual ICollection<Raport> Raporty { get; set; } = new List<Raport>();
 
     public virtual ICollection<WypitaWoda> WypitaWoda { get; set; } = new List<WypitaWoda>();
 }

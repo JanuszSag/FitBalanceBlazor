@@ -9,7 +9,7 @@ public partial class Produkt
 
     public string Nazwa { get; set; } = null!;
 
-    public virtual ICollection<ProduktDanie> ProduktDanies { get; set; } = new List<ProduktDanie>();
+    public virtual ICollection<ProduktDanie> ProduktDanie { get; set; } = new List<ProduktDanie>();
 
     public virtual ICollection<Dieta> IdDieta { get; set; } = new List<Dieta>();
 }

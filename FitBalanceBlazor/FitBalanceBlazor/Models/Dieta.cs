@@ -23,11 +23,11 @@ public partial class Dieta
 
     public virtual ICollection<PrzypisanaDieta> PrzypisanaDieta { get; set; } = new List<PrzypisanaDieta>();
 
-    public virtual ICollection<Raport> Raports { get; set; } = new List<Raport>();
+    public virtual ICollection<Raport> Raporty { get; set; } = new List<Raport>();
 
     public virtual Rodzaj RodzajNavigation { get; set; } = null!;
 
-    public virtual ICollection<Danie> DanieIdDanies { get; set; } = new List<Danie>();
+    public virtual ICollection<Danie> DanieIdDanie { get; set; } = new List<Danie>();
 
-    public virtual ICollection<Produkt> IdProdukts { get; set; } = new List<Produkt>();
+    public virtual ICollection<Produkt> IdProdukt { get; set; } = new List<Produkt>();
 }
