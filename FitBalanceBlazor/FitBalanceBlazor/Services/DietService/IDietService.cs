@@ -1,6 +1,6 @@
 using FitBalanceBlazor.Models;
 
-namespace FitBalanceBlazor.Services;
+namespace FitBalanceBlazor.Services.DietService;
 
 public interface IDietService
 {

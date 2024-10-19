@@ -1,5 +1,6 @@
 using FitBalanceBlazor.Models;
 using FitBalanceBlazor.Services;
+using FitBalanceBlazor.Services.DietService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FitBalanceBlazor.Controllers
@@ -8,7 +9,7 @@ namespace FitBalanceBlazor.Controllers
     [Route("api/[controller]")]
     public class DietController : ControllerBase
     {
-        private IDietService _dietService;
+        private readonly IDietService _dietService;
 
         public DietController(IDietService dietService)
         {
