@@ -1,9 +1,13 @@
 using MudBlazor.Services;
 using FitBalanceBlazor.Client.Pages;
 using FitBalanceBlazor.Components;
+using FitBalanceBlazor.Context;
 using FitBalanceBlazor.Services;
+using FitBalanceBlazor.Services.DietService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<MyDbContext>();
 
 // Add MudBlazor services
 builder.Services.AddMudServices();
@@ -11,7 +15,7 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
-builder.Services.AddScoped<DietService>();
+builder.Services.AddScoped<IDietService,DietService>();
 
 var app = builder.Build();
 

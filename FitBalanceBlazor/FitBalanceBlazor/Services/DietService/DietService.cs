@@ -2,10 +2,16 @@ using FitBalanceBlazor.Context;
 using FitBalanceBlazor.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitBalanceBlazor.Services;
+namespace FitBalanceBlazor.Services.DietService;
 
-public class DietService(MyDbContext _context) : IDietService
+public class DietService: IDietService
 {
+    private readonly MyDbContext _context;
+
+    public DietService(MyDbContext context)
+    {
+        this._context = context;
+    }
     /// <summary>
     /// Method <c>GetAllDietsAsync</c> return list of all diets stored in database
     /// </summary>
