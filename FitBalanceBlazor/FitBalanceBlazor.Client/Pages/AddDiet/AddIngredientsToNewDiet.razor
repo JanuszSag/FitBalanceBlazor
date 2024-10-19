@@ -1,0 +1,60 @@
+@page "/addDiet/addIngredientsToNewDiet"
+
+<PageTitle>Add ingredients to new diet</PageTitle>
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
+
+<MudGrid>
+    <MudItem xs="6">
+        <MudStack Spacing="3">
+            <!-- Sekcja wyswietlenia wczesniej wybranej pozycji(śniadanie, drugie śniadanie, obiad, podwieczorek, kolacja) -->
+            <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                <MudText Typo="Typo.h6">Dodawana pozycja: </MudText> 
+                <!-- pozycja wybrana z popczedniej stron -WSTAWIC-->
+            </MudPaper>
+
+            <!-- Sekcja wyboru składników-->
+          <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+              <MudText Typo="Typo.subtitle1" Class="mud-width-full">@(ingredient == null ? "Nic nie wybrano" : $"Składnik: {ingredient.Name}")</MudText>
+
+              <MudSelect T="Ingredient" @bind-Value="ingredient" ToStringFunc="@converter" Label="Wybierz składnik" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable>
+                  <MudSelectItem Value="@(new Ingredient() { Name="Cebula"})" /><!-- z bazy wyciagnac!!!-->
+                  <MudSelectItem Value="@(new Ingredient() { Name="Pomidor"})" />
+              </MudSelect>
+
+              <div class="d-flex align-center">
+                  <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                             Href="">Zatwierdź</MudButton><!-- gdzie nas to przenosi?-->
+              </div>
+            </MudPaper>
+        </MudStack>
+    </MudItem>
+
+    <!-- Sekcja grafiki -->
+    <MudItem xs="6">
+        <MudCard Style="width:100%; position: relative;">
+            <MudCardMedia Image="https://img.freepik.com/free-photo/top-view-recipe-book-still-life-concept_23-2149056014.jpg?t=st=1729142774~exp=1729146374~hmac=b03517ce1aadb0443708c36b9ea8e6d86b00a050e689d91cd3858ab0dd68f6c9&w=1060" Height="470" />
+
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+
+
+@code {
+    public string SelectedOption { get; set; }
+
+    private Ingredient ingredient;
+    public class Ingredient
+    {
+        public string Name { get; set; }
+        
+        public override bool Equals(object o) {
+            var other = o as Ingredient;
+            return other?.Name==Name;
+        }
+        
+        public override int GetHashCode() => Name.GetHashCode();
+    }
+
+    Func<Ingredient,string> converter = i => i?.Name;
+}

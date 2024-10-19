@@ -1,0 +1,55 @@
+@page "/employee"
+
+<PageTitle>Employee</PageTitle>
+
+<MudStack>
+  
+  <!-- Sekcja ze zdjęciem-->
+  <MudCard Width="100%"  Style="position: relative;">
+    <MudCardMedia Image="https://img.freepik.com/darmowe-zdjecie/koncepcja-biznesowa-handshake-mezczyzn_53876-31214.jpg?t=st=1722507208~exp=1722510808~hmac=4f7a5e03497b85c37bc7d5bcab7c18dd426020b3ed24c5e75f061158722e7625&w=826" Height="340"/>
+    <MudText Typo="Typo.h5" Class="textCenterOnImage" Style="border: 5px; border-radius:20px; position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); color: white; ">
+     <strong> Witaj, @nameEmployee </strong> <!-- wyciagnac z bazy imie-->
+    </MudText>
+  </MudCard>
+
+  <!-- Sekcja z opcjami, które posiada pracownik-->
+  <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround">
+    <MudPaper Class="pa-20" Style="border: 5px solid rgb(223,243,156);border-radius: 20px;">
+      Zobacz
+    </MudPaper>
+    <MudPaper Class="pa-20" Style="border: 5px solid rgb(223,243,156);border-radius: 20px;">
+      Zmodyfikuj
+    </MudPaper>
+    <MudPaper Class="pa-20" Style="border: 5px solid rgb(223,243,156);border-radius: 20px;">
+      Usuń
+    </MudPaper>
+  </MudStack>
+
+  <!-- Sekcja z przyciskami kierującymi na kolejne podstrony-->
+  <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround">
+   
+    <MudPaper Class="pa-40" Style="width: 250px; height: 100px; border: 5px solid rgb(223,243,156);border-radius: 20px;">
+      <MudStack Row="false">
+        Lista wszystkich diet
+        <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                   Href="/allClientDiets">Zobacz</MudButton>
+      </MudStack>
+    </MudPaper>
+    
+    <MudPaper Class="pa-40" Style="width: 250px; height:100px; border: 5px solid rgb(223,243,156);border-radius: 20px;">
+      <MudStack>
+        Lista diet gości
+        <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                   Href="/allGuestDiets">Zobacz</MudButton>
+      </MudStack>
+    </MudPaper>
+  </MudStack>
+
+
+</MudStack>
+@code {
+private string nameEmployee = "Artur";//trzeba z bazy pobierac
+//kod potrzebny do uzycia imiePracownik z bazy
+
+
+}
