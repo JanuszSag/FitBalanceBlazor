@@ -3,14 +3,14 @@
 <PageTitle>Home</PageTitle>
 
 <!--Sekcja początkowa strony -tytuł-->
-<MudPaper Class="pa-100" Style="width:80%;background:rgb(223,243,156);border-radius: 20px;">
-    
+    <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px; margin-left: 30px; margin-right: 30px;">
+
     <MudStack>
-        <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;" ><strong>fit</strong></MudText>
+        <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
         <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
         <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
 
-        <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+        <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
                    Href="/allGuestDiets">Wybierz swój program</MudButton>
     </MudStack>
 </MudPaper>
@@ -48,11 +48,13 @@
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>usługi</strong></MudText>
 
         <MudGrid>
-            <MudItem xs="3" Class="d-flex flex-column" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+            <MudItem xs="3" Class="d-flex flex-column" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
                 <MudText Align="Align.Left" Typo="Typo.h5" >@textServices </MudText>
-                <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                <div class="d-flex align-center">
+                <MudButton Variant="Variant.Filled"  Style="width:160px; background:rgb(255,152,107);border-radius: 20px;"
                            Href="/login">Zaloguj się
                 </MudButton>
+                </div>
             </MudItem>
             
             <MudItem xs="8">
@@ -90,7 +92,7 @@
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wybierz swoj program</strong></MudText>
         <MudStack Spacing="3" Justify="Justify.SpaceAround">
 
-            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
                 <MudText Align="Align.Left" Typo="Typo.h4"><strong> Utrata wagi</strong></MudText>
                 <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
                 <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
@@ -98,7 +100,7 @@
                     </MudButton>
             </MudPaper>
 
-            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
                 <MudText Align="Align.Left" Typo="Typo.h4"><strong>Urzymanie wagi</strong></MudText>
                 <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
                 <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
@@ -106,7 +108,7 @@
                 </MudButton>
             </MudPaper>
 
-            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
                 <MudText Align="Align.Left" Typo="Typo.h4"><strong>Zwiększenie wagi</strong></MudText>
                 <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
                 <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
@@ -120,7 +122,7 @@
 
 <!--Sekcja możliwości zobaczenia diet-->
 <div id="sectionDiets">
-    <MudStack>
+    <MudStack >
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>nasze diety</strong></MudText>
     </MudStack>
 
@@ -163,6 +165,12 @@
 <div id="sectionOpinions">
     <MudStack>
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>opinie</strong></MudText>
+        <!-- pętla-->
+        <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
+            <MudRating SelectedValue="0" Size="Size.Medium" /><!--z bazy wyciagnac-->
+            <MudText Align="Align.Left" Typo="Typo.h5">zawartość opini </MudText> <!--z bazy wyciagnac-->
+        </MudPaper>
+        
     </MudStack>
 </div>
 
@@ -171,8 +179,40 @@
     <MudStack>
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Q&A</strong></MudText>
     </MudStack>
+        <MudStack>
+            <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
+                <MudText Align="Align.Left" Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Najczęstsze pytania</strong></MudText>
+
+                <MudStack Spacing="3">
+
+                <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
+                    <MudText > @((MarkupString)faq1.Replace(Environment.NewLine, "<br/>")) </MudText>
+                </MudPaper>
+                <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
+                    <MudText > @((MarkupString)faq2.Replace(Environment.NewLine, "<br/>")) </MudText>
+                </MudPaper>
+                <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
+                    <MudText > @((MarkupString)faq3.Replace(Environment.NewLine, "<br/>")) </MudText>
+                </MudPaper>
+                </MudStack>
+                
+            </MudPaper>
+            
+        </MudStack>
+   
     <MudStack>
+        <MudPaper Class="pa-10" Style="margin-left: 30px; margin-right: 30px;">
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
+        <MudText > @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
+        <MudText Typo="Typo.h6">E-mail:</MudText>
+        <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined"></MudTextField>
+        <MudText Typo="Typo.h6">Treść wiadomości:</MudText>
+        <MudTextField ShrinkLabel @bind-Value="email" Label="Treść wiadomości" Variant="Variant.Outlined"></MudTextField>
+        <div class="d-flex align-center">
+            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                       Href="/">Wyślij</MudButton><!--Gdzie przekierować?-->
+        </div>
+        </MudPaper>
     </MudStack>
 </div>
 
@@ -182,7 +222,13 @@
     string textServices = "Dla naszych użytkowników oferujemy spersonalizowany program dietetyczny, który jest tworzony na podstawie indywidualnych preferencji i zapytań użytkownika. \n\nDodatkowo zalogowany użytkownik ma możliwość rejestrowania ilości spożywanej w ciągu dnia wody, wyliczania swojego zapotrzebowania kalorycznego oraz przeglądania rankingu najlepszych diet.";
     string textProgram = "Mamy duży wybór zbalansowanych i zdrowych diet";
     string textOurDiets = $"Nasze diety są opracowywane przez najlepszych dietetyków, aby spełniać indywidualne potrzeby naszych klientów.{Environment.NewLine} Dzięki profesjonalnemu podejściu i starannie dobranym składnikom, nasze plany żywieniowe pomagają osiągnąć zamierzone cele zdrowotne i sylwetkowe";
-    
-    
+    <!--faq-Frequently Asked Questions-->
+    string faq1 = $"1. Czy mogę zamieniać dania?{Environment.NewLine}Tak, można wymieniać pszczególne posiłki na inne. Pod warunkiem, że bedzię on zgodny z zapotrzebowaniem kalorycznym.";
+    string faq2 = $"2. Czy mogę zamieniać rodzaj diety?{Environment.NewLine} Tak, w każdym momęcie można zmienić rodzaj diety.";
+    string faq3 = $"3. Co w przypadku gdy mam problemy z zalogowaniem?{Environment.NewLine}  W takim przypadku prosimy kontakować się z naszym działem helpdesku poniżej w sekcji Napisz do nas.";
+    string textSendEmail = $"Zanim zadasz pytanie sprawdź Q&A. Może jest tam rozwiązanie Twojego problemu.{Environment.NewLine}Jeśli nadal nie znasz odpowiedzi - napisz do nas! Chętnie pomożemy Ci w rozwiązaniu problemów i wyjaśnimy wszelkie wątpliwości :)";
+
+    public string email { get; set; }
+
 
 }
