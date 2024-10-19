@@ -2,57 +2,149 @@
 
 <PageTitle>Home</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
-<MudText Class="mb-8">Welcome to your new app, powered by MudBlazor and the .NET 8 Template!</MudText>
+<!--Sekcja początkowa strony -tytuł-->
+<MudPaper Class="pa-100" Style="width:80%;background:rgb(223,243,156);border-radius: 20px;">
+    
+    <MudStack>
+        <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;" ><strong>fit</strong></MudText>
+        <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
+        <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
 
-<MudAlert Severity="Severity.Normal">
-    You can find documentation and examples on our website here:
-    <MudLink Href="https://mudblazor.com" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
-        <b>www.mudblazor.com</b>
-    </MudLink>
-</MudAlert>
+        <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                   Href="/allGuestDiets">Wybierz swój program</MudButton>
+    </MudStack>
+</MudPaper>
 
-<br/>
-<MudText Typo="Typo.h5" GutterBottom="true">Interactivity in this Template</MudText>
-<br/>
-<MudText Typo="Typo.body2">
-    When you opt for the "Global" Interactivity Location, <br/>
-    the render modes are defined in App.razor and consequently apply to all child components.<br/>
-    In this case, providers are globally set in the MainLayout.<br/>
-    <br/>
-    On the other hand, if you choose the "Per page/component" Interactivity Location,<br/>
-    it is necessary to include the <br/>
-    <br/>
-    &lt;MudPopoverProvider /&gt; <br/>
-    &lt;MudDialogProvider /&gt; <br/>
-    &lt;MudSnackbarProvider /&gt; <br/>
-    <br/>
-    components on every interactive page.<br/>
-    <br/>
-    If a render mode is not specified for a page, it defaults to Server-Side Rendering (SSR),<br/>
-    similar to this page. While MudBlazor allows pages to be rendered in SSR,<br/>
-    please note that interactive features, such as buttons and dropdown menus, will not be functional.
-</MudText>
 
-<br/>
-<MudText Typo="Typo.h5" GutterBottom="true">What's New in Blazor with the Release of .NET 8</MudText>
-<br/>
-<MudText Typo="Typo.h6" GutterBottom="true">Prerendering</MudText>
-<MudText Typo="Typo.body2" GutterBottom="true">
-    If you're exploring the features of .NET 8 Blazor,<br/> you might be pleasantly surprised to learn that each page is prerendered on the server,<br/> regardless of the selected render mode.<br/><br/>
-    This means that you'll need to inject all necessary services on the server,<br/> even when opting for the wasm (WebAssembly) render mode.<br/><br/>
-    This prerendering functionality is crucial to ensuring that WebAssembly mode feels fast and responsive,<br/> especially when it comes to initial page load times.<br/><br/>
-    For more information on how to detect prerendering and leverage the RenderContext, you can refer to the following link:
-    <MudLink Href="https://github.com/dotnet/aspnetcore/issues/51468#issuecomment-1783568121" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
-        More details
-    </MudLink>
-</MudText>
+<!--Sekcja o nas-->
+<div id="sectionAboutUs">
+<MudStack>
+    <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>o nas</strong></MudText>
+    <MudText Align="Align.Center" Typo="Typo.h5" >@textAboutus </MudText>
+    <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround">
+        
+        <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <!--  <MudCardMedia Image="" />-->
+            <MudText Align="Align.Center" Typo="Typo.h5"> Mamy duzy wybor zbalansowanych zdrowych diet</MudText>
+        </MudPaper>
 
-<br/>
-<MudText Typo="Typo.h6" GutterBottom="true">InteractiveAuto</MudText>
-<MudText Typo="Typo.body2">
-    A discussion on how to achieve this can be found here:
-    <MudLink Href="https://github.com/dotnet/aspnetcore/issues/51468#issue-1950424116" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
-        More details
-    </MudLink>
-</MudText>
+        <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <!--  <MudCardMedia Image="" />-->
+            <MudText Align="Align.Center" Typo="Typo.h5"> Nasi dietetycy to wysoko kwalifikowane specialiści</MudText>
+        </MudPaper>
+
+        <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <!--  <MudCardMedia Image="" />-->
+            <MudText Align="Align.Center" Typo="Typo.h5"> Już ponad 100 naszych klientów zmieniło swoje życie</MudText>
+        </MudPaper>
+
+    </MudStack>
+</MudStack>
+</div>
+
+<!--Sekcja usług-->
+<div id="sectionServices">
+    <MudStack>
+        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>usługi</strong></MudText>
+
+        <MudGrid>
+            <MudItem xs="3" Class="d-flex flex-column" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+                <MudText Align="Align.Left" Typo="Typo.h5" >@textServices </MudText>
+                <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/login">Zaloguj się
+                </MudButton>
+            </MudItem>
+            
+            <MudItem xs="8">
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+                            <MudText Align="Align.Left" Typo="Typo.h5" >woda </MudText></MudPaper>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+                            <MudText Align="Align.Left" Typo="Typo.h5" >moja dieta</MudText>
+                        </MudPaper>
+                    </MudItem>
+                    
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+                            <MudText Align="Align.Left" Typo="Typo.h5" >raport </MudText>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+                            <MudText Align="Align.Left" Typo="Typo.h5" >wyliczanie kalori </MudText>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+        </MudGrid>
+        
+    </MudStack>
+</div>
+
+<!--Sekcja wyboru programu-->
+<div id="sectionProgram">
+    <MudStack>
+        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wybierz swoj program</strong></MudText>
+        <MudStack Spacing="3" Justify="Justify.SpaceAround">
+
+            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+                <MudText Align="Align.Left" Typo="Typo.h4"><strong> Utrata wagi</strong></MudText>
+                <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
+                <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/allGuestDiets">Zobacz
+                    </MudButton>
+            </MudPaper>
+
+            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+                <MudText Align="Align.Left" Typo="Typo.h4"><strong>Urzymanie wagi</strong></MudText>
+                <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
+                <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/allGuestDiets">Zobacz
+                </MudButton>
+            </MudPaper>
+
+            <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
+                <MudText Align="Align.Left" Typo="Typo.h4"><strong>Zwiększenie wagi</strong></MudText>
+                <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
+                <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/allGuestDiets">Zobacz
+                </MudButton>
+            </MudPaper>
+
+        </MudStack>
+    </MudStack>
+</div>
+
+<!--Sekcja możliwości zobaczenia diet-->
+<div id="sectionDiets">
+    <MudStack>
+        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>nasze diety</strong></MudText>
+    </MudStack>
+</div>
+
+<!--Sekcja opinii-->
+<div id="sectionOpinions">
+    <MudStack>
+        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>opinie</strong></MudText>
+    </MudStack>
+</div>
+
+<!--Sekcja Q&A-->
+<div id="sectionQ&A">
+    <MudStack>
+        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Q&A</strong></MudText>
+    </MudStack>
+    <MudStack>
+        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
+    </MudStack>
+</div>
+
+@code
+{
+    string textAboutus = "Cieszymy się, że jesteś z nami!\nFitBalance to portal dietetyczny dla każdego. Z nami zrzucisz zbędne kilogramy, dorzucisz brakujące kilogramy albo utrzymasz wagę w zdrowy sposób. Zależy nam na twoim zdrowiu i dobrym samopoczuciu dlatego nasi specjaliści przygotowali wiele zbilansowanych diet od wegańskich opcji przez keto aż po bezglutenowych, które możesz modyfikować. Nie tylko znajdziesz dietę dla siebie, a również lepiej zaplanujesz swoja przygodę ze zdrowiem za pomocą kalkulatora zapotrzebowania kalorycznego oraz miarki wypitej wody. Jesteśmy chętni się dla Ciebie udoskonalać dlatego masz możliwość wystawiania opinii na temat diet.\nMotywacją do stworzenia naszej aplikacji jest brak na rynku narzędzia, które by skutecznie\u00a0 łączył ze sobą aspekty planowania posiłków, monitorowania kaloryczności oraz ilości wody wypitej danego dnia.";
+    string textServices = "Dla naszych użytkowników oferujemy spersonalizowany program dietetyczny, który jest tworzony na podstawie indywidualnych preferencji i zapytań użytkownika. \n\nDodatkowo zalogowany użytkownik ma możliwość rejestrowania ilości spożywanej w ciągu dnia wody, wyliczania swojego zapotrzebowania kalorycznego oraz przeglądania rankingu najlepszych diet.";
+    string textProgram = "Mamy duży wybór zbalansowanych i zdrowych diet";
+}

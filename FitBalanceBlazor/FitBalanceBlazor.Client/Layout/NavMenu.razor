@@ -1,5 +1,84 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
-    <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
-</MudNavMenu>
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">FitBalance</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weather">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="employee">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Employee
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="addDiet">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Add diet
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="addDiet/addIngredientsToNewDiet">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Add ingredients to new diet
+            </NavLink>
+        </div>
+
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="allClientDiets">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All client diets
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="allGuestDiets">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All guest diet
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="changeDiet">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change diet
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="changeDiet/changeIngredientsInDiet">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change ingredients in diet
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="login">
+                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Login
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="registration">
+                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Registration
+            </NavLink>
+        </div>
+
+    </nav>
+</div>
