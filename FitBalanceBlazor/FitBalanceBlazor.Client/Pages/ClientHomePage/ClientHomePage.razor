@@ -1,0 +1,128 @@
+@page "/clientHomePage"
+<MudGrid>
+    <!-- Gorna czesc -->
+    <MudGrid>
+        <MudItem xs="12">
+            <MudPaper Class="pa-4 rounded" Style="position: relative; text-align: center;">
+                <MudImage Src="/Images/ClientHomePage/ClientHomePageImage.png"
+                          Alt="Welcome image"
+                          Class="img-fluid rounded"
+                          Style="width: 100%; height: auto;" />
+                <!-- Text na zdjeciu -->
+                <div Style="position: absolute; top: 50%; left: 50%;; transform: translate(-50%, -50%); color: black; font-size: 2rem; font-weight: bold;">
+                    WITAJ, IMIĘ
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+</MudGrid>
+
+    <!-- Bloki z przyciskami -->
+    <MudItem xs="12" Class="mt-4">
+        <MudGrid>
+            <MudItem xs="3">
+                <MudCard Class="rounded-card" Style ="border: 2px solid #DFF39C; background-color: white; color: black;">
+                    <MudCardContent>
+                        <h6>Twój indywidualny program dietetyczny</h6>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled">Zobacz</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="3">
+                <MudCard Class="rounded-card" Style ="border: 2px solid #DFF39C; background-color: white; color: black;">
+                    <MudCardContent>
+                        <h6>Wszystkie diety</h6>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled">Zobacz</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="3">
+                <MudCard Class="rounded-card" Style ="border: 2px solid #DFF39C; background-color: white; color: black;">
+                    <MudCardContent>
+                        <h6>Wyliczanie kkal</h6>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled">Zobacz</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="3">
+                <MudCard Class="rounded-card" Style ="border: 2px solid #DFF39C; background-color: white; color: black;">
+                    <MudCardContent>
+                        <h6>Raport</h6>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled">Zobacz</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+
+    <!-- Blok z iloscia wypitej wody-->
+   <MudPaper Class="pa-4 rounded" Style="border: 2px solid #00BFFF; border-radius: 20px;">
+    <MudGrid>
+        <!-- Chesc lewa  -->
+        <MudItem xs="3">
+            <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
+                <h5 style="font-weight: bold;">WODA</h5>
+                <MudText  Style="color: grey; font-weight: bold;">TOTAL</MudText>
+                <h1 style="font-size: 3rem;">@totalWater ml</h1>
+            </MudPaper>
+        </MudItem>
+
+        <!-- Checs prawa z ikonkami szklanek -->
+        <MudItem xs="9">
+            <MudText Style="font-weight: bold;">Wskaż, ile wody wypiłeś dzisiaj</MudText>
+            <MudGrid Class="mt-4">
+                @for (int i = 0; i < totalCups; i++)
+                {
+                    <MudItem xs="1">
+                        <MudIcon Icon="@GetCupIcon(i)" 
+                                 Size="Size.Large" 
+                                 Color="@GetCupColor(i)" 
+                                 OnClick="@(() => ToggleCup(i))" 
+                                 Class="cursor-pointer" />
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private int totalWater = 0;
+    private int totalCups = 7; // ilosc szklanek
+    private bool[] cupFilled; // array szklanek
+
+    protected override void OnInitialized()
+    {
+        cupFilled = new bool[totalCups]; // na poczatku wszystkie szklanki sa puste
+    }
+
+    private void ToggleCup(int index)
+    {
+        cupFilled[index] = !cupFilled[index]; // zmieniamy stan szklanki
+
+        // liczymy ilosc wody
+        totalWater = cupFilled.Count(c => c) * 250; // 250ml w szklance
+    }
+
+    private string GetCupIcon(int index)
+    {
+        // Jesli szkalnka jest pelna, malujemy na niebiesko
+        return cupFilled[index] ? "fa-solid fa-glass-whiskey" : "fa-regular fa-glass-whiskey";
+    }
+
+    private Color GetCupColor(int index)
+    {
+        // Jesli szklanka jest pelna malujemy jesli nie zostawiamy na bialo
+        return cupFilled[index] ? Color.Primary : Color.Default;
+    }
+
+}
