@@ -6,55 +6,60 @@
 <MudSnackbarProvider/>
 <MudLayout>
     <MudAppBar Elevation="1">
-        @* <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/> *@
+        
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/> @*to zbedne bedzie*@
         <MudText Typo="Typo.h5" Class="ml-3">FitBalance</MudText>
         <MudSpacer/>
-        
-        @* <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/> *@
-   
-    @* <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2"> *@
-        <div class="sidebar">
-            @* <NavMenu/> *@
-        </div>
-    <MudPaper Class="pa-2" Elevation="0">
-        <MudStack Row="true" Justify="Justify.FlexStart">
-            <MudLink Href="/#sectionStarter" Style="text-transform: uppercase;">home</MudLink>
-            <MudLink Href="/#sectionAboutUs" Style="text-transform: uppercase;">o nas</MudLink>
-            <MudLink Href="/#sectionServices" Style="text-transform: uppercase;">usługi</MudLink>
-            <MudLink Href="/#sectionProgram" Style="text-transform: uppercase;">program</MudLink>
-            <MudLink Href="/#sectionOpinions" Style="text-transform: uppercase;">opinie</MudLink>
-            <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">Q&A</MudLink>
-            <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">kontakt</MudLink><!--dodać/zmienić scieżę-->
-            <MudLink Href="/login" Style="text-transform: uppercase;">logowanie</MudLink>
-
-
-
-            <!--to powinno byc dopieo po zalogowaniu-->
-            <MudMenu Label="Moje konto" Dense="true">
-                <MudMenuItem>Diety
-                    <MudNavLink Href="/allClientDiets"></MudNavLink>
-                </MudMenuItem>
-                <MudMenuItem>Oblicz zapotrzbowanie kaloryczne
-                    <MudNavLink Href="/"></MudNavLink> <!--dodać scieżę-->
-                </MudMenuItem>
-                <MudMenuItem>Uzupełnij ilość wypitej wody
-                    <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
-                </MudMenuItem>
-                <MudMenuItem>Moja dieta
-                    <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
-                </MudMenuItem>
-                <MudMenuItem>Raport
-                    <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
-                </MudMenuItem>
-            </MudMenu>
-
-        </MudStack>
-    </MudPaper>
-
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
+        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/> @*to zbedne bedzie*@
+
+        <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2"> @*to zbedne bedzie*@
+            <div class="sidebar">
+
+                <NavMenu/>
+            </div>
+
+            <MudPaper Class="pa-2" Elevation="0">
+                <MudStack Row="true" Justify="Justify.FlexStart">
+                    <MudLink Href="/#sectionStarter" Style="text-transform: uppercase;">home</MudLink>
+                    <MudLink Href="/#sectionAboutUs" Style="text-transform: uppercase;">o nas</MudLink>
+                    <MudLink Href="/#sectionServices" Style="text-transform: uppercase;">usługi</MudLink>
+                    <MudLink Href="/#sectionProgram" Style="text-transform: uppercase;">program</MudLink>
+                    <MudLink Href="/#sectionOpinions" Style="text-transform: uppercase;">opinie</MudLink>
+                    <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">Q&A</MudLink>
+                    <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">kontakt</MudLink><!--dodać/zmienić scieżę-->
+                    <MudLink Href="/login" Style="text-transform: uppercase;">logowanie</MudLink>
+
+
+
+                    <!--to powinno byc dopieo po zalogowaniu-->
+                    <MudMenu Label="Moje konto" Dense="true">
+                        <MudMenuItem>Diety
+                            <MudNavLink Href="/allClientDiets"></MudNavLink>
+                        </MudMenuItem>
+                        <MudMenuItem>Oblicz zapotrzbowanie kaloryczne
+                            <MudNavLink Href="/"></MudNavLink> <!--dodać scieżę-->
+                        </MudMenuItem>
+                        <MudMenuItem>Uzupełnij ilość wypitej wody
+                            <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
+                        </MudMenuItem>
+                        <MudMenuItem>Moja dieta
+                            <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
+                        </MudMenuItem>
+                        <MudMenuItem>Raport
+                            <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
+                        </MudMenuItem>
+                    </MudMenu>
+
+                </MudStack>
+            </MudPaper>
+
+
+        </MudDrawer>
     </MudAppBar>
 </MudLayout>
-    @* </MudDrawer> *@
+
+
     <MudMainContent Class="mt-16 pa-4">
         @Body
     </MudMainContent>
