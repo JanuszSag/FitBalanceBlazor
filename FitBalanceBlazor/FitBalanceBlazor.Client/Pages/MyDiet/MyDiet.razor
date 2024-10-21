@@ -1,0 +1,47 @@
+@page "/myDiet"
+
+<!-- Nagłówek strony -->
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase; font-weight: bold;">Moja dieta</MudText>
+
+<MudGrid>
+    <!-- Lewa część z informacjami -->
+    <MudItem xs="6">
+        <MudStack Spacing="3">
+            <!-- Sekcja z informacją o diecie -->
+            <MudPaper Class="pa-3" Style="background-color: #E0FFB3; border-radius: 20px;">
+                <MudText Typo="Typo.h6" Style="font-weight: bold;">Twoja przypisana dieta: nazwa diety</MudText>
+            </MudPaper>
+
+            <!-- Sekcja z posiłkami -->
+            <MudPaper Class="pa-3" Style="background-color: #E0FFB3; border-radius: 20px;">
+                <MudText Typo="Typo.body1">
+                    Śniadanie: <br />
+                    Drugie śniadanie: <br />
+                    Obiad: <br />
+                    Podwieczorek: <br />
+                    Kolacja:
+                </MudText>
+
+                <!-- Pytanie i przycisk -->
+                <MudText Typo="Typo.body1" Style="font-weight: bold; margin-top: 20px;">
+                    Nie odpowiada Ci któraś pozycja?
+                </MudText>
+                
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="background-color: #FF986B; border-radius: 20px; margin-top: 10px;">
+                    zmień ją
+                </MudButton>
+            </MudPaper>
+        </MudStack>
+    </MudItem>
+
+    <!-- Prawa część z obrazkiem -->
+    <MudItem xs="6">
+        <MudCard Style="width: 100%;">
+            <MudCardMedia Image="/Images/MyDiet/MyDiet.png" />
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    public string SelectedOption { get; set; }
+}
