@@ -5,36 +5,38 @@
 <!--Sekcja początkowa strony -tytuł-->
     <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px; margin-left: 30px; margin-right: 30px;">
 
-    <MudStack>
-        <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
-        <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
-        <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
+        <MudStack>
+            <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
+            <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
+            <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
 
-        <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
-                   Href="/allGuestDiets">Wybierz swój program</MudButton>
-    </MudStack>
-</MudPaper>
+            <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
+                       Href="/allGuestDiets">Wybierz swój program</MudButton>
+        </MudStack>
+
+        <MudImage Fluid="true" Src="/Images/HomePage/StarterDish.png" Alt="StarterDishImage" Class="rounded-lg"/>
+    </MudPaper>
 
 
 <!--Sekcja o nas-->
 <div id="sectionAboutUs">
 <MudStack>
     <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>o nas</strong></MudText>
-    <MudText Align="Align.Center" Typo="Typo.h5"> @((MarkupString)textAboutus.Replace(Environment.NewLine, "<br/>")) </MudText>
-    <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround">
+    <MudText Align="Align.Center" Typo="Typo.h5" Style="margin-left: 30px; margin-right: 30px;"> @((MarkupString)textAboutus.Replace(Environment.NewLine, "<br/>")) </MudText>
+    <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround" Style="margin-left: 30px; margin-right: 30px;">
         
-        <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
-            <!--  <MudCardMedia Image="" />-->
+        <MudPaper Class="pa-15" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <MudImage Src="/Images/HomePage/AboutUsDiet.png" Alt="DietImage" Class="rounded-lg"/>
             <MudText Align="Align.Center" Typo="Typo.h5"> Mamy duzy wybor zbalansowanych zdrowych diet</MudText>
         </MudPaper>
 
-        <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
-            <!--  <MudCardMedia Image="" />-->
+        <MudPaper Class="pa-15" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <MudImage Src="/Images/HomePage/AboutUsDietician.png" Alt="DieticianImage" Class="rounded-lg"/>
             <MudText Align="Align.Center" Typo="Typo.h5"> Nasi dietetycy to wysoko kwalifikowane specialiści</MudText>
         </MudPaper>
 
-        <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;">
-            <!--  <MudCardMedia Image="" />-->
+        <MudPaper Class="pa-15" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <MudImage Src="/Images/HomePage/AboutUsDevelop.png" Alt="DevelopImage"  Class="rounded-lg"/>
             <MudText Align="Align.Center" Typo="Typo.h5"> Już ponad 100 naszych klientów zmieniło swoje życie</MudText>
         </MudPaper>
 
@@ -61,22 +63,23 @@
                 <MudGrid>
                     <MudItem xs="6">
                         <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
-                            <MudText Align="Align.Left" Typo="Typo.h5" >woda </MudText></MudPaper>
+                            <MudImage Fluid="true" Src="/Images/HomePage/ServicesWater.png" Alt="DevelopImage"  Class="rounded-lg"/>
+                            </MudPaper>
                     </MudItem>
                     <MudItem xs="6">
                         <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
-                            <MudText Align="Align.Left" Typo="Typo.h5" >moja dieta</MudText>
+                            <MudImage Fluid="true" Src="/Images/HomePage/ServicesMyDiet.png" Alt="DevelopImage"  Class="rounded-lg"/>
                         </MudPaper>
                     </MudItem>
                     
                     <MudItem xs="6">
                         <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
-                            <MudText Align="Align.Left" Typo="Typo.h5" >raport </MudText>
+                            <MudImage Fluid="true" Src="/Images/HomePage/ServicesRaport.png" Alt="DevelopImage"  Class="rounded-lg"/>
                         </MudPaper>
                     </MudItem>
                     <MudItem xs="6">
                         <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
-                            <MudText Align="Align.Left" Typo="Typo.h5" >wyliczanie kalori </MudText>
+                            <MudImage Fluid="true" Src="/Images/HomePage/ServicesCountKcal.png" Alt="DevelopImage"  Class="rounded-lg"/>
                         </MudPaper>
                     </MudItem>
                 </MudGrid>
@@ -232,3 +235,5 @@
 
 
 }
+
+
