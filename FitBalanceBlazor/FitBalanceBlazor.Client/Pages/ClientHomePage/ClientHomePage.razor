@@ -67,7 +67,7 @@
     <!-- Blok z iloscia wypitej wody-->
    <MudPaper Class="pa-4 rounded" Style="border: 2px solid #00BFFF; border-radius: 20px;">
     <MudGrid>
-        <!-- Chesc lewa  -->
+        <!-- Sekcja lewa  -->
         <MudItem xs="3">
             <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
                 <h5 style="font-weight: bold;">WODA</h5>
@@ -76,7 +76,7 @@
             </MudPaper>
         </MudItem>
 
-        <!-- Checs prawa z ikonkami szklanek -->
+        <!-- Sekcja prawa z ikonkami szklanek -->
         <MudItem xs="9">
             <MudText Style="font-weight: bold;">Wskaż, ile wody wypiłeś dzisiaj</MudText>
             <MudGrid Class="mt-4">
@@ -94,35 +94,45 @@
         </MudItem>
     </MudGrid>
 </MudPaper>
-
-@code {
+    @code{
     private int totalWater = 0;
     private int totalCups = 7; // ilosc szklanek
-    private bool[] cupFilled; // array szklanek
+    private bool[] cupFilled; // array dla przechowywania wszystkich szklanek 
 
     protected override void OnInitialized()
     {
-        cupFilled = new bool[totalCups]; // na poczatku wszystkie szklanki sa puste
+    cupFilled = new bool[totalCups]; 
     }
 
     private void ToggleCup(int index)
     {
-        cupFilled[index] = !cupFilled[index]; // zmieniamy stan szklanki
+    if (index >= 0 && index < totalCups) 
+    {
+    cupFilled[index] = !cupFilled[index]; 
 
-        // liczymy ilosc wody
-        totalWater = cupFilled.Count(c => c) * 250; // 250ml w szklance
+    // liczymy ilosc wody
+    totalWater = cupFilled.Count(c => c) * 250; 
+    }
     }
 
     private string GetCupIcon(int index)
     {
-        // Jesli szkalnka jest pelna, malujemy na niebiesko
-        return cupFilled[index] ? "fa-solid fa-glass-whiskey" : "fa-regular fa-glass-whiskey";
+    if (index >= 0 && index < totalCups) 
+    {
+    // jesli szklanka jest pelna wyswietlamy taką ikonke
+    return cupFilled[index] ? "fa-solid fa-glass-whiskey" : "fa-regular fa-glass-whiskey";
+    }
+    return "fa-regular fa-glass-whiskey"; 
     }
 
     private Color GetCupColor(int index)
     {
-        // Jesli szklanka jest pelna malujemy jesli nie zostawiamy na bialo
-        return cupFilled[index] ? Color.Primary : Color.Default;
+    if (index >= 0 && index < totalCups) 
+    {
+    
+    return cupFilled[index] ? Color.Primary : Color.Default;
     }
-
-}
+    return Color.Default; //
+    }
+    }
+    
