@@ -1,21 +1,32 @@
 ﻿@page "/"
 
 <PageTitle>Home</PageTitle>
+<MudStack Spacing="5">
 
 <!--Sekcja początkowa strony -tytuł-->
-    <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px; margin-left: 30px; margin-right: 30px;">
+<MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px; margin-left: 30px; margin-right: 30px;">
 
-        <MudStack>
-            <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
-            <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
-            <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
+    <MudGrid>
+        <MudItem xs="6">
+            <MudStack Spacing="3">
+                <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
+                <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
+                <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
+                <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/allGuestDiets">Wybierz swój program</MudButton>
+            </MudStack>
+        </MudItem>
+            
+        <MudItem xs="6">
+            <MudImage Fluid="true" Src="/Images/HomePage/StarterDish.png" Alt="StarterDishImage" Class="rounded-lg" Height="100"/>
+        </MudItem>
+        
+    </MudGrid>
+    
+       
+        
+</MudPaper>
 
-            <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
-                       Href="/allGuestDiets">Wybierz swój program</MudButton>
-        </MudStack>
-
-        <MudImage Fluid="true" Src="/Images/HomePage/StarterDish.png" Alt="StarterDishImage" Class="rounded-lg"/>
-    </MudPaper>
 
 
 <!--Sekcja o nas-->
@@ -219,6 +230,8 @@
     </MudStack>
 </div>
 
+
+</MudStack>
 @code
 {
     string textAboutus = $"Cieszymy się, że jesteś z nami!{Environment.NewLine}FitBalance to portal dietetyczny dla każdego. Z nami zrzucisz zbędne kilogramy, dorzucisz brakujące kilogramy albo utrzymasz wagę w zdrowy sposób. Zależy nam na twoim zdrowiu i dobrym samopoczuciu dlatego nasi specjaliści przygotowali wiele zbilansowanych diet od wegańskich opcji przez keto aż po bezglutenowych, które możesz modyfikować. Nie tylko znajdziesz dietę dla siebie, a również lepiej zaplanujesz swoja przygodę ze zdrowiem za pomocą kalkulatora zapotrzebowania kalorycznego oraz miarki wypitej wody. Jesteśmy chętni się dla Ciebie udoskonalać dlatego masz możliwość wystawiania opinii na temat diet.\nMotywacją do stworzenia naszej aplikacji jest brak na rynku narzędzia, które by skutecznie\u00a0 łączył ze sobą aspekty planowania posiłków, monitorowania kaloryczności oraz ilości wody wypitej danego dnia.";
