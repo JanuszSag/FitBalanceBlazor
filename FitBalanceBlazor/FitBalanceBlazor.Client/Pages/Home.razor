@@ -2,19 +2,28 @@
 
 <PageTitle>Home</PageTitle>
 
-<!--Sekcja początkowa strony -tytuł-->
-    <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px; margin-left: 30px; margin-right: 30px;">
+<MudStack Spacing="5">
 
-        <MudStack>
-            <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
-            <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
-            <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
+    <!--Sekcja początkowa strony -tytuł-->
+    <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px; margin-left: 30px; margin-right: 30px;height: 500px">
 
-            <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
-                       Href="/allGuestDiets">Wybierz swój program</MudButton>
-        </MudStack>
+    <MudGrid AlignItems="center">
+        <MudItem xs="6">
+            <MudStack Spacing="3">
+                <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
+                <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
+                <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
+                <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/allGuestDiets">Wybierz swój program</MudButton>
+            </MudStack>
+        </MudItem>
 
-        <MudImage Fluid="true" Src="/Images/HomePage/StarterDish.png" Alt="StarterDishImage" Class="rounded-lg"/>
+        <MudItem xs="6">
+            <MudImage Src="/Images/HomePage/StarterDish.png" Alt="StarterDishImage" Class="rounded-lg" Height="650" />
+        </MudItem>
+
+    </MudGrid>
+    
     </MudPaper>
 
 
@@ -62,8 +71,8 @@
             <MudItem xs="8">
                 <MudGrid>
                     <MudItem xs="6">
-                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
-                            <MudImage Fluid="true" Src="/Images/HomePage/ServicesWater.png" Alt="DevelopImage"  Class="rounded-lg"/>
+                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 262px">
+                            <MudImage Fluid="true" Src="/Images/HomePage/ServicesWater.png" Alt="DevelopImage"  Class="rounded-lg" /> 
                             </MudPaper>
                     </MudItem>
                     <MudItem xs="6">
@@ -73,7 +82,7 @@
                     </MudItem>
                     
                     <MudItem xs="6">
-                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+                        <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 265px">
                             <MudImage Fluid="true" Src="/Images/HomePage/ServicesRaport.png" Alt="DevelopImage"  Class="rounded-lg"/>
                         </MudPaper>
                     </MudItem>
@@ -182,11 +191,11 @@
     <MudStack>
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Q&A</strong></MudText>
     </MudStack>
-        <MudStack>
-            <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
-                <MudText Align="Align.Left" Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Najczęstsze pytania</strong></MudText>
+    <MudStack>
+        <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
+            <MudText Align="Align.Left" Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Najczęstsze pytania</strong></MudText>
 
-                <MudStack Spacing="3">
+            <MudStack Spacing="3">
 
                 <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
                     <MudText > @((MarkupString)faq1.Replace(Environment.NewLine, "<br/>")) </MudText>
@@ -197,27 +206,29 @@
                 <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
                     <MudText > @((MarkupString)faq3.Replace(Environment.NewLine, "<br/>")) </MudText>
                 </MudPaper>
-                </MudStack>
+            </MudStack>
                 
-            </MudPaper>
+        </MudPaper>
             
-        </MudStack>
+    </MudStack>
    
     <MudStack>
         <MudPaper Class="pa-10" Style="margin-left: 30px; margin-right: 30px;">
-        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
-        <MudText > @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
-        <MudText Typo="Typo.h6">E-mail:</MudText>
-        <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined"></MudTextField>
-        <MudText Typo="Typo.h6">Treść wiadomości:</MudText>
-        <MudTextField ShrinkLabel @bind-Value="email" Label="Treść wiadomości" Variant="Variant.Outlined"></MudTextField>
-        <div class="d-flex align-center">
-            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                       Href="/">Wyślij</MudButton><!--Gdzie przekierować?-->
-        </div>
+            <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
+            <MudText > @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
+            <MudText Typo="Typo.h6">E-mail:</MudText>
+            <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined"></MudTextField>
+            <MudText Typo="Typo.h6">Treść wiadomości:</MudText>
+            <MudTextField ShrinkLabel @bind-Value="email" Label="Treść wiadomości" Variant="Variant.Outlined"></MudTextField>
+            <div class="d-flex align-center">
+                <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                           Href="">Wyślij</MudButton><!--Gdzie przekierować?-->
+            </div>
         </MudPaper>
     </MudStack>
 </div>
+
+</MudStack>
 
 @code
 {
