@@ -1,3 +1,5 @@
+@using System.ComponentModel.DataAnnotations
+
 @page "/changeDiet"
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana diety</strong></MudText>
@@ -14,7 +16,7 @@
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.h6">Która pozycję chcesz zmienić?</MudText>
                 <MudForm>
-                    <MudRadioGroup @bind-Value="SelectedOption">
+                    <MudRadioGroup @bind-Value="modelChangeDiet.SelectedOption">
                         <MudStack>
                             <MudRadio Value="@("Śniadanie")" Color="Color.Primary">Śniadanie</MudRadio>
                             <MudRadio Value="@("Drugie śniadanie")" Color="Color.Primary">Drugie śniadanie</MudRadio>
@@ -23,12 +25,14 @@
                             <MudRadio Value="@("Kolacja")" Color="Color.Primary">Kolacja</MudRadio>
                         </MudStack>
                     </MudRadioGroup>
+                    
                 </MudForm>
                 <div class="d-flex align-center">
-                    <MudText Class="ml-4">Wybrana opcja: @SelectedOption</MudText>
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               Href="/changeDiet/changeIngredientsInDiet">Zatwierdź</MudButton>
-                </div>
+                    <MudText Class="ml-4">Wybrana opcja: @modelChangeDiet.SelectedOption</MudText>
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                        Zatwierdź
+                    </MudButton> </div>
             </MudPaper>
         </MudStack>
     </MudItem>
@@ -45,6 +49,41 @@
 
 
 @code {
-public string TextValue { get; set; }
-public string SelectedOption { get; set; }
+//Model formularza,Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
+ChangeDietForm modelChangeDiet = new ChangeDietForm();
+bool success;
+    
+public class ChangeDietForm
+{
+    //Wymagania formularza required-wymagany
+    [Required(ErrorMessage = "Należy wybrać pozycję.")]
+    public string SelectedOption { get; set; }
+        
+}
+
+//Metoda sprawdzająca poprawnośc danych - czy nie są puste
+private bool ModelIsValid()
+{
+    return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
+}
+    
+[Inject]//Wstrzykuje instancję NavigationManager, która umożliwia nawigację do innych stron.
+private NavigationManager NavigationManager { get; set; }
+    
+//Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
+private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
+{
+    if (ModelIsValid())
+    {
+        success = true;
+        NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+
+    }
+    else
+    {
+        success = false;
+    }
+    StateHasChanged();
+}
+
 }
