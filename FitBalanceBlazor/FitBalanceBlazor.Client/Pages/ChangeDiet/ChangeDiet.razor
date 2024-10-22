@@ -4,51 +4,56 @@
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana diety</strong></MudText>
 
-<MudGrid>
-    <MudItem xs="6"> <!-- xs="liczba" oznacza ilośc kolum, zajmowanych przez element xs=12 cala szerokosc, 6 pol ...-->
-        <MudStack Spacing="3">
-            <!-- Sekcja dodawanie nazwy nowej diety -->
-            <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.h6">Dieta do zmieny:</MudText>   <!--dodanie z bazy albo jakoś inaczej zapmaiteany wybor poprzedniej strony-->
-            </MudPaper>
 
-            <!-- Sekcja wyboru dania do zmieny -->
-            <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.h6">Która pozycję chcesz zmienić?</MudText>
-                <MudForm>
-                    <MudRadioGroup @bind-Value="modelChangeDiet.SelectedOption">
-                        <MudStack>
-                            <MudRadio Value="@("Śniadanie")" Color="Color.Primary">Śniadanie</MudRadio>
-                            <MudRadio Value="@("Drugie śniadanie")" Color="Color.Primary">Drugie śniadanie</MudRadio>
-                            <MudRadio Value="@("Obiad")" Color="Color.Primary">Obiad</MudRadio>
-                            <MudRadio Value="@("Podwieczorek")" Color="Color.Primary">Podwieczorek</MudRadio>
-                            <MudRadio Value="@("Kolacja")" Color="Color.Primary">Kolacja</MudRadio>
-                        </MudStack>
-                    </MudRadioGroup>
+<EditForm Model="@modelChangeDiet" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="6"> <!-- xs="liczba" oznacza ilośc kolum, zajmowanych przez element xs=12 cala szerokosc, 6 pol ...-->
+            <MudStack Spacing="3">
+                <!-- Sekcja dodawanie nazwy nowej diety -->
+                <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                    <MudText Typo="Typo.h6">Dieta do zmieny:</MudText>   <!--dodanie z bazy albo jakoś inaczej zapmaiteany wybor poprzedniej strony-->
+                </MudPaper>
+
+                <!-- Sekcja wyboru dania do zmieny -->
+                <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                    <MudText Typo="Typo.h6">Która pozycję chcesz zmienić?</MudText>
+                    <MudForm>
+                        <MudRadioGroup @bind-Value="modelChangeDiet.SelectedOption">
+                            <MudStack>
+                                <MudRadio Value="@("Śniadanie")" Color="Color.Primary">Śniadanie</MudRadio>
+                                <MudRadio Value="@("Drugie śniadanie")" Color="Color.Primary">Drugie śniadanie</MudRadio>
+                                <MudRadio Value="@("Obiad")" Color="Color.Primary">Obiad</MudRadio>
+                                <MudRadio Value="@("Podwieczorek")" Color="Color.Primary">Podwieczorek</MudRadio>
+                                <MudRadio Value="@("Kolacja")" Color="Color.Primary">Kolacja</MudRadio>
+                            </MudStack>
+                        </MudRadioGroup>
                     
-                </MudForm>
-                <div class="d-flex align-center">
-                    <MudText Class="ml-4">Wybrana opcja: @modelChangeDiet.SelectedOption</MudText>
-                    <MudButton ButtonType="ButtonType.Submit"
-                               Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
-                        Zatwierdź
-                    </MudButton> </div>
-            </MudPaper>
-        </MudStack>
-    </MudItem>
+                    </MudForm>
+                    <div class="d-flex align-center">
+                        <MudText Class="ml-4">Wybrana opcja: @modelChangeDiet.SelectedOption</MudText>
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                            Zatwierdź
+                        </MudButton> </div>
+                </MudPaper>
+            </MudStack>
+        </MudItem>
 
-    <!-- Sekcja grafiki -->
-    <MudItem xs="6">
-        <MudCard Style="width:100%; position: relative;">
-            <MudCardMedia Image="https://img.freepik.com/free-photo/top-view-healthy-vs-unhealthy-concept_23-2148193159.jpg?t=st=1729008537~exp=1729012137~hmac=ca30860a96fe1f68d47ea34c3609ddd56c928eeb8052136aefe0b5bc0dbe73db&w=360" Height="500" />
+        <!-- Sekcja grafiki -->
+        <MudItem xs="6">
+            <MudCard Style="width:100%; position: relative;">
+                <MudCardMedia Image="https://img.freepik.com/free-photo/top-view-healthy-vs-unhealthy-concept_23-2148193159.jpg?t=st=1729008537~exp=1729012137~hmac=ca30860a96fe1f68d47ea34c3609ddd56c928eeb8052136aefe0b5bc0dbe73db&w=360" Height="500" />
 
-        </MudCard>
-    </MudItem>
-</MudGrid>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+    
+</EditForm>
 
 
 
-@code {
+    @code {
 //Model formularza,Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
 ChangeDietForm modelChangeDiet = new ChangeDietForm();
 bool success;
