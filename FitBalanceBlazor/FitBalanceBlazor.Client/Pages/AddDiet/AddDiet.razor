@@ -1,20 +1,23 @@
+@using System.ComponentModel.DataAnnotations
 @page "/addDiet"
 <PageTitle>Add diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
-<MudGrid>
-    <MudItem xs="6">
-        <MudStack Spacing="3">
-            <!-- Sekcja dodawanie nazwy nowej diety -->
-            <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.h6">Nazwa diety</MudText>
-                <MudTextField @bind-Value="DietName" Label="Wpisz nazwę diety" Variant="Variant.Text"></MudTextField>
-            </MudPaper>
 
-            <!-- Sekcja wyboru dania do dodania -->
-            <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.h6">Która pozycję chcesz dodać?</MudText>
-                <MudForm>
-                    <MudRadioGroup @bind-Value="SelectedOption">
+<EditForm Model="@modelAddDiet" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="6">
+            <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                <MudCardContent>
+                    <!-- Sekcja dodawanie nazwy nowej diety -->
+                    <MudText Typo="Typo.h6">Nazwa diety</MudText>
+                    <MudTextField @bind-Value="modelAddDiet.DietName" Label="Wpisz nazwę diety"
+                                  For="@(() => modelAddDiet.DietName)"
+                                  Required="true" RequiredError="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
+
+                    <!-- Sekcja wyboru dania do dodania -->
+                    <MudText Typo="Typo.h6">Która pozycję chcesz dodać?</MudText>
+                    <MudRadioGroup @bind-Value="modelAddDiet.SelectedOption" >
                         <MudStack>
                             <MudRadio Value="@("Śniadanie")" Color="Color.Primary">Śniadanie</MudRadio>
                             <MudRadio Value="@("Drugie śniadanie")" Color="Color.Primary">Drugie śniadanie</MudRadio>
@@ -23,45 +26,68 @@
                             <MudRadio Value="@("Kolacja")" Color="Color.Primary">Kolacja</MudRadio>
                         </MudStack>
                     </MudRadioGroup>
-                </MudForm>
-                <div class="d-flex align-center">
-                    <MudText Class="ml-4">Wybrana opcja: @SelectedOption</MudText>
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               Href="/addDiet/addIngredientsToNewDiet">Zatwierdź</MudButton>
-                </div>
-            </MudPaper>
-        </MudStack>
-    </MudItem>
+                    <MudText Color="Color.Error">
+                    <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage>
+                    </MudText>
+                    
+                    <div class="d-flex align-center">
+                        <MudText Class="ml-4">Wybrana opcja: @modelAddDiet.SelectedOption</MudText>
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                            Zatwierdź
+                        </MudButton>
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
 
-    <!-- Sekcja grafiki -->
-    <MudItem xs="6">
+        <!-- Sekcja grafiki -->
+        <MudItem xs="6">
 
-        <MudCard Style="width:100%; position: relative;">
-            <MudCardMedia Image="https://img.freepik.com/foto-gratis/manos-chef-cortando-verduras-su-cocina_155003-42435.jpg" Height="500"/>
+            <MudCard Style="width:100%; position: relative;">
+                <MudCardMedia Image="https://img.freepik.com/foto-gratis/manos-chef-cortando-verduras-su-cocina_155003-42435.jpg" Height="460"/>
 
-        </MudCard>
-    </MudItem>
-</MudGrid>
-
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
 
 @code {
-public string DietName { get; set; }
-public string SelectedOption { get; set; }
+    AddNewDietForm modelAddDiet = new AddNewDietForm();
+    bool success;
+    
+    public class AddNewDietForm
+    {
+        [Required(ErrorMessage = "Należy wprowadzić nazwę diety.")]
+        [StringLength(20, ErrorMessage = "Nazwa powinna być ne dłuższa niż 20 znaków.")]
+        public string DietName { get; set; }
+        
+        [Required(ErrorMessage = "Należy wybrać pozycję.")]
+        public string SelectedOption { get; set; }
+        
+    }
 
-// private MudForm? newDietForm;
-// private string nameNewDiet= "";
-// private string chosenItem= "";
+    private bool ModelIsValid()
+    {
+        return !string.IsNullOrEmpty(modelAddDiet.DietName) && !string.IsNullOrEmpty(modelAddDiet.SelectedOption);
+    }
+    
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+    private void OnValidSubmit(EditContext context)
+    {
+        if (ModelIsValid())
+        {
+            success = true;
+            NavigationManager.NavigateTo("/addDiet/addIngredientsToNewDiet");
+            
+        }
+        else
+        {
+            success = false;
+        }
+        StateHasChanged();
+    }
+    
 
-
-// private void formValuesOnNextPage()
-// {
-//     Navigation($"/addIngredientsToNewDiet/{DietName}");
-// }
-
-// private bool givenName = false;
-//
-// private Task onValidGivenName
-// {
-//     givenName=true;
-// }
 }
