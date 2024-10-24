@@ -1,0 +1,128 @@
+@page "/caloryCount"
+
+<!-- Заголовок страницы -->
+<MudText Typo="Typo.h1" Align="Align.Center" Style="text-transform: uppercase; font-weight: bold;">Wyliczanie Kalorii</MudText>
+
+<MudGrid Class="mt-5">
+    <!-- Левая секция - форма ввода данных -->
+    <MudItem xs="6">
+        <MudPaper Class="pa-5" Style="background-color: #E0FFB3; border-radius: 20px;">
+            <MudText Typo="Typo.h6" Style="font-weight: bold;">Wprowadź swoje dane</MudText>
+            <MudForm>
+                <!-- Ввод возраста -->
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudTextField Label="Wiek" @bind-Value="Age" Type="number" Style="width: 100%;" />
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.body1">lat</MudText>
+                    </MudItem>
+                </MudGrid>
+
+                <!-- Ввод пола -->
+                <MudText Typo="Typo.body1">Płeć:</MudText>
+                <MudRadioGroup @bind-Value="Gender" Class="mt-2">
+                    <MudRadio Value=@("kobieta")>Kobieta</MudRadio>
+                    <MudRadio Value=@("mężczyzna")>Mężczyzna</MudRadio>
+                </MudRadioGroup>
+
+                <!-- Ввод веса -->
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudTextField Label="Waga" @bind-Value="Weight" Type="number" Style="width: 100%;" />
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.body1">kg</MudText>
+                    </MudItem>
+                </MudGrid>
+
+                <!-- Ввод роста -->
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudTextField Label="Wzrost" @bind-Value="Height" Type="number" Style="width: 100%;" />
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudText Typo="Typo.body1">cm</MudText>
+                    </MudItem>
+                </MudGrid>
+
+                <!-- Уровень физической активности -->
+                <MudText Typo="Typo.body1">Aktywność fizyczna:</MudText>
+                <MudRadioGroup @bind-Value="ActivityLevel" Class="mt-2">
+                    <MudRadio Value=@("low")>Niska</MudRadio>
+                    <MudRadio Value=@("mid")>Średnia</MudRadio>
+                    <MudRadio Value=@("high")>Wysoka</MudRadio>
+                </MudRadioGroup>
+
+                <!-- Кнопка подтверждения -->
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="background-color: #FF986B; border-radius: 20px; margin-top: 20px;" OnClick="CalculateCalorie">
+                    Zatwierdź
+                </MudButton>
+            </MudForm>
+        </MudPaper>
+    </MudItem>
+
+    <!-- Правая секция - результат -->
+    <MudItem xs="6">
+        <MudPaper Class="pa-5" Style="border: 2px solid #DFF39C; border-radius: 20px;">
+            <MudText Typo="Typo.h6" Style="font-weight: bold;">Twoja dzienna norma kalorii:</MudText>
+
+            <!-- Калорийный круг -->
+            <div style="text-align: center; margin-top: 20px;">
+                <div style="border: 5px solid #FF986B; border-radius: 50%; width: 200px; height: 200px; display: inline-flex; align-items: center; justify-content: center;">
+                    <MudText Typo="Typo.h2" Style="color: #FF986B;">@Calories</MudText>
+                </div>
+                <MudText Typo="Typo.body1" Style="color: #FF986B;">kcal</MudText>
+            </div>
+
+            <!-- Макронутриенты -->
+            <MudGrid Class="mt-4">
+                <MudItem xs="4">
+                    <MudText Typo="Typo.body1">Białko</MudText>
+                    <MudText Typo="Typo.body2">@Protein g</MudText>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudText Typo="Typo.body1">Tłuszcze</MudText>
+                    <MudText Typo="Typo.body2">@Fat g</MudText>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudText Typo="Typo.body1">Węglowodany</MudText>
+                    <MudText Typo="Typo.body2">@Carbs g</MudText>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    public int Age { get; set; }
+    public string Gender { get; set; } = "kobieta";
+    public double Weight { get; set; }
+    public double Height { get; set; }
+    public string ActivityLevel { get; set; } = "low";
+
+    public double Calories { get; set; }
+    public double Protein { get; set; }
+    public double Fat { get; set; }
+    public double Carbs { get; set; }
+
+    private void CalculateCalorie()
+    {
+        double need = 0;
+
+        if (Gender == "kobieta")
+        {
+            need = 655 + (10 * Weight) + (6.25 * Height) - (5 * Age) - 161;
+        }
+        else
+        {
+            need = 66 + (10 * Weight) + (6.25 * Height) - (5 * Age) + 5;
+        }
+
+        Protein = need * 0.15 / 4;  // 15% białko
+        Carbs = need * 0.55 / 4;    // 55% węglowodany
+        Fat = need * 0.30 / 9;      // 30% tłuszcze
+
+        Calories = need;
+    }
+}
