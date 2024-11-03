@@ -18,7 +18,7 @@ public class DietService: IDietService
     /// <returns>List of diets</returns>
     public async Task<List<Dieta>> GetAllDietsAsync()
     {
-        return await _context.Diety.ToListAsync();
+        return await _context.Dieta.ToListAsync();
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class DietService: IDietService
     /// <returns>diet object</returns>
     public async Task<Dieta?> GetDietAsync(int dietId)
     {
-        var result = await _context.Diety.FindAsync(dietId);
+        var result = await _context.Dieta.FindAsync(dietId);
 
         
         return result;

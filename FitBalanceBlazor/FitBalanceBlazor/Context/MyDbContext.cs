@@ -16,33 +16,33 @@ public partial class MyDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Adres> Adresy { get; set; }
+    public virtual DbSet<Adres> Adres { get; set; }
 
-    public virtual DbSet<Danie> Dania { get; set; }
+    public virtual DbSet<Danie> Danie { get; set; }
 
-    public virtual DbSet<Dieta> Diety { get; set; }
+    public virtual DbSet<Dieta> Dieta { get; set; }
 
-    public virtual DbSet<Opinia> Opinie { get; set; }
+    public virtual DbSet<Opinia> Opinia { get; set; }
 
-    public virtual DbSet<PomiarWagi> PomiaryWagi { get; set; }
+    public virtual DbSet<Pomiar_wagi> Pomiar_wagi { get; set; }
 
-    public virtual DbSet<Pracownik> Pracownicy { get; set; }
+    public virtual DbSet<Pracownik> Pracownik { get; set; }
 
-    public virtual DbSet<Produkt> Produkty { get; set; }
+    public virtual DbSet<Produkt> Produkt { get; set; }
 
-    public virtual DbSet<ProduktDanie> ProduktDanie { get; set; }
+    public virtual DbSet<Produkt_Danie> Produkt_Danie { get; set; }
 
     public virtual DbSet<Programy> Programy { get; set; }
 
-    public virtual DbSet<PrzypisanaDieta> PrzypisaneDiety { get; set; }
+    public virtual DbSet<Przypisana_dieta> Przypisana_dieta { get; set; }
 
-    public virtual DbSet<Raport> Raporty { get; set; }
+    public virtual DbSet<Raport> Raport { get; set; }
 
-    public virtual DbSet<Rodzaj> Rodzaje { get; set; }
+    public virtual DbSet<Rodzaj> Rodzaj { get; set; }
 
-    public virtual DbSet<Uzytkownik> Uzytkownicy { get; set; }
+    public virtual DbSet<Uzytkownik> Uzytkownik { get; set; }
 
-    public virtual DbSet<WypitaWoda> WypitaWoda { get; set; }
+    public virtual DbSet<Wypita_woda> Wypita_woda { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -52,367 +52,239 @@ public partial class MyDbContext : DbContext
     {
         modelBuilder.Entity<Adres>(entity =>
         {
-            entity.HasKey(e => e.IdAdres).HasName("Adres_pk");
+            entity.HasKey(e => e.id_adres).HasName("Adres_pk");
 
-            entity.Property(e => e.IdAdres)
-                .ValueGeneratedNever()
-                .HasColumnName("id_adres");
-            entity.Property(e => e.IdPracownik).HasColumnName("id_pracownik");
-            entity.Property(e => e.KodPocztowy)
-                .HasColumnType("text")
-                .HasColumnName("kod_pocztowy");
-            entity.Property(e => e.Miasto)
-                .HasColumnType("text")
-                .HasColumnName("miasto");
-            entity.Property(e => e.NumerMieszkania)
-                .HasColumnType("text")
-                .HasColumnName("numer_mieszkania");
-            entity.Property(e => e.Ulica)
-                .HasColumnType("text")
-                .HasColumnName("ulica");
+            entity.Property(e => e.id_adres).ValueGeneratedNever();
+            entity.Property(e => e.kod_pocztowy).HasColumnType("text");
+            entity.Property(e => e.miasto).HasColumnType("text");
+            entity.Property(e => e.numer_mieszkania).HasColumnType("text");
+            entity.Property(e => e.ulica).HasColumnType("text");
 
-            entity.HasOne(d => d.IdPracownikNavigation).WithMany(p => p.Adres)
-                .HasForeignKey(d => d.IdPracownik)
+            entity.HasOne(d => d.id_pracownikNavigation).WithMany(p => p.Adres)
+                .HasForeignKey(d => d.id_pracownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Adres_Pracownik");
         });
 
         modelBuilder.Entity<Danie>(entity =>
         {
-            entity.HasKey(e => e.IdDanie).HasName("Danie_pk");
+            entity.HasKey(e => e.id_danie).HasName("Danie_pk");
 
-            entity.ToTable("Danie");
+            entity.Property(e => e.id_danie).ValueGeneratedNever();
+            entity.Property(e => e.nazwa).HasColumnType("text");
 
-            entity.Property(e => e.IdDanie)
-                .ValueGeneratedNever()
-                .HasColumnName("id_danie");
-            entity.Property(e => e.Kalorie).HasColumnName("kalorie");
-            entity.Property(e => e.Nazwa)
-                .HasColumnType("text")
-                .HasColumnName("nazwa");
-
-            entity.HasMany(d => d.DietaIdDieta).WithMany(p => p.DanieIdDanie)
+            entity.HasMany(d => d.Dieta_id_dieta).WithMany(p => p.Danie_id_danie)
                 .UsingEntity<Dictionary<string, object>>(
-                    "DietaDanie",
+                    "Dieta_Danie",
                     r => r.HasOne<Dieta>().WithMany()
-                        .HasForeignKey("DietaIdDieta")
+                        .HasForeignKey("Dieta_id_dieta")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("Dieta_Danie_Dieta"),
                     l => l.HasOne<Danie>().WithMany()
-                        .HasForeignKey("DanieIdDanie")
+                        .HasForeignKey("Danie_id_danie")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("Dieta_Danie_Danie"),
                     j =>
                     {
-                        j.HasKey("DanieIdDanie", "DietaIdDieta").HasName("Dieta_Danie_pk");
-                        j.ToTable("Dieta_Danie");
-                        j.IndexerProperty<int>("DanieIdDanie").HasColumnName("Danie_id_danie");
-                        j.IndexerProperty<int>("DietaIdDieta").HasColumnName("Dieta_id_dieta");
+                        j.HasKey("Danie_id_danie", "Dieta_id_dieta").HasName("Dieta_Danie_pk");
                     });
         });
 
         modelBuilder.Entity<Dieta>(entity =>
         {
-            entity.HasKey(e => e.IdDieta).HasName("Dieta_pk");
+            entity.HasKey(e => e.id_dieta).HasName("Dieta_pk");
 
-            entity.Property(e => e.IdDieta)
-                .ValueGeneratedNever()
-                .HasColumnName("id_dieta");
-            entity.Property(e => e.Autor).HasColumnName("autor");
-            entity.Property(e => e.Kalorycznosc).HasColumnName("kalorycznosc");
-            entity.Property(e => e.Nazwa)
-                .HasColumnType("text")
-                .HasColumnName("nazwa");
-            entity.Property(e => e.Opis)
-                .HasColumnType("text")
-                .HasColumnName("opis");
-            entity.Property(e => e.Rodzaj).HasColumnName("rodzaj");
+            entity.Property(e => e.id_dieta).ValueGeneratedNever();
+            entity.Property(e => e.nazwa).HasColumnType("text");
+            entity.Property(e => e.opis).HasColumnType("text");
 
-            entity.HasOne(d => d.AutorNavigation).WithMany(p => p.Dieta)
-                .HasForeignKey(d => d.Autor)
+            entity.HasOne(d => d.autorNavigation).WithMany(p => p.Dieta)
+                .HasForeignKey(d => d.autor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Dieta_Pracownik");
 
-            entity.HasOne(d => d.RodzajNavigation).WithMany(p => p.Dieta)
-                .HasForeignKey(d => d.Rodzaj)
+            entity.HasOne(d => d.rodzajNavigation).WithMany(p => p.Dieta)
+                .HasForeignKey(d => d.rodzaj)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Dieta_Rodzaj");
 
-            entity.HasMany(d => d.IdProdukt).WithMany(p => p.IdDieta)
+            entity.HasMany(d => d.id_produkt).WithMany(p => p.id_dieta)
                 .UsingEntity<Dictionary<string, object>>(
-                    "ProduktDietum",
+                    "Produkt_Dieta",
                     r => r.HasOne<Produkt>().WithMany()
-                        .HasForeignKey("IdProdukt")
+                        .HasForeignKey("id_produkt")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("Table_17_Produkt"),
                     l => l.HasOne<Dieta>().WithMany()
-                        .HasForeignKey("IdDieta")
+                        .HasForeignKey("id_dieta")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("Table_17_Dieta"),
                     j =>
                     {
-                        j.HasKey("IdDieta", "IdProdukt").HasName("Produkt_Dieta_pk");
-                        j.ToTable("Produkt_Dieta");
-                        j.IndexerProperty<int>("IdDieta").HasColumnName("id_dieta");
-                        j.IndexerProperty<int>("IdProdukt").HasColumnName("id_produkt");
+                        j.HasKey("id_dieta", "id_produkt").HasName("Produkt_Dieta_pk");
                     });
         });
 
         modelBuilder.Entity<Opinia>(entity =>
         {
-            entity.HasKey(e => e.IdOpinia).HasName("Opinia_pk");
+            entity.HasKey(e => e.id_opinia).HasName("Opinia_pk");
 
-            entity.Property(e => e.IdOpinia)
-                .ValueGeneratedNever()
-                .HasColumnName("id_opinia");
-            entity.Property(e => e.Data).HasColumnName("data");
-            entity.Property(e => e.IdDieta).HasColumnName("id_dieta");
-            entity.Property(e => e.IdUzytkownik).HasColumnName("id_uzytkownik");
-            entity.Property(e => e.Ocena).HasColumnName("ocena");
-            entity.Property(e => e.Zawartosc)
-                .HasColumnType("text")
-                .HasColumnName("zawartosc");
+            entity.Property(e => e.id_opinia).ValueGeneratedNever();
+            entity.Property(e => e.zawartosc).HasColumnType("text");
 
-            entity.HasOne(d => d.IdDietaNavigation).WithMany(p => p.Opinia)
-                .HasForeignKey(d => d.IdDieta)
+            entity.HasOne(d => d.id_dietaNavigation).WithMany(p => p.Opinia)
+                .HasForeignKey(d => d.id_dieta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Opinia_Dieta");
 
-            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.Opinia)
-                .HasForeignKey(d => d.IdUzytkownik)
+            entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Opinia)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Opinia_Uzytkownik");
         });
 
-        modelBuilder.Entity<PomiarWagi>(entity =>
+        modelBuilder.Entity<Pomiar_wagi>(entity =>
         {
-            entity.HasKey(e => e.IdPomiar).HasName("Pomiar_wagi_pk");
+            entity.HasKey(e => e.id_pomiar).HasName("Pomiar_wagi_pk");
 
-            entity.ToTable("Pomiar_wagi");
+            entity.Property(e => e.id_pomiar).ValueGeneratedNever();
 
-            entity.Property(e => e.IdPomiar)
-                .ValueGeneratedNever()
-                .HasColumnName("id_pomiar");
-            entity.Property(e => e.Data).HasColumnName("data");
-            entity.Property(e => e.IdUzytkownik).HasColumnName("id_uzytkownik");
-            entity.Property(e => e.Waga).HasColumnName("waga");
-
-            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.PomiarWagi)
-                .HasForeignKey(d => d.IdUzytkownik)
+            entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Pomiar_wagi)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Pomiar_Wagi_Uzytkownik");
         });
 
         modelBuilder.Entity<Pracownik>(entity =>
         {
-            entity.HasKey(e => e.IdPracownik).HasName("Pracownik_pk");
+            entity.HasKey(e => e.id_pracownik).HasName("Pracownik_pk");
 
-            entity.ToTable("Pracownik");
+            entity.Property(e => e.id_pracownik).ValueGeneratedNever();
+            entity.Property(e => e.imie).HasColumnType("text");
+            entity.Property(e => e.nazwisko).HasColumnType("text");
+            entity.Property(e => e.numer_telefonu).HasColumnType("text");
+            entity.Property(e => e.stanowisko).HasColumnType("text");
 
-            entity.Property(e => e.IdPracownik)
-                .ValueGeneratedNever()
-                .HasColumnName("id_pracownik");
-            entity.Property(e => e.DataUrodzenia).HasColumnName("data_urodzenia");
-            entity.Property(e => e.IdUzytkownik).HasColumnName("id_uzytkownik");
-            entity.Property(e => e.Imie)
-                .HasColumnType("text")
-                .HasColumnName("imie");
-            entity.Property(e => e.Nazwisko)
-                .HasColumnType("text")
-                .HasColumnName("nazwisko");
-            entity.Property(e => e.NumerTelefonu)
-                .HasColumnType("text")
-                .HasColumnName("numer_telefonu");
-            entity.Property(e => e.Stanowisko)
-                .HasColumnType("text")
-                .HasColumnName("stanowisko");
-
-            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.Pracownicy)
-                .HasForeignKey(d => d.IdUzytkownik)
+            entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Pracownik)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Pracownik_Uzytkownik");
         });
 
         modelBuilder.Entity<Produkt>(entity =>
         {
-            entity.HasKey(e => e.IdProdukt).HasName("Produkt_pk");
+            entity.HasKey(e => e.id_produkt).HasName("Produkt_pk");
 
-            entity.ToTable("Produkt");
-
-            entity.Property(e => e.IdProdukt)
-                .ValueGeneratedNever()
-                .HasColumnName("id_produkt");
-            entity.Property(e => e.Nazwa)
-                .HasColumnType("text")
-                .HasColumnName("nazwa");
+            entity.Property(e => e.id_produkt).ValueGeneratedNever();
+            entity.Property(e => e.nazwa).HasColumnType("text");
         });
 
-        modelBuilder.Entity<ProduktDanie>(entity =>
+        modelBuilder.Entity<Produkt_Danie>(entity =>
         {
-            entity.HasKey(e => new { e.IdProdukt, e.IdDanie }).HasName("Produkt_Danie_pk");
+            entity.HasKey(e => new { e.id_produkt, e.id_danie }).HasName("Produkt_Danie_pk");
 
-            entity.ToTable("Produkt_Danie");
-
-            entity.Property(e => e.IdProdukt).HasColumnName("id_produkt");
-            entity.Property(e => e.IdDanie).HasColumnName("id_danie");
-            entity.Property(e => e.Ilosc).HasColumnName("ilosc");
-
-            entity.HasOne(d => d.IdDanieNavigation).WithMany(p => p.ProduktDanie)
-                .HasForeignKey(d => d.IdDanie)
+            entity.HasOne(d => d.id_danieNavigation).WithMany(p => p.Produkt_Danie)
+                .HasForeignKey(d => d.id_danie)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Table_19_Danie");
 
-            entity.HasOne(d => d.IdProduktNavigation).WithMany(p => p.ProduktDanie)
-                .HasForeignKey(d => d.IdProdukt)
+            entity.HasOne(d => d.id_produktNavigation).WithMany(p => p.Produkt_Danie)
+                .HasForeignKey(d => d.id_produkt)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Table_19_Produkt");
         });
 
         modelBuilder.Entity<Programy>(entity =>
         {
-            entity.HasKey(e => e.IdProgram).HasName("Program_pk");
+            entity.HasKey(e => e.id_program).HasName("Program_pk");
 
-            entity.ToTable("Program");
-
-            entity.Property(e => e.IdProgram)
-                .ValueGeneratedNever()
-                .HasColumnName("id_program");
-            entity.Property(e => e.Nazwa)
-                .HasColumnType("text")
-                .HasColumnName("nazwa");
+            entity.Property(e => e.id_program).ValueGeneratedNever();
+            entity.Property(e => e.nazwa).HasColumnType("text");
         });
 
-        modelBuilder.Entity<PrzypisanaDieta>(entity =>
+        modelBuilder.Entity<Przypisana_dieta>(entity =>
         {
-            entity.HasKey(e => e.IdPrzypisanaDieta).HasName("Przypisana_dieta_pk");
+            entity.HasKey(e => e.id_przypisana_dieta).HasName("Przypisana_dieta_pk");
 
-            entity.ToTable("Przypisana_dieta");
+            entity.Property(e => e.id_przypisana_dieta).ValueGeneratedNever();
 
-            entity.Property(e => e.IdPrzypisanaDieta)
-                .ValueGeneratedNever()
-                .HasColumnName("id_przypisana_dieta");
-            entity.Property(e => e.IdDieta).HasColumnName("id_dieta");
-            entity.Property(e => e.IdProgram).HasColumnName("id_program");
-            entity.Property(e => e.IdUzytkownik).HasColumnName("id_uzytkownik");
-
-            entity.HasOne(d => d.IdDietaNavigation).WithMany(p => p.PrzypisanaDieta)
-                .HasForeignKey(d => d.IdDieta)
+            entity.HasOne(d => d.id_dietaNavigation).WithMany(p => p.Przypisana_dieta)
+                .HasForeignKey(d => d.id_dieta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Przypisana_dieta_Dieta");
 
-            entity.HasOne(d => d.IdProgramyNavigation).WithMany(p => p.PrzypisanaDieta)
-                .HasForeignKey(d => d.IdProgram)
+            entity.HasOne(d => d.id_programNavigation).WithMany(p => p.Przypisana_dieta)
+                .HasForeignKey(d => d.id_program)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Przypisana_dieta_Program");
 
-            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.PrzypisanaDieta)
-                .HasForeignKey(d => d.IdUzytkownik)
+            entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Przypisana_dieta)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Przypisana_dieta_Uzytkownik");
 
-            entity.HasMany(d => d.IdDanie).WithMany(p => p.IdPrzypisanaDieta)
+            entity.HasMany(d => d.id_danie).WithMany(p => p.id_przypisana_dieta)
                 .UsingEntity<Dictionary<string, object>>(
-                    "PrzypisanaDietaDanie",
+                    "Przypisana_dieta_Danie",
                     r => r.HasOne<Danie>().WithMany()
-                        .HasForeignKey("IdDanie")
+                        .HasForeignKey("id_danie")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("Table_18_Danie"),
-                    l => l.HasOne<PrzypisanaDieta>().WithMany()
-                        .HasForeignKey("IdPrzypisanaDieta")
+                    l => l.HasOne<Przypisana_dieta>().WithMany()
+                        .HasForeignKey("id_przypisana_dieta")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("Table_18_Przypisana_dieta"),
                     j =>
                     {
-                        j.HasKey("IdPrzypisanaDieta", "IdDanie").HasName("Przypisana_dieta_Danie_pk");
-                        j.ToTable("Przypisana_dieta_Danie");
-                        j.IndexerProperty<int>("IdPrzypisanaDieta").HasColumnName("id_przypisana_dieta");
-                        j.IndexerProperty<int>("IdDanie").HasColumnName("id_danie");
+                        j.HasKey("id_przypisana_dieta", "id_danie").HasName("Przypisana_dieta_Danie_pk");
                     });
         });
 
         modelBuilder.Entity<Raport>(entity =>
         {
-            entity.HasKey(e => e.IdRaport).HasName("Raport_pk");
+            entity.HasKey(e => e.id_raport).HasName("Raport_pk");
 
-            entity.ToTable("Raport");
+            entity.Property(e => e.id_raport).ValueGeneratedNever();
 
-            entity.Property(e => e.IdRaport)
-                .ValueGeneratedNever()
-                .HasColumnName("id_raport");
-            entity.Property(e => e.Data).HasColumnName("data");
-            entity.Property(e => e.Dieta).HasColumnName("dieta");
-            entity.Property(e => e.Uzytkownik).HasColumnName("uzytkownik");
-
-            entity.HasOne(d => d.DietaNavigation).WithMany(p => p.Raporty)
-                .HasForeignKey(d => d.Dieta)
+            entity.HasOne(d => d.dietaNavigation).WithMany(p => p.Raport)
+                .HasForeignKey(d => d.dieta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Raport_Dieta");
 
-            entity.HasOne(d => d.UzytkownikNavigation).WithMany(p => p.Raporty)
-                .HasForeignKey(d => d.Uzytkownik)
+            entity.HasOne(d => d.uzytkownikNavigation).WithMany(p => p.Raport)
+                .HasForeignKey(d => d.uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Raport_Uzytkownik");
         });
 
         modelBuilder.Entity<Rodzaj>(entity =>
         {
-            entity.HasKey(e => e.IdRodzaj).HasName("Rodzaj_pk");
+            entity.HasKey(e => e.id_rodzaj).HasName("Rodzaj_pk");
 
-            entity.ToTable("Rodzaj");
-
-            entity.Property(e => e.IdRodzaj)
-                .ValueGeneratedNever()
-                .HasColumnName("id_rodzaj");
-            entity.Property(e => e.Nazwa)
-                .HasColumnType("text")
-                .HasColumnName("nazwa");
+            entity.Property(e => e.id_rodzaj).ValueGeneratedNever();
+            entity.Property(e => e.nazwa).HasColumnType("text");
         });
 
         modelBuilder.Entity<Uzytkownik>(entity =>
         {
-            entity.HasKey(e => e.IdUzytkownik).HasName("Uzytkownik_pk");
+            entity.HasKey(e => e.id_uzytkownik).HasName("Uzytkownik_pk");
 
-            entity.ToTable("Uzytkownik");
-
-            entity.Property(e => e.IdUzytkownik)
-                .ValueGeneratedNever()
-                .HasColumnName("id_uzytkownik");
-            entity.Property(e => e.DataUrodzenia).HasColumnName("data_urodzenia");
-            entity.Property(e => e.Email)
-                .HasColumnType("text")
-                .HasColumnName("email");
-            entity.Property(e => e.HasloHashed)
-                .HasColumnType("text")
-                .HasColumnName("haslo_hashed");
-            entity.Property(e => e.HasloSalt)
-                .HasColumnType("text")
-                .HasColumnName("haslo_salt");
-            entity.Property(e => e.Plec)
-                .HasColumnType("text")
-                .HasColumnName("plec");
-            entity.Property(e => e.Pseudonim)
-                .HasColumnType("text")
-                .HasColumnName("pseudonim");
-            entity.Property(e => e.Waga).HasColumnName("waga");
-            entity.Property(e => e.Wzrost).HasColumnName("wzrost");
-            entity.Property(e => e.ZapotrzebowanieKaloryczne).HasColumnName("zapotrzebowanie_kaloryczne");
+            entity.Property(e => e.id_uzytkownik).ValueGeneratedNever();
+            entity.Property(e => e.email).HasColumnType("text");
+            entity.Property(e => e.haslo_hashed).HasColumnType("text");
+            entity.Property(e => e.haslo_salt).HasColumnType("text");
+            entity.Property(e => e.plec).HasColumnType("text");
+            entity.Property(e => e.pseudonim).HasColumnType("text");
         });
 
-        modelBuilder.Entity<WypitaWoda>(entity =>
+        modelBuilder.Entity<Wypita_woda>(entity =>
         {
-            entity.HasKey(e => e.IdWypitaWoda).HasName("Wypita_woda_pk");
+            entity.HasKey(e => e.id_wypita_woda).HasName("Wypita_woda_pk");
 
-            entity.ToTable("Wypita_woda");
+            entity.Property(e => e.id_wypita_woda).ValueGeneratedNever();
 
-            entity.Property(e => e.IdWypitaWoda)
-                .ValueGeneratedNever()
-                .HasColumnName("id_wypita_woda");
-            entity.Property(e => e.Data).HasColumnName("data");
-            entity.Property(e => e.IdUzytkownik).HasColumnName("id_uzytkownik");
-            entity.Property(e => e.Ilosc).HasColumnName("ilosc");
-
-            entity.HasOne(d => d.IdUzytkownikNavigation).WithMany(p => p.WypitaWoda)
-                .HasForeignKey(d => d.IdUzytkownik)
+            entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Wypita_woda)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Wypita_Woda_Uzytkownik");
         });

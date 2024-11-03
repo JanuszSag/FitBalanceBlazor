@@ -5,23 +5,23 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Pracownik
 {
-    public int IdPracownik { get; set; }
+    public int id_pracownik { get; set; }
 
-    public string Imie { get; set; } = null!;
+    public string imie { get; set; } = null!;
 
-    public string Nazwisko { get; set; } = null!;
+    public string nazwisko { get; set; } = null!;
 
-    public DateOnly DataUrodzenia { get; set; }
+    public DateOnly data_urodzenia { get; set; }
 
-    public string NumerTelefonu { get; set; } = null!;
+    public string numer_telefonu { get; set; } = null!;
 
-    public string Stanowisko { get; set; } = null!;
+    public string stanowisko { get; set; } = null!;
 
-    public int IdUzytkownik { get; set; }
+    public int id_uzytkownik { get; set; }
 
     public virtual ICollection<Adres> Adres { get; set; } = new List<Adres>();
 
     public virtual ICollection<Dieta> Dieta { get; set; } = new List<Dieta>();
 
-    public virtual Uzytkownik IdUzytkownikNavigation { get; set; } = null!;
+    public virtual Uzytkownik id_uzytkownikNavigation { get; set; } = null!;
 }
