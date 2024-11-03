@@ -5,35 +5,35 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Uzytkownik
 {
-    public int id_uzytkownik { get; set; }
+    public int IdUzytkownik { get; set; }
 
-    public string pseudonim { get; set; } = null!;
+    public string Pseudonim { get; set; } = null!;
 
-    public string email { get; set; } = null!;
+    public string Email { get; set; } = null!;
 
-    public DateOnly data_urodzenia { get; set; }
+    public DateOnly DataUrodzenia { get; set; }
 
-    public string plec { get; set; } = null!;
+    public string Plec { get; set; } = null!;
 
-    public int wzrost { get; set; }
+    public int Wzrost { get; set; }
 
-    public int waga { get; set; }
+    public int Waga { get; set; }
 
-    public int zapotrzebowanie_kaloryczne { get; set; }
+    public int ZapotrzebowanieKaloryczne { get; set; }
 
-    public string haslo_hashed { get; set; } = null!;
+    public string HasloHashed { get; set; } = null!;
 
-    public string haslo_salt { get; set; } = null!;
+    public string HasloSalt { get; set; } = null!;
 
     public virtual ICollection<Opinia> Opinia { get; set; } = new List<Opinia>();
 
-    public virtual ICollection<Pomiar_wagi> Pomiar_wagi { get; set; } = new List<Pomiar_wagi>();
+    public virtual ICollection<PomiarWagi> PomiarWagi { get; set; } = new List<PomiarWagi>();
 
-    public virtual ICollection<Pracownik> Pracownik { get; set; } = new List<Pracownik>();
+    public virtual ICollection<Pracownik> Pracownicy { get; set; } = new List<Pracownik>();
 
-    public virtual ICollection<Przypisana_dieta> Przypisana_dieta { get; set; } = new List<Przypisana_dieta>();
+    public virtual ICollection<PrzypisanaDieta> PrzypisanaDieta { get; set; } = new List<PrzypisanaDieta>();
 
-    public virtual ICollection<Raport> Raport { get; set; } = new List<Raport>();
+    public virtual ICollection<Raport> Raporty { get; set; } = new List<Raport>();
 
-    public virtual ICollection<Wypita_woda> Wypita_woda { get; set; } = new List<Wypita_woda>();
+    public virtual ICollection<WypitaWoda> WypitaWoda { get; set; } = new List<WypitaWoda>();
 }

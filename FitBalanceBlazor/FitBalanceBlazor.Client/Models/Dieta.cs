@@ -5,29 +5,29 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Dieta
 {
-    public int id_dieta { get; set; }
+    public int IdDieta { get; set; }
 
-    public string nazwa { get; set; } = null!;
+    public string Nazwa { get; set; } = null!;
 
-    public string? opis { get; set; }
+    public string? Opis { get; set; }
 
-    public int kalorycznosc { get; set; }
+    public int Kalorycznosc { get; set; }
 
-    public int autor { get; set; }
+    public int Autor { get; set; }
 
-    public int rodzaj { get; set; }
+    public int Rodzaj { get; set; }
+
+    public virtual Pracownik AutorNavigation { get; set; } = null!;
 
     public virtual ICollection<Opinia> Opinia { get; set; } = new List<Opinia>();
 
-    public virtual ICollection<Przypisana_dieta> Przypisana_dieta { get; set; } = new List<Przypisana_dieta>();
+    public virtual ICollection<PrzypisanaDieta> PrzypisanaDieta { get; set; } = new List<PrzypisanaDieta>();
 
-    public virtual ICollection<Raport> Raport { get; set; } = new List<Raport>();
+    public virtual ICollection<Raport> Raporty { get; set; } = new List<Raport>();
 
-    public virtual Pracownik autorNavigation { get; set; } = null!;
+    public virtual Rodzaj RodzajNavigation { get; set; } = null!;
 
-    public virtual Rodzaj rodzajNavigation { get; set; } = null!;
+    public virtual ICollection<Danie> DanieIdDanie { get; set; } = new List<Danie>();
 
-    public virtual ICollection<Danie> Danie_id_danie { get; set; } = new List<Danie>();
-
-    public virtual ICollection<Produkt> id_produkt { get; set; } = new List<Produkt>();
+    public virtual ICollection<Produkt> IdProdukt { get; set; } = new List<Produkt>();
 }

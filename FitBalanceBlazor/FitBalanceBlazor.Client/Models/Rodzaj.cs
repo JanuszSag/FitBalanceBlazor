@@ -5,9 +5,9 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Rodzaj
 {
-    public int id_rodzaj { get; set; }
+    public int IdRodzaj { get; set; }
 
-    public string nazwa { get; set; } = null!;
+    public string Nazwa { get; set; } = null!;
 
     public virtual ICollection<Dieta> Dieta { get; set; } = new List<Dieta>();
 }

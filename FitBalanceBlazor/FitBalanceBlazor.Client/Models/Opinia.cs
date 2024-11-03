@@ -5,19 +5,19 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Opinia
 {
-    public int id_opinia { get; set; }
+    public int IdOpinia { get; set; }
 
-    public int ocena { get; set; }
+    public int Ocena { get; set; }
 
-    public string zawartosc { get; set; } = null!;
+    public string Zawartosc { get; set; } = null!;
 
-    public DateOnly data { get; set; }
+    public DateOnly Data { get; set; }
 
-    public int id_uzytkownik { get; set; }
+    public int IdUzytkownik { get; set; }
 
-    public int id_dieta { get; set; }
+    public int IdDieta { get; set; }
 
-    public virtual Dieta id_dietaNavigation { get; set; } = null!;
+    public virtual Dieta IdDietaNavigation { get; set; } = null!;
 
-    public virtual Uzytkownik id_uzytkownikNavigation { get; set; } = null!;
+    public virtual Uzytkownik IdUzytkownikNavigation { get; set; } = null!;
 }

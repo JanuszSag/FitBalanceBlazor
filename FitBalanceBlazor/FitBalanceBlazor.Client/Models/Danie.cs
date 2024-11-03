@@ -5,15 +5,15 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Danie
 {
-    public int id_danie { get; set; }
+    public int IdDanie { get; set; }
 
-    public string nazwa { get; set; } = null!;
+    public string Nazwa { get; set; } = null!;
 
-    public int kalorie { get; set; }
+    public int Kalorie { get; set; }
 
-    public virtual ICollection<Produkt_Danie> Produkt_Danie { get; set; } = new List<Produkt_Danie>();
+    public virtual ICollection<ProduktDanie> ProduktDanie { get; set; } = new List<ProduktDanie>();
 
-    public virtual ICollection<Dieta> Dieta_id_dieta { get; set; } = new List<Dieta>();
+    public virtual ICollection<Dieta> DietaIdDieta { get; set; } = new List<Dieta>();
 
-    public virtual ICollection<Przypisana_dieta> id_przypisana_dieta { get; set; } = new List<Przypisana_dieta>();
+    public virtual ICollection<PrzypisanaDieta> IdPrzypisanaDieta { get; set; } = new List<PrzypisanaDieta>();
 }
