@@ -19,4 +19,10 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*"/>
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Folder Include="Context\" />
+      <Folder Include="Models\" />
+    </ItemGroup>
+
 </Project>

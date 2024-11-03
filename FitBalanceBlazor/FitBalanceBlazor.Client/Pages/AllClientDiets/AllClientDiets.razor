@@ -1,6 +1,31 @@
 @page "/allClientDiets"
+@using FitBalanceBlazor.Models
+@inject HttpClient Http
+
+
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
 
+<MudTable Items="@diety">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Nazwa</MudTh>
+        <MudTh>Kaloryczność</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.id_dieta</MudTd>
+        <MudTd DataLabel="Nazwa">@context.nazwa</MudTd>
+        <MudTd DataLabel="Kalorycznosc">@context.kalorycznosc</MudTd>
+    </RowTemplate>
+</MudTable>
+
+
 @code
-{}
+{
+    private List<Dieta> diety;
+
+    protected override async Task OnInitializedAsync()
+    {
+        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+    }
+}

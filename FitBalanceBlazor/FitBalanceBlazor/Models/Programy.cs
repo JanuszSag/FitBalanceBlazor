@@ -5,9 +5,9 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Programy
 {
-    public int IdProgram { get; set; }
+    public int id_program { get; set; }
 
-    public string Nazwa { get; set; } = null!;
+    public string nazwa { get; set; } = null!;
 
-    public virtual ICollection<PrzypisanaDieta> PrzypisanaDieta { get; set; } = new List<PrzypisanaDieta>();
+    public virtual ICollection<Przypisana_dieta> Przypisana_dieta { get; set; } = new List<Przypisana_dieta>();
 }

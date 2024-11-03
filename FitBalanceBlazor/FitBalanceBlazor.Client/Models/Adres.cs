@@ -5,17 +5,17 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Adres
 {
-    public int IdAdres { get; set; }
+    public int id_adres { get; set; }
 
-    public int IdPracownik { get; set; }
+    public int id_pracownik { get; set; }
 
-    public string Miasto { get; set; } = null!;
+    public string miasto { get; set; } = null!;
 
-    public string Ulica { get; set; } = null!;
+    public string ulica { get; set; } = null!;
 
-    public string NumerMieszkania { get; set; } = null!;
+    public string numer_mieszkania { get; set; } = null!;
 
-    public string KodPocztowy { get; set; } = null!;
+    public string kod_pocztowy { get; set; } = null!;
 
-    public virtual Pracownik IdPracownikNavigation { get; set; } = null!;
+    public virtual Pracownik id_pracownikNavigation { get; set; } = null!;
 }

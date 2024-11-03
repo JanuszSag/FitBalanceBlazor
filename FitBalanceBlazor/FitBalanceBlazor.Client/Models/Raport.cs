@@ -5,15 +5,15 @@ namespace FitBalanceBlazor.Models;
 
 public partial class Raport
 {
-    public int IdRaport { get; set; }
+    public int id_raport { get; set; }
 
-    public DateOnly Data { get; set; }
+    public DateOnly data { get; set; }
 
-    public int Uzytkownik { get; set; }
+    public int uzytkownik { get; set; }
 
-    public int Dieta { get; set; }
+    public int dieta { get; set; }
 
-    public virtual Dieta DietaNavigation { get; set; } = null!;
+    public virtual Dieta dietaNavigation { get; set; } = null!;
 
-    public virtual Uzytkownik UzytkownikNavigation { get; set; } = null!;
+    public virtual Uzytkownik uzytkownikNavigation { get; set; } = null!;
 }
