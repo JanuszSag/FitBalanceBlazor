@@ -17,6 +17,7 @@
         </PackageReference>
         <ProjectReference Include="..\FitBalanceBlazor.Client\FitBalanceBlazor.Client.csproj"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*"/>
+        <ProjectReference Include="..\Shared\Shared\Shared.csproj" />
     </ItemGroup>
 
 
