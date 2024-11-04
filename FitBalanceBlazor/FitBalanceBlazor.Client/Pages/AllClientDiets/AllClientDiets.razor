@@ -6,6 +6,19 @@
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
 
+<!-- Sekcja pojedyńczego elementu listy diet -->
+
+<!--petla-->
+<MudText  Typo="Typo.h6" Style="text-transform: uppercase;"><strong>nazwa</strong></MudText>
+<MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+    <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround">
+    <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Śniadanie </strong></MudText></MudItem>
+    <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Obiad </strong></MudText></MudItem>
+    <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Kolacja</strong></MudText></MudItem>
+    </MudStack>
+</MudPaper>
+
+
 <MudTable Items="@diety">
     <HeaderContent>
         <MudTh>Id</MudTh>
@@ -18,7 +31,6 @@
         <MudTd DataLabel="Kalorycznosc">@context.kalorycznosc</MudTd>
     </RowTemplate>
 </MudTable>
-
 
 @code
 {
