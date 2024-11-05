@@ -9,28 +9,57 @@
 <!-- Sekcja pojedyńczego elementu listy diet -->
 
 <!--petla-->
-<MudText  Typo="Typo.h6" Style="text-transform: uppercase;"><strong>nazwa</strong></MudText>
-<MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-    <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround">
-    <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Śniadanie </strong></MudText></MudItem>
-    <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Obiad </strong></MudText></MudItem>
-    <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Kolacja</strong></MudText></MudItem>
-    </MudStack>
-</MudPaper>
+@* <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;"> *@
+@* *@
+@*     <MudStack Row="true" Spacing="2" Justify="Justify.SpaceAround"> *@
+@* *@
+@*         <MudListItem> *@
+@*             <MudText  Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@diety.n</strong></MudText> *@
+@*             <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Śniadanie </strong></MudText></MudItem> *@
+@*             <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Obiad </strong></MudText></MudItem> *@
+@*             <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>Kolacja</strong></MudText></MudItem> *@
+@*         </MudListItem> *@
+@* *@
+@*     </MudStack> *@
+@* </MudPaper> *@
 
+
+@* <MudStack> *@
+@*     @foreach (var d in diety) *@
+@*     { *@
+@*     <MudItem xs="6"><MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@d.nazwa </strong></MudText></MudItem> *@
+@*     } *@
+@* </MudStack> *@
 
 <MudTable Items="@diety">
     <HeaderContent>
-        <MudTh>Id</MudTh>
         <MudTh>Nazwa</MudTh>
-        <MudTh>Kaloryczność</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.id_dieta</MudTd>
-        <MudTd DataLabel="Nazwa">@context.nazwa</MudTd>
-        <MudTd DataLabel="Kalorycznosc">@context.kalorycznosc</MudTd>
+        @* <MudStack Spacing="10" Justify="Justify.SpaceAround"> *@
+        <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+            <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
+        </MudPaper>
+        @* </MudStack> *@
     </RowTemplate>
 </MudTable>
+
+
+@* *@
+@* <MudTable Items="@diety"> *@
+@*     <HeaderContent> *@
+@*         <MudTh>Id</MudTh> *@
+@*         <MudTh>Nazwa</MudTh> *@
+@*         <MudTh>Kaloryczność</MudTh> *@
+@*     </HeaderContent> *@
+@*     <RowTemplate> *@
+@*         <MudTd DataLabel="Id">@context.id_dieta</MudTd> *@
+@*         <MudTd DataLabel="Nazwa">@context.nazwa</MudTd> *@
+@*         <MudTd DataLabel="Kalorycznosc">@context.kalorycznosc</MudTd> *@
+@*     </RowTemplate> *@
+@* </MudTable> *@
+
+
 
 @code
 {
@@ -40,4 +69,6 @@
     {
         diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
     }
+    
+
 }
