@@ -33,14 +33,25 @@
 
 <MudTable Items="@diety">
     <HeaderContent>
-        <MudTh>Nazwa</MudTh>
+        @* <MudTh>Dopasowane diety</MudTh> *@
     </HeaderContent>
     <RowTemplate>
-        @* <MudStack Spacing="10" Justify="Justify.SpaceAround"> *@
-        <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+        <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
             <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
+            
+            <MudStack Row="true" Justify="Justify.SpaceAround">
+                <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;"><strong>Śniadanie </strong></MudText>
+                <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;"><strong>Obiad </strong></MudText>
+                <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;"><strong>Kolacja</strong></MudText>
+            </MudStack>
+
+            <MudStack Row="true" Justify="Justify.SpaceAround">
+                <div class="d-flex align-center">
+                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
+                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton>
+                </div>
+           </MudStack>
         </MudPaper>
-        @* </MudStack> *@
     </RowTemplate>
 </MudTable>
 
