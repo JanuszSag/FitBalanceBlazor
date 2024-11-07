@@ -1,4 +1,5 @@
 @page "/allClientDiets"
+@using System.ComponentModel.DataAnnotations
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
 
@@ -31,7 +32,7 @@
 @*     } *@
 @* </MudStack> *@
 <MudGrid>
-<MudItem xs="10">
+<MudItem xs="9">
         <MudTable Items="@diety">
             @* <HeaderContent> *@
             @*     $1$ <MudTh>Dopasowane diety</MudTh> #1# *@
@@ -63,12 +64,40 @@
         </MudTable>
 </MudItem>
 
-<MudItem xs="1">
+<MudItem xs="2">
     <MudStack>
         <MudText Typo=Typo.h6><strong>Filtry</strong></MudText>
-        <MudPaper Class="pa-20" Style="border: 4px black;border-radius: 20px;">
-            <MudText>radiobuttom rodzaj i ilosc posilkow- to nastepne</MudText>
-            </MudPaper>
+        <MudPaper Class="pa-10" Style="border: 4px black;border-radius: 20px;">
+            <MudText Typo="Typo.h6">Rodzaj:</MudText>
+            <MudRadioGroup @bind-Value="modelFilter.SelectedOption" >
+                <MudStack>
+                    <MudRadio Value="@("wegańskaDieta")" Color="Color.Primary">wegetariańska dieta</MudRadio>
+                    <MudRadio Value="@("wegańskaDieta")" Color="Color.Primary">wegańska dieta</MudRadio>
+                    <MudRadio Value="@("ketoDieta")" Color="Color.Primary">keto dieta</MudRadio>
+                    <MudRadio Value="@("dietaBezLaktozy")" Color="Color.Primary">dieta bez laktozy</MudRadio>
+                    <MudRadio Value="@("dietaBezGlutenu")" Color="Color.Primary">dieta bez glutenu</MudRadio>
+                    <MudRadio Value="@("dietaKoszerna")" Color="Color.Primary">dieta koszerna</MudRadio>
+                </MudStack>
+            </MudRadioGroup>
+            <MudText Typo="Typo.h6">Ilośc posiłków:</MudText>
+            <MudRadioGroup @bind-Value="modelFilter.SelectedOption" >
+                <MudStack>
+                    <MudRadio Value="@("trzy")" Color="Color.Primary">3</MudRadio>
+                    <MudRadio Value="@("piec")" Color="Color.Primary">5</MudRadio>
+                </MudStack>
+            </MudRadioGroup>
+
+            <MudText Color="Color.Error">
+                <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
+            </MudText>
+
+            <div class="d-flex align-center">
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                    Pokaż wyniki<!--i pytanie co dalej-->
+                </MudButton>
+            </div>
+        </MudPaper>
     </MudStack>
 </MudItem>
 </MudGrid>
@@ -97,6 +126,16 @@
     {
         diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
     }
+    //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
+    FilterForm modelFilter = new FilterForm();
+    bool success;
     
+    public class FilterForm
+    {
+        //Wymagania formularza required-wymagany
+        [Required(ErrorMessage = "Należy wybrać pozycję.")]
+        public string SelectedOption { get; set; }
+        
+    }
 
 }
