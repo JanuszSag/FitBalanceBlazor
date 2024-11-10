@@ -1,9 +1,13 @@
+using System.Text;
 using MudBlazor.Services;
 using FitBalanceBlazor.Client.Pages;
 using FitBalanceBlazor.Components;
 using FitBalanceBlazor.Context;
 using FitBalanceBlazor.Services;
+using FitBalanceBlazor.Services.AuthService;
 using FitBalanceBlazor.Services.DietService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +20,26 @@ builder.Services.AddMudServices();
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddScoped<IDietService,DietService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "FitBalanceBlazor",
+            ValidAudience = "FitBalanceBlazor",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecretKey"))
+        };
+    });
 
 builder.Services.AddControllers();
 
