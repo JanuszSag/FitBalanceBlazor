@@ -6,6 +6,7 @@ using FitBalanceBlazor.Context;
 using FitBalanceBlazor.Services;
 using FitBalanceBlazor.Services.AuthService;
 using FitBalanceBlazor.Services.DietService;
+using FitBalanceBlazor.Services.ReviewService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -21,6 +22,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddScoped<IDietService,DietService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddAuthentication(options =>
     {
