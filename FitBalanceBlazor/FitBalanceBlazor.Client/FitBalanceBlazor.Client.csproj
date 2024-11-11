@@ -20,4 +20,8 @@
       <ProjectReference Include="..\Shared\Shared\Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\WeightLossProgram\WeightLossProgram.razor" />
+    </ItemGroup>
+
 </Project>
