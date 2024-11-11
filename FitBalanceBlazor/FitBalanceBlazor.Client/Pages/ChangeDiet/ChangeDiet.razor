@@ -1,6 +1,9 @@
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 
 @page "/changeDiet"
+@inject NavigationManager NavigationManager
+
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana diety</strong></MudText>
 
@@ -71,9 +74,7 @@ private bool ModelIsValid()
 {
     return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
 }
-    
-[Inject]//Wstrzykuje instancję NavigationManager, która umożliwia nawigację do innych stron.
-private NavigationManager NavigationManager { get; set; }
+
     
 //Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
 private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
@@ -91,4 +92,17 @@ private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET
     StateHasChanged();
 }
 
-}
+//Nazwa diety ze strony AllGuestDiets
+        private string name;
+        
+        protected override void OnInitialized()
+        {
+            //nowa instacja uri, która reprezentuje aktualny URL
+            var uri = new Uri(NavigationManager.Uri);
+            //System.Web.HttpUtility-analizuje ciąg zapytania części URL po znaku "?" i zwraca kolekcję par klucz-wartość.
+            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        
+            name = query[name];
+        }
+
+    }
