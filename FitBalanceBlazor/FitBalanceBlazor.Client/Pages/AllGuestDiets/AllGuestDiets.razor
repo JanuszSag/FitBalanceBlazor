@@ -1,7 +1,41 @@
 @page "/allGuestDiets"
+@using System.ComponentModel.DataAnnotations
+@using FitBalanceBlazor.Models
+@inject HttpClient Http
+
 <PageTitle>All guest diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Lista diet dla gości</strong></MudText>
 
+<MudTable Items="@diety">
+   
+    <RowTemplate>
+        <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+            <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
+            <MudStack Justify="Justify.SpaceAround">
+                <MudTd  DataLabel="Opis">Opis: @context.opis</MudTd>
+                <MudTd  DataLabel="Rodzaj">Rodzaj: @context.rodzaj</MudTd><!-- zmienić na string-->
+                <!-- <MudTd  DataLabel="Dania">@context.dania</MudTd>--><!-- wyciagnac z innej tabeli-->
+            </MudStack>
+
+
+            <MudStack Row="true" Justify="Justify.SpaceAround">
+                <div class="d-flex align-center">
+                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
+                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton><!--JAk to zrobić?-->
+                </div>
+            </MudStack>
+        </MudPaper>
+    </RowTemplate>
+</MudTable>
+
 @code {
+    private List<Dieta> diety;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var wszytskieDiety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        //Wyswietla tylko pierwsze diety z wszytskich rodzajów - co 6 dlatego Index%6==0 i ogranicza liczbę wyświtlanych diet Take(ograniczenie)
+        diety = wszytskieDiety.Where((Item,Index)=>Index%6==0).Take(3).ToList();
+    }
 
 }
