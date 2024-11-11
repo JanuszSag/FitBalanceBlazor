@@ -1,7 +1,9 @@
 @page "/allGuestDiets"
+@inject NavigationManager NavigationManager
 @using System.ComponentModel.DataAnnotations
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
+
 
 <PageTitle>All guest diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Lista diet dla gości</strong></MudText>
@@ -20,7 +22,10 @@
 
             <MudStack Row="true" Justify="Justify.SpaceAround">
                 <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
+                    <MudButton Variant="Variant.Filled" 
+                               Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
+                               @* @onclick="() => ChangePage(@context.nazwa)">Zmień</MudButton> *@
+                    >Zmień</MudButton>
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton><!--JAk to zrobić?-->
                 </div>
             </MudStack>
@@ -38,4 +43,9 @@
         diety = wszytskieDiety.Where((Item,Index)=>Index%6==0).Take(3).ToList();
     }
 
+    // private void ChangePage(string name)
+    // {
+    //     NavigationManager.NavigateTo($"/changeDiet?name={name}");
+    // }
+   
 }
