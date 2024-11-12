@@ -3,8 +3,8 @@ using FitBalanceBlazor.Services;
 using FitBalanceBlazor.Services.DietService;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FitBalanceBlazor.Controllers
-{
+namespace FitBalanceBlazor.Controllers;
+
     [ApiController]
     [Route("api/[controller]")]
     public class DietController : ControllerBase
@@ -32,5 +32,5 @@ namespace FitBalanceBlazor.Controllers
     }
     
     
-}
+
 
