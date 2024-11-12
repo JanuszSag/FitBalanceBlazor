@@ -1,5 +1,6 @@
 ﻿@page "/"
-
+@using System.Text.RegularExpressions
+@inject ISnackbar Snackbar
 @* @using System.ComponentModel.DataAnnotations *@
 @* @using FitBalanceBlazor.Models *@
 @* @inject HttpClient Http *@
@@ -226,12 +227,13 @@
                 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
                 <MudText > @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
                 <MudText Typo="Typo.h6">E-mail:</MudText>
-                <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined"
+                              For="@(() => email)"Immediate="true"Error="@(!IsCorectEmail(email))"ErrorText="Nieprawidłowy adres email"></MudTextField>
                 <MudText Typo="Typo.h6">Treść wiadomości:</MudText>
-                <MudTextField ShrinkLabel @bind-Value="email" Label="Treść wiadomości" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField ShrinkLabel @bind-Value="message" Label="Treść wiadomości" Variant="Variant.Outlined"Error="@string.IsNullOrEmpty(message)"ErrorText="Wpisz treść mail"></MudTextField>
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               Href="">Wyślij</MudButton><!--Gdzie przekierować?-->
+                               @onclick="SnackBarEmail">Wyślij</MudButton>
                 </div>
             </MudPaper>
         </MudStack>
@@ -251,7 +253,34 @@ string faq2 = $"2. Czy mogę zamieniać rodzaj diety?{Environment.NewLine} Tak, 
 string faq3 = $"3. Co w przypadku gdy mam problemy z zalogowaniem?{Environment.NewLine}  W takim przypadku prosimy kontakować się z naszym działem helpdesku poniżej w sekcji Napisz do nas.";
 string textSendEmail = $"Zanim zadasz pytanie sprawdź Q&A. Może jest tam rozwiązanie Twojego problemu.{Environment.NewLine}Jeśli nadal nie znasz odpowiedzi - napisz do nas! Chętnie pomożemy Ci w rozwiązaniu problemów i wyjaśnimy wszelkie wątpliwości :)";
 
+//Metoda sprawdzenia poprawności maila poprzez regex
 public string email { get; set; }
+
+private bool IsCorectEmail(string email)
+{
+    if (string.IsNullOrWhiteSpace(email))
+    {
+        return false;
+    }
+
+    var regexEmail = new System.Text.RegularExpressions.Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    return regexEmail.IsMatch(email);
+}
+
+public string message { get; set; }
+
+//snackbar-wyswietla krotkie i tymczasowe mwiadomosci
+void SnackBarEmail()
+{
+    if(IsCorectEmail(email)& !string.IsNullOrEmpty(message)){
+    Snackbar.Add("Wysłano pomyslnie maila!", Severity.Success);
+    }
+    else
+    {
+        Snackbar.Add("Należy wprowadzic poprawny mail adres i treść wiadomości", Severity.Error); 
+    }
+}
 
 //opinie
     // private List<Opinia> opinie;
