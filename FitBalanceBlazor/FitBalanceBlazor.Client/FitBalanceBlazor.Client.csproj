@@ -24,4 +24,8 @@
       <_ContentIncludedByDefault Remove="Pages\WeightLossProgram\WeightLossProgram.razor" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Pages\Home-test\" />
+    </ItemGroup>
+
 </Project>
