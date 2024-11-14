@@ -18,14 +18,10 @@
                 <MudTd  DataLabel="Rodzaj">Rodzaj: @context.rodzaj</MudTd><!-- zmienić na string-->
                 <!-- <MudTd  DataLabel="Dania">@context.dania</MudTd>--><!-- wyciagnac z innej tabeli-->
             </MudStack>
-
-
+            
             <MudStack Row="true" Justify="Justify.SpaceAround">
                 <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled" 
-                               Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
-                               @* @onclick="() => ChangePage(@context.nazwa)">Zmień</MudButton> *@
-                    >Zmień</MudButton>
+                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton><!--JAk to zrobić?-->
                 </div>
             </MudStack>
