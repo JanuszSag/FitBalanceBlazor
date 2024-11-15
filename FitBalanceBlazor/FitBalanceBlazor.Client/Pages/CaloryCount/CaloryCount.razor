@@ -19,7 +19,7 @@
                     </MudItem>
                 </MudGrid>
 
-                <!-- Wprowadzenie pluci -->
+                <!-- Wprowadzenie płci -->
                 <MudText Typo="Typo.body1">Płeć:</MudText>
                 <MudRadioGroup @bind-Value="Gender" Class="mt-2">
                     <MudRadio Value=@("kobieta")>Kobieta</MudRadio>
@@ -36,7 +36,7 @@
                     </MudItem>
                 </MudGrid>
 
-                <!-- Wprowadzenie wzrosta -->
+                <!-- Wprowadzenie wzrostu -->
                 <MudGrid>
                     <MudItem xs="8">
                         <MudTextField Label="Wzrost" @bind-Value="Height" Type="number" Style="width: 100%;" />
@@ -46,7 +46,7 @@
                     </MudItem>
                 </MudGrid>
 
-                <!-- Poziom aktywnosci fizycznej -->
+                <!-- Poziom aktywności fizycznej -->
                 <MudText Typo="Typo.body1">Aktywność fizyczna:</MudText>
                 <MudRadioGroup @bind-Value="ActivityLevel" Class="mt-2">
                     <MudRadio Value=@("low")>Niska</MudRadio>
@@ -54,7 +54,6 @@
                     <MudRadio Value=@("high")>Wysoka</MudRadio>
                 </MudRadioGroup>
 
-             
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="background-color: #FF986B; border-radius: 20px; margin-top: 20px;" OnClick="CalculateCalorie">
                     Zatwierdź
                 </MudButton>
@@ -67,7 +66,7 @@
         <MudPaper Class="pa-5" Style="border: 2px solid #DFF39C; border-radius: 20px;">
             <MudText Typo="Typo.h6" Style="font-weight: bold;">Twoja dzienna norma kalorii:</MudText>
 
-            <!-- Koloг -->
+            <!-- Koło  -->
             <div style="text-align: center; margin-top: 20px;">
                 <div style="border: 5px solid #FF986B; border-radius: 50%; width: 200px; height: 200px; display: inline-flex; align-items: center; justify-content: center;">
                     <MudText Typo="Typo.h2" Style="color: #FF986B;">@Calories</MudText>
@@ -75,7 +74,6 @@
                 <MudText Typo="Typo.body1" Style="color: #FF986B;">kcal</MudText>
             </div>
 
-          
             <MudGrid Class="mt-4">
                 <MudItem xs="4">
                     <MudText Typo="Typo.body1">Białko</MudText>
@@ -108,21 +106,33 @@
 
     private void CalculateCalorie()
     {
-        double need = 0;
+        double bmr;
 
         if (Gender == "kobieta")
         {
-            need = 655 + (10 * Weight) + (6.25 * Height) - (5 * Age) - 161;
+            
+            bmr = 447.6 + (9.2 * Weight) + (3.1 * Height) - (4.3 * Age);
         }
         else
         {
-            need = 66 + (10 * Weight) + (6.25 * Height) - (5 * Age) + 5;
+           
+            bmr = 88.36 + (13.4 * Weight) + (4.8 * Height) - (5.7 * Age);
         }
 
-        Protein = need * 0.15 / 4;  // 15% białko
-        Carbs = need * 0.55 / 4;    // 55% węglowodany
-        Fat = need * 0.30 / 9;      // 30% tłuszcze
+        
+        double activityMultiplier = ActivityLevel switch
+        {
+            "low" => 1.2,
+            "mid" => 1.55,
+            "high" => 1.725,
+            _ => 1.2
+        };
 
-        Calories = need;
+        Calories = Math.Round(bmr * activityMultiplier);
+
+     
+        Protein = Math.Round (Calories * 0.15 / 4);  
+        Carbs = Math.Round (Calories * 0.55 / 4);    
+        Fat = Math.Round (Calories * 0.30 / 9);     
     }
 }
