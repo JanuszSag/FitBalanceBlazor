@@ -6,20 +6,20 @@
         <MudTextField Label="Login*" @bind-Value="login" Required="true" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="E-mail*" @bind-Value="email" Required="true" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="Data urodzenia*" @bind-Value="birthDate" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Class="mb-3" />
-        <!--
+        
         <MudSelect Label="Płeć" @bind-Value="gender" Variant="Variant.Outlined" Class="mb-3">
-            <MudSelectItem Value="Mężczyzna">"Mężczyzna"</MudSelectItem>
-            <MudSelectItem Value="Kobieta">"Kobieta"</MudSelectItem>
-            <MudSelectItem Value="Inne">"Inne"</MudSelectItem>
+            <MudSelectItem Value=@("Mężczyzna")>Mężczyzna</MudSelectItem>
+            <MudSelectItem Value=@("Kobieta")>Kobieta</MudSelectItem>
+            <MudSelectItem Value=@("Inne")>Inne</MudSelectItem>
         </MudSelect>
-        -->
+        
         <MudTextField Label="Wzrost (cm)" @bind-Value="height" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="Waga (kg)" @bind-Value="weight" Variant="Variant.Outlined" Class="mb-3" />
         <MudTextField Label="Hasło*" @bind-Value="password" InputType="InputType.Password" Required="true" Variant="Variant.Outlined" Class="mb-3" />
 
         <MudCheckBox @bind-Checked="acceptTerms" T="bool" Required="true">Akceptuję regulamin portalu *</MudCheckBox>
 
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!acceptTerms)" Class="mt-4">Załóż konto</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"  Class="mt-4" Href = "/clientHomePage">Załóż konto</MudButton>
     </MudForm>
 </MudPaper>
 
