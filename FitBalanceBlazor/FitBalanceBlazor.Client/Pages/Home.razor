@@ -1,11 +1,10 @@
 ﻿@page "/"
 @using System.Text.RegularExpressions
 @inject ISnackbar Snackbar
+
 @* @using System.ComponentModel.DataAnnotations *@
 @* @using FitBalanceBlazor.Models *@
 @* @inject HttpClient Http *@
-
-
 <PageTitle>Home</PageTitle>
 
 <MudStack Spacing="5">
@@ -21,7 +20,7 @@
                         <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
                         <MudText Align="Align.Left" Typo="Typo.h6">Zbalansowane diety dla zdrowego trybu życia</MudText>
                         <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
-                                   Href="">Wybierz swój program</MudButton><!--sciezka do sekcji na tej stronie -->
+                                   Href="/#sectionProgram">Wybierz swój program</MudButton><!--sciezka do sekcji na tej stronie -->
                     </MudStack>
                 </MudItem>
 
