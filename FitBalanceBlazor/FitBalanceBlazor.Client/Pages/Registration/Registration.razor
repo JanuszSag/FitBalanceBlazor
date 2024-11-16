@@ -1,35 +1,99 @@
 @page "/registration"
+@using System.ComponentModel.DataAnnotations
+
 <MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background:rgb(223,243,156); border-radius: 20px;">
     <MudText Typo="Typo.h4" Class="mb-4" Align="Align.Center">Zarejestruj się</MudText>
 
-    <MudForm>
-        <MudTextField Label="Login*" @bind-Value="login" Required="true" Variant="Variant.Outlined" Class="mb-3" />
-        <MudTextField Label="E-mail*" @bind-Value="email" Required="true" Variant="Variant.Outlined" Class="mb-3" />
-        <MudTextField Label="Data urodzenia*" @bind-Value="birthDate" InputType="InputType.Date" Required="true" Variant="Variant.Outlined" Class="mb-3" />
-        
-        <MudSelect Label="Płeć" @bind-Value="gender" Variant="Variant.Outlined" Class="mb-3">
+    <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="HandleValidSubmit">
+        <!-- Login -->
+        <MudTextField Label="Login*" @bind-Value="userRegistration.Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+                      For="@(() => userRegistration.Login)" />
+
+        <!-- Email -->
+        <MudTextField Label="E-mail*" @bind-Value="userRegistration.Email" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+                      For="@(() => userRegistration.Email)" />
+
+        <!-- Data urodzenia -->
+        <MudTextField Label="Data urodzenia*" @bind-Value="userRegistration.BirthDate" InputType="InputType.Date" Variant="Variant.Outlined" Class="mb-3"
+                      For="@(() => userRegistration.BirthDate)" />
+
+        <!-- Płeć -->
+        <MudSelect Label="Płeć" @bind-Value="userRegistration.Gender" Variant="Variant.Outlined" Class="mb-3" For="@(() => userRegistration.Gender)">
             <MudSelectItem Value=@("Mężczyzna")>Mężczyzna</MudSelectItem>
             <MudSelectItem Value=@("Kobieta")>Kobieta</MudSelectItem>
             <MudSelectItem Value=@("Inne")>Inne</MudSelectItem>
         </MudSelect>
+
+        <!-- Wzrost -->
+        <MudTextField Label="Wzrost (cm)" @bind-Value="userRegistration.Height" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+                      For="@(() => userRegistration.Height)" />
+
+        <!-- Waga -->
+        <MudTextField Label="Waga (kg)" @bind-Value="userRegistration.Weight" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+                      For="@(() => userRegistration.Weight)" />
+
+        <!-- Hasło -->
+        <MudTextField Label="Hasło*" @bind-Value="userRegistration.Password" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+                      For="@(() => userRegistration.Password)" />
+
+        <!-- Akceptacja regulaminu -->
+        <MudCheckBox @bind-Checked="userRegistration.AcceptTerms" T="bool" Class="mb-3" For="@(() => userRegistration.AcceptTerms)">
+            Akceptuję regulamin portalu *
+        </MudCheckBox>
         
-        <MudTextField Label="Wzrost (cm)" @bind-Value="height" Variant="Variant.Outlined" Class="mb-3" />
-        <MudTextField Label="Waga (kg)" @bind-Value="weight" Variant="Variant.Outlined" Class="mb-3" />
-        <MudTextField Label="Hasło*" @bind-Value="password" InputType="InputType.Password" Required="true" Variant="Variant.Outlined" Class="mb-3" />
-
-        <MudCheckBox @bind-Checked="acceptTerms" T="bool" Required="true">Akceptuję regulamin portalu *</MudCheckBox>
-
-        <MudButton Variant="Variant.Filled" Color="Color.Primary"  Class="mt-4" Href = "/clientHomePage">Załóż konto</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true">
+            Załóż konto
+        </MudButton>
+        
+        <MudText Typo="Typo.caption" Color="Color.Error" Class="mt-2">@errorMessage</MudText>
     </MudForm>
 </MudPaper>
 
 @code {
-    private string login = string.Empty;
-    private string email = string.Empty;
-    private DateTime birthDate;
-    private string gender = string.Empty;
-    private int height;
-    private int weight;
-    private string password = string.Empty;
-    private bool acceptTerms = false;
+    private MudForm form;
+    private bool isValid;
+    private string errorMessage = string.Empty;
+
+    
+    private UserRegistration userRegistration = new();
+
+    
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("Form submitted successfully!");
+        Console.WriteLine($"Login: {userRegistration.Login}, Email: {userRegistration.Email}");
+        
+    }
+
+    
+    public class UserRegistration
+    {
+        [Required(ErrorMessage = "Pole login jest wymagane.")]
+        [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
+        public string Login { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Pole e-mail jest wymagane.")]
+        [EmailAddress(ErrorMessage = "Nieprawidłowy format e-mail.")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Data urodzenia jest wymagana.")]
+        [DataType(DataType.Date)]
+        public DateTime? BirthDate { get; set; }
+
+        [Required(ErrorMessage = "Pole płeć jest wymagane.")]
+        public string Gender { get; set; } = string.Empty;
+
+        [Range(50, 250, ErrorMessage = "Wzrost musi być między 50 a 250 cm.")]
+        public int? Height { get; set; }
+
+        [Range(10, 300, ErrorMessage = "Waga musi być między 10 a 300 kg.")]
+        public int? Weight { get; set; }
+
+        [Required(ErrorMessage = "Pole hasło jest wymagane.")]
+        [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
+        public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Musisz zaakceptować regulamin.")]
+        public bool AcceptTerms { get; set; }
+    }
 }
