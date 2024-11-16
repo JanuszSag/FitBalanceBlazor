@@ -1,25 +1,58 @@
 @page "/login"
 @using MudBlazor
+@using System.ComponentModel.DataAnnotations
 
 <MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background-color: #e4f5ac; border-radius: 20px;">
-    <div style="text-align: center;">
-        <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" Color="Color.Primary" />
-    </div>
+    <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="HandleValidSubmit">
+        <div style="text-align: center;">
+            <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" Color="Color.Primary" />
+        </div>
 
-    <MudTextField T="string" Label="login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" @bind-Value="login" />
-    <MudTextField T="string" Label="hasło" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" @bind-Value="password" />
+        <!-- Login -->
+        <MudTextField T="string" Label="Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
+                      @bind-Value="userLogin.Login" For="@(() => userLogin.Login)" />
 
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Style="background-color: #FF9966; color: black;" Href="/clientHomePage">zaloguj</MudButton>
+        <!-- Haslo -->
+        <MudTextField T="string" Label="Hasło" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
+                      @bind-Value="userLogin.Password" For="@(() => userLogin.Password)" />
+        
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Style="background-color: #FF9966; color: black;">
+            Zaloguj
+        </MudButton>
 
-    <div class="mt-3" style="text-align: center;">
-        <MudText Typo="Typo.body2" Align="Align.Center">
-            Nie masz konta? 
-            <MudLink Href="/registration">Zarejestruj się</MudLink>
-        </MudText>
-    </div>
+    
+        <MudText Typo="Typo.caption" Color="Color.Error">@errorMessage</MudText>
+
+        <div class="mt-3" style="text-align: center;">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Nie masz konta? 
+                <MudLink Href="/registration">Zarejestruj się</MudLink>
+            </MudText>
+        </div>
+    </MudForm>
 </MudPaper>
 
 @code {
-    private string login = string.Empty;
-    private string password = string.Empty;
+    private MudForm form;
+    private bool isValid;
+    private string errorMessage = string.Empty;
+    
+    private UserLogin userLogin = new();
+    
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine("Zalogowano: " + userLogin.Login);
+    }
+
+    
+    public class UserLogin
+    {
+        [Required(ErrorMessage = "Pole login jest wymagane.")]
+        [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
+        public string Login { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Pole hasło jest wymagane.")]
+        [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
+        public string Password { get; set; } = string.Empty;
+    }
 }
