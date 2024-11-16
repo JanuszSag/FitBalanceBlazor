@@ -10,17 +10,17 @@
 <!-- Sekcja elementów listy diet -->
 
 <MudGrid>
-<MudItem xs="9">
+    <MudItem xs="9">
         <MudTable Items="@diety">
             <RowTemplate>
                 <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                     <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
                     <MudStack Justify="Justify.SpaceAround">
-                    <MudTd  DataLabel="Opis">Opis: @context.opis</MudTd>
-                    <MudTd  DataLabel="Rodzaj">Rodzaj: @context.rodzaj</MudTd><!-- zmienić na string-->
-                       <!-- <MudTd  DataLabel="Dania">@context.dania</MudTd>--><!-- wyciagnac z innej tabeli--> 
+                        <MudTd DataLabel="Opis">Opis: @context.opis</MudTd>
+                        <MudTd DataLabel="Rodzaj">Rodzaj: @context.rodzaj</MudTd><!-- zmienić na string-->
+                        <!-- <MudTd  DataLabel="Dania">@context.dania</MudTd>--><!-- wyciagnac z innej tabeli-->
                     </MudStack>
-                    
+
                     <MudStack Row="true" Justify="Justify.SpaceAround">
                         <div class="d-flex align-center">
                             <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
@@ -30,44 +30,47 @@
                 </MudPaper>
             </RowTemplate>
         </MudTable>
-</MudItem>
-
+            <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
+                       Href="/addDiet">Dodaj dietę</MudButton>
+    </MudItem>
+   
     <!-- Sekcja filtrów-rodzaj diety -->
-<MudItem xs="2">
-    <MudStack>
-        <MudText Typo=Typo.h6><strong>Filtry</strong></MudText>
-        <MudPaper Class="pa-10" Style="border: 4px black;border-radius: 20px;">
-            <MudText Typo="Typo.h6">Rodzaj:</MudText>
-            <MudRadioGroup @bind-Value="modelFilter.SelectedOption" >
-                <MudStack>
-                    @* @foreach (var rodzaj in rodzaje) *@
-                    @* { *@
-                    @* <MudRadio Value="@rodzaj.id_rodzaj">@rodzaj.nazwa</MudRadio> *@
-                    @* } *@
-                    
-                  <!-- trzeba jakoś uwyważ rodzaji diet -dynamicznie-->
-                </MudStack>
-                <MudRadio Value="@("wegetariańksaDieta")" Color="Color.Primary">wegetariańksa dieta</MudRadio>
-                <MudRadio Value="@("wegańskaDieta")" Color="Color.Primary">wegańska dieta</MudRadio>
-                <MudRadio Value="@("ketoDieta")" Color="Color.Primary">keto dieta</MudRadio>
-                <MudRadio Value="@("dietaBezLaktozy")" Color="Color.Primary">dieta bez laktozy</MudRadio>
-                <MudRadio Value="@("dietaBezGlutenu")" Color="Color.Primary">dieta bez glutenu</MudRadio>
-                <MudRadio Value="@("dietaKoszerna")" Color="Color.Primary">dieta koszerna</MudRadio>
-            </MudRadioGroup>
-          
-            <MudText Color="Color.Error">
-                <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
-            </MudText>
+    <MudItem xs="2">
+        <MudStack>
+            <MudText Typo=Typo.h6><strong>Filtry</strong></MudText>
+            <MudPaper Class="pa-10" Style="border: 4px black;border-radius: 20px;">
+                <MudText Typo="Typo.h6">Rodzaj:</MudText>
+                <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
+                    <MudStack>
+                        @foreach (var rodzaj in rodzaje)
+                        {
+                            <MudRadio Value="@("rodzajDiety")">@rodzaj.nazwa</MudRadio>
+                        }
 
-            <div class="d-flex align-center">
-                <MudButton ButtonType="ButtonType.Submit"
-                           Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
-                    Pokaż wyniki<!--i pytanie co dalej-->
-                </MudButton>
-            </div>
-        </MudPaper>
-    </MudStack>
-</MudItem>
+                        <!-- trzeba jakoś używaż rodzaji diet -dynamicznie-->
+                    </MudStack>
+                    @* <MudRadio Value="@("wegetariańksaDieta")" Color="Color.Primary">wegetariańksa dieta</MudRadio> *@
+                    @* <MudRadio Value="@("wegańskaDieta")" Color="Color.Primary">wegańska dieta</MudRadio> *@
+                    @* <MudRadio Value="@("ketoDieta")" Color="Color.Primary">keto dieta</MudRadio> *@
+                    @* <MudRadio Value="@("dietaBezLaktozy")" Color="Color.Primary">dieta bez laktozy</MudRadio> *@
+                    @* <MudRadio Value="@("dietaBezGlutenu")" Color="Color.Primary">dieta bez glutenu</MudRadio> *@
+                    @* <MudRadio Value="@("dietaKoszerna")" Color="Color.Primary">dieta koszerna</MudRadio> *@
+                    @* <MudRadio Value="@("eszystkieRodzaje")" Color="Color.Primary">pokaż wszystkie</MudRadio> *@
+                </MudRadioGroup>
+
+                <MudText Color="Color.Error">
+                    <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
+                </MudText>
+
+                <div class="d-flex align-center">
+                    <MudButton ButtonType="ButtonType.Submit"
+                               Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                        Pokaż wyniki<!--i pytanie co dalej-->
+                    </MudButton>
+                </div>
+            </MudPaper>
+        </MudStack>
+    </MudItem>
 </MudGrid>
 
 @* *@
@@ -98,7 +101,7 @@
     {
         //Http.GetFromJsonAsync<T> metoda pobiera dane z określonego endpointu API i deserializuje je do typu T(Dieta/Rodzaj), odpowiedz w formacie JSON, który może byc przekonwertowany na liste obiektów Dieta/Rodzaj
         diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-       // rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Rodzaj"); to chyba nie moze byc w 1 miejscu(w jednej metodzie- rodzaje i diety) 
+        //rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Rodzaj"); //to chyba nie moze byc w 1 miejscu(w jednej metodzie- rodzaje i diety) 
     }
     
     //Model formularza,Klasa "AllClientDiets" gdzie przechowywane są informację wprowadzone do formularza(filtracja)

@@ -27,27 +27,30 @@
                     <MudLink Href="/#sectionProgram" Style="text-transform: uppercase;">program</MudLink>
                     <MudLink Href="/#sectionOpinions" Style="text-transform: uppercase;">opinie</MudLink>
                     <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">Q&A</MudLink>
-                    <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">kontakt</MudLink><!--dodać/zmienić scieżę-->
+                    <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">kontakt</MudLink>
                     <MudLink Href="/login" Style="text-transform: uppercase;">logowanie</MudLink>
 
 
 
-                    <!--to powinno byc dopieo po zalogowaniu-->
+                    <!--to powinno byc dopieo po zalogowaniu-NIE DZIAŁA-->
                     <MudMenu Label="Moje konto" Dense="true">
                         <MudMenuItem>Diety
                             <MudNavLink Href="/allClientDiets"></MudNavLink>
                         </MudMenuItem>
-                        <MudMenuItem>Oblicz zapotrzbowanie kaloryczne
-                            <MudNavLink Href="/"></MudNavLink> <!--dodać scieżę-->
+                        <MudMenuItem>Oblicz zapotrzebowanie kaloryczne
+                            <MudNavLink Href="/caloryCount"></MudNavLink>
                         </MudMenuItem>
                         <MudMenuItem>Uzupełnij ilość wypitej wody
                             <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
                         </MudMenuItem>
                         <MudMenuItem>Moja dieta
-                            <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
+                            <MudNavLink Href="/myDiet"></MudNavLink>
                         </MudMenuItem>
                         <MudMenuItem>Raport
-                            <MudNavLink Href="/"></MudNavLink><!--dodać scieżę-->
+                            <MudNavLink Href="/raport"></MudNavLink>
+                        </MudMenuItem>
+                        <MudMenuItem>Panel pracownika <!--po zalogowaniu i tylko dla pracownika-->
+                            <MudNavLink Href="/employee"></MudNavLink>
                         </MudMenuItem>
                     </MudMenu>
 
