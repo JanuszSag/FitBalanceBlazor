@@ -1,6 +1,6 @@
-using System.Data.Entity;
 using FitBalanceBlazor.Context;
 using FitBalanceBlazor.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitBalanceBlazor.Services.ReviewService;
 
@@ -10,15 +10,23 @@ public class ReviewService : IReviewService
 
     public ReviewService(MyDbContext context)
     {
-        _context = context;
+        this._context = context;
     }
-    
-    public async Task<List<Opinia>> getAllReviewsAsync()
+    /// <summary>
+    /// Method <c>GetAllDietsAsync</c> return list of all reviews stored in database
+    /// </summary>
+    /// <returns>List of reviews</returns>
+    public async Task<List<Opinia>> GetAllReviewsAsync()
     {
         return await _context.Opinia.ToListAsync();
     }
-
-    public async Task<Opinia> getReviewByIdAsync(int id)
+    
+    /// <summary>
+    /// Method <c>GetReviewByIdAsync</c> return review based on id given in parameter
+    /// </summary>
+    /// <param name="id">id of review stored in database</param>
+    /// <returns>review object</returns>
+    public async Task<Opinia> GetReviewByIdAsync(int id)
     {
         return await _context.Opinia.FindAsync(id);
     }
