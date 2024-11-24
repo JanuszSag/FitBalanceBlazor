@@ -18,12 +18,12 @@ public class ReviewController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Opinia>>> GetReviews()
     {
-        return await _reviewService.getAllReviewsAsync();
+        return await _reviewService.GetAllReviewsAsync();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Opinia>> GetReview(int id)
     {
-        return await _reviewService.getReviewByIdAsync(id);
+        return await _reviewService.GetReviewByIdAsync(id);
     }
 }
