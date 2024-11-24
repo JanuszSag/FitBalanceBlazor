@@ -22,7 +22,7 @@ public class DietService: IDietService
     }
 
     /// <summary>
-    /// Method <c>GetDietAsync</c> return diet based on id given in parameer
+    /// Method <c>GetDietAsync</c> return diet based on id given in parameter
     /// </summary>
     /// <param name="dietId">id of diet stored in database</param>
     /// <returns>diet object</returns>
@@ -32,5 +32,16 @@ public class DietService: IDietService
 
         
         return result;
+    }
+    
+    /// <summary>
+    /// method <c>RemoveDietAsync</c> removes diet from database based on id parameter
+    /// </summary>
+    /// <param name="dietId">id of diet to remove</param>
+    public void RemoveDietAsync(int dietId)
+    {
+        var ItemToRemove = _context.Dieta.Find(dietId);
+        
+        _context.Dieta.Remove(ItemToRemove);
     }
 }
