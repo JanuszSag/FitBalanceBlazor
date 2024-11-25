@@ -20,7 +20,18 @@ public class DietService: IDietService
     {
         return await _context.Dieta.ToListAsync();
     }
-
+    
+    /// <summary>
+    /// Method <c>GetAllDietsByCategoryIdAsync</c> return list of all diets with specific category stored in database
+    /// </summary>
+    /// <param name="categoryId">Id of category</param>
+    /// <returns>List of diets with specific category</returns>
+    public async Task<List<Dieta>> GetAllDietsByCategoryIdAsync(int categoryId)
+    {
+        return await _context.Dieta.Where(d => d.rodzaj == categoryId).ToListAsync();
+    }
+    
+    
     /// <summary>
     /// Method <c>GetDietAsync</c> return diet based on id given in parameter
     /// </summary>
@@ -33,7 +44,7 @@ public class DietService: IDietService
         
         return result;
     }
-    
+
     /// <summary>
     /// method <c>RemoveDietAsync</c> removes diet from database based on id parameter
     /// </summary>
