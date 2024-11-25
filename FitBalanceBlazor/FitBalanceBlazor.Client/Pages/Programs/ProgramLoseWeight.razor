@@ -2,24 +2,39 @@
 <PageTitle>Program lose weight</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Program utrata wagi</strong></MudText>
 
-    <MudGrid>
-        <MudItem xs="6">
-            <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudCardContent>
-                    <!-- Sekcja dodawanie nazwy nowej diety -->
-                    <MudText Typo="Typo.h6"><strong>Chcesz zrzucić zbędne kilogramy?</strong></MudText>
-                    <MudButton ButtonType="ButtonType.Submit"
-                               Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
-                        Wylicz swoje zapotrzebowanie kaloryczne
-                    </MudButton>
-                    
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+<MudGrid>
+    <MudItem xs="6">
+        <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+            <MudCardContent>
+                <!-- Sekcja opisu-->
+                <MudStack Spacing="5">
+                    <MudText Align="Align.Left" Typo="Typo.h4"><strong>Nasza unikalna strategia utraty wagi to nie tylko dieta, ale całościowe podejście do zdrowego stylu życia.</strong></MudText>
+                    <MudText Align="Align.Left" Typo="Typo.h5">@textProgramLose1</MudText>
+                    <MudText Align="Align.Left" Typo="Typo.h5"><strong>@textProgramLose2</strong> @textProgramLose2_1</MudText>
+                    <MudText Align="Align.Left" Typo="Typo.h5"><strong>@textProgramLose3</strong> @textProgramLose3_1</MudText>
+                </MudStack>
 
-        <!-- Sekcja grafiki -->
-        <MudItem xs="6">
+                
+                <MudButton ButtonType="ButtonType.Submit"  
+                           Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;">
+                    Wylicz swoje zapotrzebowanie kaloryczne
+                </MudButton>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Sekcja grafiki -->
+    <MudItem xs="6">
+        <MudCard Style="width:100%; position: relative;">
             <MudImage Fluid="true" Src="/Images/Program/ProgramLoseWeight.png" Alt="Image" Class="rounded-lg"/>
-        </MudItem>
-    </MudGrid>
+        </MudCard>
+    </MudItem>
+</MudGrid>
 
+@code{
+    string textProgramLose1 = "Nasz program pomoże Ci zrzucić zbędne kilogramy w zdrowy sposób, zachowując jednocześnie energię i witalność. Skupiamy się na zbilansowanej diecie, aktywności fizycznej oraz wsparciu motywacyjnym, abyś mógł konsekwentnie realizować swoje cele.";
+    string textProgramLose2 = "\u2022 Indywidualnie dobrany plan żywieniowy";
+    string textProgramLose2_1 = "– który pomoże Ci schudnąć bez efektu jo-jo.";
+    string textProgramLose3 = "\u2022 Wsparcie psychologiczne i coaching motywacyjny";
+    string textProgramLose3_1 = "– który pomoże Ci wytrwać w postanowieniach.";
+}

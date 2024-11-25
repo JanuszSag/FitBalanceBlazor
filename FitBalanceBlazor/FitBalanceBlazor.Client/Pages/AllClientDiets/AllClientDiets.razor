@@ -1,4 +1,5 @@
 @page "/allClientDiets"
+@using System.ComponentModel.DataAnnotations 
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
 
@@ -6,26 +7,233 @@
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
 
-<MudTable Items="@diety">
-    <HeaderContent>
-        <MudTh>Id</MudTh>
-        <MudTh>Nazwa</MudTh>
-        <MudTh>Kaloryczność</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Id">@context.id_dieta</MudTd>
-        <MudTd DataLabel="Nazwa">@context.nazwa</MudTd>
-        <MudTd DataLabel="Kalorycznosc">@context.kalorycznosc</MudTd>
-    </RowTemplate>
-</MudTable>
+<!-- Sekcja elementów listy diet -->
+
+<MudGrid>
+<MudItem xs="9">
+        <MudTable Items="@diety">
+            <RowTemplate>
+                <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                    <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
+                    <MudStack Justify="Justify.SpaceAround">
+                    <MudTd  DataLabel="Opis">Opis: @context.opis</MudTd>
+                    <MudTd  DataLabel="Rodzaj">Rodzaj: @context.rodzaj</MudTd><!-- zmienić na string-->
+                       <!-- <MudTd  DataLabel="Dania">@context.dania</MudTd>--><!-- wyciagnac z innej tabeli--> 
+                    </MudStack>
+                    
+                    <MudStack Row="true" Justify="Justify.SpaceAround">
+                        <div class="d-flex align-center">
+                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
+                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton><!--JAk to zrobić?-->
+                        </div>
+                    </MudStack>
+                </MudPaper>
+            </RowTemplate>
+        </MudTable>
+</MudItem>
+
+    <!-- Sekcja filtrów-rodzaj diety -->
+<MudItem xs="2">
+    <MudStack>
+        <MudText Typo=Typo.h6><strong>Filtry</strong></MudText>
+        <MudPaper Class="pa-10" Style="border: 4px black;border-radius: 20px;">
+            <MudText Typo="Typo.h6">Rodzaj:</MudText>
+            <MudRadioGroup @bind-Value="modelFilter.SelectedOption" >
+                <MudStack>
+                    @* @foreach (var rodzaj in rodzaje) *@
+                    @* { *@
+                    @* <MudRadio Value="@rodzaj.id_rodzaj">@rodzaj.nazwa</MudRadio> *@
+                    @* } *@
+                    @* <MudRadio Value="Rodzaj" Color="Color.Primary">@rodzaj</MudRadio> *@
+                    @* <MudRadio Value="@("wegańskaDieta")" Color="Color.Primary">wegańska dieta</MudRadio> *@
+                    @* <MudRadio Value="@("ketoDieta")" Color="Color.Primary">keto dieta</MudRadio> *@
+                    @* <MudRadio Value="@("dietaBezLaktozy")" Color="Color.Primary">dieta bez laktozy</MudRadio> *@
+                    @* <MudRadio Value="@("dietaBezGlutenu")" Color="Color.Primary">dieta bez glutenu</MudRadio> *@
+                    @* <MudRadio Value="@("dietaKoszerna")" Color="Color.Primary">dieta koszerna</MudRadio> *@
+                </MudStack>
+            </MudRadioGroup>
+          
+            <MudText Color="Color.Error">
+                <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
+            </MudText>
+
+            <div class="d-flex align-center">
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                    Pokaż wyniki<!--i pytanie co dalej-->
+                </MudButton>
+            </div>
+        </MudPaper>
+    </MudStack>
+</MudItem>
+</MudGrid>
+
+@* *@
+@* <MudTable Items="@diety"> *@
+@*     <HeaderContent> *@
+@*         <MudTh>Id</MudTh> *@
+@*         <MudTh>Nazwa</MudTh> *@
+@*         <MudTh>Kaloryczność</MudTh> *@
+@*     </HeaderContent> *@
+@*     <RowTemplate> *@
+@*         <MudTd DataLabel="Id">@context.id_dieta</MudTd> *@
+@*         <MudTd DataLabel="Nazwa">@context.nazwa</MudTd> *@
+@*         <MudTd DataLabel="Kalorycznosc">@context.kalorycznosc</MudTd> *@
+@*     </RowTemplate> *@
+@* </MudTable> *@
+
 
 
 @code
 {
+    //Zmienne, które są listami obiektów typu Dieta i Rodzaj, lista przechowuje dane, które pobrane są z API
     private List<Dieta> diety;
+    private List<Rodzaj> rodzaje;
 
+    //Metoda, która jest wywoływana gdy komponent jest inicjalizowany-tworzony i wstawiany 
+    //async-asunchroniczna,co pozwala na wykonywanie operacji wejścia/wyjścia, jak np. pobieranie danych z serwera, bez blokowania głównego wątku aplikacji
     protected override async Task OnInitializedAsync()
     {
+        //Http.GetFromJsonAsync<T> metoda pobiera dane z określonego endpointu API i deserializuje je do typu T(Dieta/Rodzaj), odpowiedz w formacie JSON, który może byc przekonwertowany na liste obiektów Dieta/Rodzaj
         diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Rodzaj");
     }
+    
+    //Model formularza,Klasa "AllClientDiets" gdzie przechowywane są informację wprowadzone do formularza(filtracja)
+    FilterForm modelFilter = new FilterForm();
+    bool success;
+
+    public class FilterForm
+    {
+        //Wymagania formularza required-wymagany
+        [Required(ErrorMessage = "Należy wybrać pozycję.")]
+        public string SelectedOption { get; set; }
+
+    }
+
 }
+
+@* @page "/allClientDiets" *@
+@* @using System.ComponentModel.DataAnnotations *@
+@* @using FitBalanceBlazor.Models *@
+@* @inject HttpClient Http *@
+@* *@
+@* <PageTitle>All clients diets</PageTitle> *@
+@* *@
+@* <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"> *@
+@*     <strong>wszystkie diety</strong> *@
+@* </MudText> *@
+@* *@
+@* <MudGrid> *@
+@*     <MudItem xs="9"> *@
+@*         <MudTable Items="@przefiltrowaneDiety"> *@
+@*             <RowTemplate> *@
+@*                 <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;"> *@
+@*                     <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"> *@
+@*                         <strong>@context.nazwa</strong> *@
+@*                     </MudTd> *@
+@*                      *@
+@*                     <MudStack Row="true" Justify="Justify.SpaceAround"> *@
+@*                         <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;"> *@
+@*                             <strong>Śniadanie </strong> *@
+@*                         </MudText> *@
+@*                         <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;"> *@
+@*                             <strong>Obiad </strong> *@
+@*                         </MudText> *@
+@*                         <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;"> *@
+@*                             <strong>Kolacja</strong> *@
+@*                         </MudText> *@
+@*                     </MudStack> *@
+@* *@
+@*                     <MudStack Row="true" Justify="Justify.SpaceAround"> *@
+@*                         <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;">Danie</MudText> *@
+@*                         <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;">Danie</MudText> *@
+@*                         <MudText Typo="Typo.subtitle1" Style="text-transform: uppercase;">Danie</MudText> *@
+@*                     </MudStack> *@
+@* *@
+@*                     <MudStack Row="true" Justify="Justify.SpaceAround"> *@
+@*                         <div class="d-flex align-center"> *@
+@*                             <MudButton Variant="Variant.Filled"  *@
+@*                                        Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"  *@
+@*                                        Href="/changeDiet">Zmień</MudButton> *@
+@*                             <MudButton Variant="Variant.Filled"  *@
+@*                                        Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton> *@
+@*                         </div> *@
+@*                     </MudStack> *@
+@*                 </MudPaper> *@
+@*             </RowTemplate> *@
+@*         </MudTable> *@
+@*     </MudItem> *@
+@* *@
+@*     <MudItem xs="2"> *@
+@*         <MudStack> *@
+@*             <MudText Typo="Typo.h6"><strong>Filtry</strong></MudText> *@
+@*             <MudPaper Class="pa-10" Style="border: 4px black;border-radius: 20px;"> *@
+@*                 <MudText Typo="Typo.h6">Rodzaj:</MudText> *@
+@*                 <MudRadioGroup @bind-Value="modelFilter.SelectedOption"> *@
+@*                     <MudStack> *@
+@*                         <MudRadio Value=@("1") Color="Color.Primary">wegetariańska dieta</MudRadio> *@
+@*                         <MudRadio Value=@("2") Color="Color.Primary">wegańska dieta</MudRadio> *@
+@*                         <MudRadio Value=@("3") Color="Color.Primary">keto dieta</MudRadio> *@
+@*                         <MudRadio Value=@("4") Color="Color.Primary">dieta bez laktozy</MudRadio> *@
+@*                         <MudRadio Value=@("5") Color="Color.Primary">dieta bez glutenu</MudRadio> *@
+@*                         <MudRadio Value=@("6") Color="Color.Primary">dieta koszerna</MudRadio> *@
+@*                     </MudStack> *@
+@*                 </MudRadioGroup> *@
+@* *@
+@*                 <MudText Typo="Typo.h6">Ilość posiłków:</MudText> *@
+@*                 <MudRadioGroup @bind-Value="modelFilter.IlośćPosiłków"> *@
+@*                     <MudStack> *@
+@*                         <MudRadio Value="3" Color="Color.Primary">3</MudRadio> *@
+@*                         <MudRadio Value="5" Color="Color.Primary">5</MudRadio> *@
+@*                     </MudStack> *@
+@*                 </MudRadioGroup> *@
+@* *@
+@*                 <MudText Color="Color.Error"> *@
+@*                     <ValidationMessage For="@(() => modelFilter.SelectedOption)" Class="text-danger"></ValidationMessage> *@
+@*                 </MudText> *@
+@* *@
+@*                 <div class="d-flex align-center"> *@
+@*                     <MudButton ButtonType="ButtonType.Button" *@
+@*                                Variant="Variant.Filled"  *@
+@*                                OnClick="@FiltrujDiety" *@
+@*                                Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"> *@
+@*                         Pokaż wyniki *@
+@*                     </MudButton> *@
+@*                 </div> *@
+@*             </MudPaper> *@
+@*         </MudStack> *@
+@*     </MudItem> *@
+@* </MudGrid> *@
+@* *@
+@* @code { *@
+@*     private List<Dieta> diety; *@
+@*     private List<Dieta> przefiltrowaneDiety;  // Lista do przechowywania przefiltrowanych diet *@
+@* *@
+@*     protected override async Task OnInitializedAsync() *@
+@*     { *@
+@*         // Pobieranie diet z API *@
+@*         diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet"); *@
+@*         przefiltrowaneDiety = diety;  // Początkowo wyświetl wszystkie diety *@
+@*     } *@
+@* *@
+@*     private async Task FiltrujDiety() *@
+@*     { *@
+@*         // Filtrowanie listy na podstawie wybranego rodzaju i liczby posiłków *@
+@*         przefiltrowaneDiety = diety.Where(d => *@
+@*             (!modelFilter.SelectedOption || d.rodzaj== modelFilter.SelectedOption.Value) //jak to zrobić???? *@
+@*         ).ToList(); *@
+@*     } *@
+@* *@
+@*     // Model formularza filtrów *@
+@*     FilterForm modelFilter = new FilterForm(); *@
+@*      *@
+@*     public class FilterForm *@
+@*     { *@
+@*         [Required(ErrorMessage = "Należy wybrać pozycję.")] *@
+@*         public string SelectedOption { get; set; } *@
+@*          *@
+@*         // Dodatkowy atrybut do filtrowania liczby posiłków *@
+@*         public int? IlośćPosiłków { get; set; } *@
+@*     } *@
+@* } *@
