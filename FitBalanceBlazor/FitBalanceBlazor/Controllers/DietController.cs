@@ -36,7 +36,7 @@ namespace FitBalanceBlazor.Controllers;
             return Ok(result);
         }
 
-        [HttpDelete("{id")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteDiet(int id)
         {
             _dietService.RemoveDietAsync(id);
