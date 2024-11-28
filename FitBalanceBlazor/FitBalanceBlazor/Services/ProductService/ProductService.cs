@@ -1,4 +1,4 @@
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using FitBalanceBlazor.Context;
 
 namespace FitBalanceBlazor.Services.ProductService;
