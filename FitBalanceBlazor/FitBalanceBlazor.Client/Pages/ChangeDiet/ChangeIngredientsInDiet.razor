@@ -13,7 +13,7 @@
             <!-- Sekcja wyswietlenia wczesniej wybranej pozycji(śniadanie, drugie śniadanie, obiad, podwieczorek, kolacja) do zmiany -->
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.h6">Dieta do zmiany:</MudText>
-                <MudText Typo="Typo.h6"> Pozycja:@SelectedOption</MudText> <!-- pozycje wybrana z popczedniech stron -WSTAWIC-->
+                @* <MudText Typo="Typo.h6"> Danie :@SelectedOption</MudText> <!-- danie wybrana z popczedniech stron -WSTAWIC--> *@
             </MudPaper>
 
             <!-- Sekcja wyboru składników-->
@@ -21,13 +21,15 @@
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.subtitle1" Class="mud-width-full">@(selectedProdukt == null ? "Nic nie wybrano" : $"Składnik: {selectedProdukt.nazwa}")</MudText>
 
-                <MudSelect T="Produkt" @bind-Value="selectedProdukt" ToStringFunc="@converter" Label="Wybierz składnik" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable>
-                   @foreach (var produkt in produkty)
-                   {
-                       <MudSelectItem Value="produkt">@produkt.nazwa</MudSelectItem>
-                   }
+                 <MudSelect @bind-Value="selectedProdukt" Label="Wybierz składnik"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
+                    <MudStack>
+                    @* @foreach (var produkt in produkty) *@
+                    @* { *@
+                    @*     <MudSelectItem Value="produkt">@produkt.nazwa</MudSelectItem> *@
+                    @* } *@
+                    </MudStack>
 
-                </MudSelect>
+                 </MudSelect> 
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
                                Href="">Zatwierdź</MudButton><!-- gdzie nas to przenosi?-->
@@ -70,9 +72,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Ingredient");//api/???
+        produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Product");
     }
-
-    Func<Produkt, string> converter = p => p?.nazwa;
     
 }
