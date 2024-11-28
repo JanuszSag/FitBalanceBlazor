@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FitBalanceBlazor.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[Controller]")]
 public class ReviewController : ControllerBase
 {
     private readonly IReviewService _reviewService;

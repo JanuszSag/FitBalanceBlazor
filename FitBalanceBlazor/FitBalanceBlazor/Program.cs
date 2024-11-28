@@ -52,6 +52,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -77,5 +78,8 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(FitBalanceBlazor.Client._Imports).Assembly);
 
 app.MapControllers();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.Run();
