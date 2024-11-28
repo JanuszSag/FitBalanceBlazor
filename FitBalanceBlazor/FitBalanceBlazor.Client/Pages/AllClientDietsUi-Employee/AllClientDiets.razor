@@ -16,15 +16,17 @@
                 <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                     <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
                     <MudStack Justify="Justify.SpaceAround">
-                        <MudTd DataLabel="Opis">Opis: @context.opis</MudTd>
-                        <MudTd DataLabel="Rodzaj">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @context.rodzaj)?.nazwa</MudTd>
-
-                        <MudTd DataLabel="Dania">Dania:
+                        <MudTd DataLabel="Opis" >  <MudText Typo="Typo.subtitle1">Opis: @context.opis </MudText> </MudTd>
+                        <MudTd DataLabel="Rodzaj"> <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @context.rodzaj)?.nazwa
+                        </MudText> </MudTd>
+                        <MudTd DataLabel="Dania">
+                            <MudText Typo="Typo.subtitle1">Dania:
                             @* @foreach (var idDanie in @context.Danie_id_danie) *@
                             @* { *@
                             @* <span>@dania.FirstOrDefault(d => d.id_danie ==@dieta_danie.nazwa )?.nazwa</span> *@
                             @* } *@
-                            </MudTd>
+                            </MudText>
+                        </MudTd>
                     </MudStack>
         
                     <MudStack Row="true" Justify="Justify.SpaceAround">
@@ -104,14 +106,14 @@
     //async-asunchroniczna,co pozwala na wykonywanie operacji wejścia/wyjścia, jak np. pobieranie danych z serwera, bez blokowania głównego wątku aplikacji
     protected override async Task OnInitializedAsync()
     {
-        //Http.GetFromJsonAsync<T> metoda pobiera dane z określonego endpointu API i deserializuje je do typu T(Dieta/Rodzaj), odpowiedz w formacie JSON, który może byc przekonwertowany na liste obiektów Dieta/Rodzaj
-        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-        rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania= await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-        //dietyRodzaje=await Http.GetFromJsonAsync<List<Dieta>>($"api/Diet/Category/{id}");
-        
-       
-    }
+//Http.GetFromJsonAsync<T> metoda pobiera dane z określonego endpointu API i deserializuje je do typu T(Dieta/Rodzaj), odpowiedz w formacie JSON, który może byc przekonwertowany na liste obiektów Dieta/Rodzaj
+diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
+dania= await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+//dietyRodzaje=await Http.GetFromJsonAsync<List<Dieta>>($"api/Diet/Category/{id}");
+
+
+}
     
     //Model formularza,Klasa "AllClientDiets" gdzie przechowywane są informację wprowadzone do formularza(filtracja)
     FilterForm modelFilter = new FilterForm();
