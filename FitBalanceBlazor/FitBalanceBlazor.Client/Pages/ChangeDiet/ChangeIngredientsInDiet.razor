@@ -70,7 +70,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Produkt");
+        produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Ingredient");//api/???
     }
 
     Func<Produkt, string> converter = p => p?.nazwa;
