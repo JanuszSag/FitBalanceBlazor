@@ -72,7 +72,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Product");
+        try
+        {
+            produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Product");
+        }
+        catch (Exception ex)
+        {
+
+        }
     }
-    
+
 }
