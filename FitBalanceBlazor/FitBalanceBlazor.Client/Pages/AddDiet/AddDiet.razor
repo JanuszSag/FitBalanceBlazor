@@ -1,6 +1,10 @@
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager NavigationManager
 @page "/addDiet"
+
+@using System.ComponentModel.DataAnnotations
+@using FitBalanceBlazor.Models
+@inject HttpClient Http
 <PageTitle>Add diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
 
@@ -18,26 +22,27 @@
 
                     <!-- Sekcja wyboru dania do dodania -->
                     <MudText Typo="Typo.h6">Która pozycję chcesz dodać?</MudText>
-                    <MudRadioGroup @bind-Value="modelAddDiet.SelectedOption" >
-                        <MudStack>
-                            <MudRadio Value="@("Śniadanie")" Color="Color.Primary">Śniadanie</MudRadio>
-                            <MudRadio Value="@("Drugie śniadanie")" Color="Color.Primary">Drugie śniadanie</MudRadio>
-                            <MudRadio Value="@("Obiad")" Color="Color.Primary">Obiad</MudRadio>
-                            <MudRadio Value="@("Podwieczorek")" Color="Color.Primary">Podwieczorek</MudRadio>
-                            <MudRadio Value="@("Kolacja")" Color="Color.Primary">Kolacja</MudRadio>
-                        </MudStack>
-                    </MudRadioGroup>
-                    <MudText Color="Color.Error">
-                    <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage>
-                    </MudText>
-                    
+                    <MudForm>
+                        <MudRadioGroup @bind-Value="modelAddDiet.SelectedOption">
+                            <MudStack>
+                                @foreach (var danie in dania)
+                                {
+                                <MudRadio Value="@("nazwaDania")">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to maja być dania z wybranej diety z poprzedniej strony-->
+                                }
+
+                            </MudStack>
+                        </MudRadioGroup>
+
+                    </MudForm>
                     <div class="d-flex align-center">
                         <MudText Class="ml-4">Wybrana opcja: @modelAddDiet.SelectedOption</MudText>
                         <MudButton ButtonType="ButtonType.Submit"
                                    Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
                             Zatwierdź
-                        </MudButton>
-                    </div>
+                        </MudButton> </div>
+                    <MudText Color="Color.Error">
+                    <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage>
+                    </MudText>
                 </MudCardContent>
             </MudCard>
         </MudItem>
@@ -55,20 +60,21 @@
 
 
 @code {
+
     //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
     AddNewDietForm modelAddDiet = new AddNewDietForm();
     bool success;
-    
+
     public class AddNewDietForm
     {
         //Wymagania formularza required-wymagany
         [Required(ErrorMessage = "Należy wprowadzić nazwę diety.")]
         [StringLength(20, ErrorMessage = "Nazwa powinna być ne dłuższa niż 20 znaków.")]
         public string DietName { get; set; }
-        
+
         [Required(ErrorMessage = "Należy wybrać pozycję.")]
         public string SelectedOption { get; set; }
-        
+
     }
 
     //Metoda sprawdzająca poprawnośc danych - czy nie są puste
@@ -76,7 +82,7 @@
     {
         return !string.IsNullOrEmpty(modelAddDiet.DietName) && !string.IsNullOrEmpty(modelAddDiet.SelectedOption);
     }
-    
+
     //Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
     private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
     {
@@ -90,8 +96,23 @@
         {
             success = false;
         }
+
         StateHasChanged();
+    }
+
+    private List<Danie> dania;
+
+    protected override async Task OnInitializedAsync(){
+        try
+        {
+            dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+        }
+        catch (Exception ex)
+        {
+            
+        } 
     }
     
 
 }
+
