@@ -1,3 +1,4 @@
+
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager NavigationManager
 @page "/addDiet"
@@ -21,21 +22,21 @@
                                   Required="true" RequiredError="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
 
                     <!-- Sekcja wyboru dania do dodania -->
-                    <MudText Typo="Typo.h6">Która pozycję chcesz dodać?</MudText>
+                    <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText>
                     <MudForm>
-                        <MudRadioGroup @bind-Value="modelAddDiet.SelectedOption">
+                        <MudCheckBox @bind-Value="modelAddDiet.SelectedOption">
                             <MudStack>
                                 @foreach (var danie in dania)
                                 {
-                                <MudRadio Value="@("nazwaDania")">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to maja być dania z wybranej diety z poprzedniej strony-->
+                                <MudCheckBox Value="@("nazwaDania")">@danie.nazwa</MudCheckBox>
                                 }
 
                             </MudStack>
-                        </MudRadioGroup>
+                        </MudCheckBox>
 
                     </MudForm>
                     <div class="d-flex align-center">
-                        <MudText Class="ml-4">Wybrana opcja: @modelAddDiet.SelectedOption</MudText>
+                        @* <MudText Class="ml-4">Wybrana opcja: @modelAddDiet.SelectedOption</MudText> *@
                         <MudButton ButtonType="ButtonType.Submit"
                                    Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
                             Zatwierdź

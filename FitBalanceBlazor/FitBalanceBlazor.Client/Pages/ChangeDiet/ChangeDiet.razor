@@ -32,7 +32,6 @@
                                 {
                                 <MudRadio Value="@("nazwaDania")">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to maja być dania z wybranej diety z poprzedniej strony-->
                                 }
-                     
                                 </MudStack> 
                         </MudRadioGroup>
                     
@@ -108,8 +107,9 @@ private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET
         
             name = query[name];
         }
-        private List<Danie> dania;
         
+        //obsługa enpionta
+        private List<Danie> dania;
         protected override async Task OnInitializedAsync()
         {
             try
