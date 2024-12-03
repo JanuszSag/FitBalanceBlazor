@@ -24,11 +24,11 @@
                     <!-- Sekcja wyboru dania do dodania -->
                     <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText>
                     <MudForm>
-                        <MudCheckBox @bind-Value="modelAddDiet.SelectedOption">
+                        <MudCheckBox @bind-Value="modelAddDiet.SelectedOption"><!--to zaznaczenie działa-->
                             <MudStack>
                                 @foreach (var danie in dania)
                                 {
-                                <MudCheckBox Value="@("nazwaDania")">@danie.nazwa</MudCheckBox>
+                                <MudCheckBox Value="@("nazwaDania")">@danie.nazwa</MudCheckBox><!-- to zaznaczenie nie działa-->
                                 }
 
                             </MudStack>
@@ -42,7 +42,7 @@
                             Zatwierdź
                         </MudButton> </div>
                     <MudText Color="Color.Error">
-                    <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage>
+                        <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage>
                     </MudText>
                 </MudCardContent>
             </MudCard>
@@ -62,58 +62,57 @@
 
 @code {
 
-    //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
-    AddNewDietForm modelAddDiet = new AddNewDietForm();
-    bool success;
+//Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
+AddNewDietForm modelAddDiet = new AddNewDietForm();
+bool success;
 
-    public class AddNewDietForm
-    {
-        //Wymagania formularza required-wymagany
-        [Required(ErrorMessage = "Należy wprowadzić nazwę diety.")]
-        [StringLength(20, ErrorMessage = "Nazwa powinna być ne dłuższa niż 20 znaków.")]
-        public string DietName { get; set; }
+public class AddNewDietForm
+{
+//Wymagania formularza required-wymagany
+[Required(ErrorMessage = "Należy wprowadzić nazwę diety.")]
+[StringLength(20, ErrorMessage = "Nazwa powinna być ne dłuższa niż 20 znaków.")]
+public string DietName { get; set; }
 
-        [Required(ErrorMessage = "Należy wybrać pozycję.")]
-        public string SelectedOption { get; set; }
-
-    }
-
-    //Metoda sprawdzająca poprawnośc danych - czy nie są puste
-    private bool ModelIsValid()
-    {
-        return !string.IsNullOrEmpty(modelAddDiet.DietName) && !string.IsNullOrEmpty(modelAddDiet.SelectedOption);
-    }
-
-    //Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
-    private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
-    {
-        if (ModelIsValid())
-        {
-            success = true;
-            NavigationManager.NavigateTo($"/addDiet/addIngredientsToNewDiet?DietName={Uri.EscapeDataString(modelAddDiet.DietName)}&SelectedOption={Uri.EscapeDataString(modelAddDiet.SelectedOption)}");
-
-        }
-        else
-        {
-            success = false;
-        }
-
-        StateHasChanged();
-    }
-
-    private List<Danie> dania;
-
-    protected override async Task OnInitializedAsync(){
-        try
-        {
-            dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-        }
-        catch (Exception ex)
-        {
-            
-        } 
-    }
-    
+[Required(ErrorMessage = "Należy wybrać pozycję.")]
+public string SelectedOption { get; set; }
 
 }
 
+//Metoda sprawdzająca poprawnośc danych - czy nie są puste
+private bool ModelIsValid()
+{
+return !string.IsNullOrEmpty(modelAddDiet.DietName) && !string.IsNullOrEmpty(modelAddDiet.SelectedOption);
+}
+
+//Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
+private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
+{
+if (ModelIsValid())
+{
+success = true;
+NavigationManager.NavigateTo($"/addDiet/addIngredientsToNewDiet?DietName={Uri.EscapeDataString(modelAddDiet.DietName)}&SelectedOption={Uri.EscapeDataString(modelAddDiet.SelectedOption)}");
+
+}
+else
+{
+success = false;
+}
+
+StateHasChanged();
+}
+
+private List<Danie> dania;
+
+protected override async Task OnInitializedAsync(){
+try
+{
+dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+}
+catch (Exception ex)
+{
+
+}
+}
+
+
+}
