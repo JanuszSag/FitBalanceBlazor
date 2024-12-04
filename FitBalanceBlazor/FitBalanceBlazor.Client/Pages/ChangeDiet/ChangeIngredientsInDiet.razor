@@ -12,22 +12,35 @@
         <MudStack Spacing="3">
             <!-- Sekcja wyswietlenia wczesniej wybranej pozycji(śniadanie, drugie śniadanie, obiad, podwieczorek, kolacja) do zmiany -->
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.h6">Dieta do zmiany:</MudText>
-                <MudText Typo="Typo.h6"> Danie :@SelectedOption</MudText> <!-- danie wybrana z popczedniech stron -WSTAWIC--> 
+                @* <MudText Typo="Typo.h6">Dieta do zmiany:@selectedDiet?.nazwa</MudText> *@
+                <MudText Typo="Typo.h6">Dieta: @selectedDiet?.nazwa</MudText>
+                @* @if (selectedDiet == null) *@
+                @* { *@
+                @* <MudText Typo="Typo.body1">Dieta nie została załadowana.</MudText> *@
+                @* } *@
+                @* @if (selectedDiet == null) *@
+                @* { *@
+                @* <MudText Typo="Typo.body1">Dieta o ID @DietId nie została załadowana</MudText> *@
+                @* } *@
+                @* else *@
+                @* { *@
+                @* <MudText Typo="Typo.h6">Dieta: @selectedDiet?.nazwa</MudText> *@
+                @* } *@
+                 <MudText Typo="Typo.h6">Danie do zmiany:@SelectedOption</MudText> 
             </MudPaper>
 
             <!-- Sekcja wyboru składników-->
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.subtitle1" Class="mud-width-full">@(selectedProdukt == null ? "Nic nie wybrano" : $"Składnik: {selectedProdukt.nazwa}")</MudText>
 
-                 <MudSelect @bind-Value="selectedProdukt" Label="Wybierz składnik"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
+                <MudSelect @bind-Value="selectedProdukt" Label="Wybierz składnik"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
                     <MudStack>
-                    @foreach (var produkt in produkty)
-                    {
-                        <MudSelectItem Value="produkt">@produkt.nazwa</MudSelectItem>
-                    }
+                        @foreach (var produkt in produkty)
+                        {
+                        <MudSelectItem Value="produkt">@produkt.nazwa</MudSelectItem><!--produkt_danie- tabela musi byc updatowana-->
+                        }
                     </MudStack>
-                 </MudSelect> 
+                </MudSelect>
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
                                Href="">Zatwierdź</MudButton><!-- update bazy i info o powodzeniu lub bledzie-->
@@ -49,6 +62,10 @@
 
 
 @code {
+    // Nazwa diety ze strony AllGuestDiets
+    [Parameter] public int DietId { get; set; }
+    private Dieta selectedDiet;
+    
     private string SelectedOption;
 
     //Metoda nadpisania, która jest wywoływana po zainicjowaniu komponentu.
@@ -59,8 +76,15 @@
         var uri = new Uri(NavigationManager.Uri);
         //System.Web.HttpUtility-analizuje ciąg zapytania części URL po znaku "?" i zwraca kolekcję par klucz-wartość.
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        DietId = int.Parse(query["DietId"] ?? "0");
+
         
         SelectedOption = query["SelectedOption"];
+        if (string.IsNullOrEmpty(SelectedOption))
+        {
+            SelectedOption = "Nie wybrano żadnej opcji.";
+        }
+        
     }
 
     //Wyciąganie z bazy 
@@ -72,11 +96,17 @@
     {
         try
         {
+            // selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}");
+            selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}");
+            if (selectedDiet == null)
+            {
+                Console.WriteLine($"Dieta o ID {DietId} nie została znaleziona.");
+            }
             produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Product");
         }
         catch (Exception ex)
         {
-
+            Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
         }
     }
     
