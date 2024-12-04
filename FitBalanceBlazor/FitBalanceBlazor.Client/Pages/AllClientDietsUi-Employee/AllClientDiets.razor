@@ -39,6 +39,7 @@
                 </MudPaper>
             </RowTemplate>
         </MudTable>
+        
 
         <MudButton Variant="Variant.Filled" 
                    Style="width:300px; background:rgb(255,152,107);border-radius: 20px;" 
@@ -46,30 +47,103 @@
             Dodaj dietę
         </MudButton>
     </MudItem>
+
+    <!-- Sekcja filtrów-rodzaj diety -->
+    <MudItem xs="2">
+        <MudStack>
+            <MudText Typo=Typo.h6><strong>Filtry</strong></MudText>
+            <MudPaper Class="pa-10" Style="border: 6px black;border-radius: 20px;">
+                <MudText Typo="Typo.h6">Rodzaj:</MudText>
+                <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
+                    <MudStack>
+                        <MudRadio Value="@("wszystkieDiety")">wszystkie rodzaje</MudRadio>
+                        @foreach (var rodzaj in @rodzaje)
+                        {
+                        <MudRadio Value="@("rodzajDiety")">@rodzaj.nazwa</MudRadio>
+                        }
+                    </MudStack>
+
+                </MudRadioGroup>
+
+                <MudText Color="Color.Error">
+                    <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
+                </MudText>
+
+                <div class="d-flex align-center">
+                    <MudButton ButtonType="ButtonType.Button"
+                               Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                               OnClick="dietsFilter">
+                        Pokaż wyniki
+                    </MudButton>
+                </div>
+            </MudPaper>
+        </MudStack>
+    </MudItem>
 </MudGrid>
 
 @code {
+    //Zmienne, które są listami obiektów typu Dieta i Rodzaj, lista przechowuje dane, które pobrane są z API
     private List<Dieta> diety;
     private List<Rodzaj> rodzaje;
     private List<Danie> dania;
-
-    FilterForm modelFilter = new FilterForm();
-
-    public class FilterForm
-    {
-        public string SelectedOption { get; set; } = "wszystkieDiety";
-    }
+    
 
     protected override async Task OnInitializedAsync()
     {
-        // Poprawiono: Pobieranie danych z API
         diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+        // dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+  
     }
 
-    private void onChangeDiet(int id) // Dodano metodę do przekazywania ID diety do strony zmiany
+    // Metoda do przekazywania ID diety do strony zmiany
+    private void onChangeDiet(int id) 
     {
         NavigationManager.NavigateTo($"/changeDiet/{id}");
     }
+    //Model formularza,Klasa "AllClientDiets" gdzie przechowywane są informację wprowadzone do formularza(filtracja)
+    FilterForm modelFilter = new FilterForm();
+    bool success;
+
+    public class FilterForm
+    {
+        public string SelectedOption { get; set; }
+
+    }
+       //obsługa filtrów
+    private async Task dietsFilter()
+    {
+        if (modelFilter.SelectedOption == "wszystkieDiety")
+        {
+            diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        }
+        else
+        {
+            //żadna nie działa poprawnie
+            //diety = diety.Where(d => rodzaje.FirstOrDefault(r => r.id_rodzaj == d.rodzaj)?.nazwa == modelFilter.SelectedOption).ToList();
+            // diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
+             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && string.Equals(r.nazwa, modelFilter.SelectedOption, StringComparison.OrdinalIgnoreCase))).ToList();
+             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).ToList();
+             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).Where(d => d.rodzaj == modelFilter.SelectedOption) // lub inne warunki.ToList();
+             
+             // diety = diety.Where(d => {
+             //     int selectedId;
+             //     bool isInt = int.TryParse(modelFilter.SelectedOption, out selectedId);
+             //     return isInt && d.rodzaj == selectedId;
+             // }).ToList();
+
+            
+
+
+
+    
+    
+        }
+        StateHasChanged();
+        // Console.WriteLine($"Number of diets after filter: {diety.Count}");
+    }
+ 
+    
+
+
 }
