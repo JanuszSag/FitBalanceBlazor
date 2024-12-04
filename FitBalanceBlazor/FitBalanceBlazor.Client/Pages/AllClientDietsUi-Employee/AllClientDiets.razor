@@ -2,7 +2,7 @@
 @using System.ComponentModel.DataAnnotations 
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
-
+@inject NavigationManager NavigationManager
 
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
@@ -16,108 +16,60 @@
                 <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                     <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
                     <MudStack Justify="Justify.SpaceAround">
-                        <MudTd DataLabel="Opis" >  <MudText Typo="Typo.subtitle1">Opis: @context.opis </MudText> </MudTd>
-                        <MudTd DataLabel="Rodzaj"> <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @context.rodzaj)?.nazwa
-                        </MudText> </MudTd>
+                        <MudTd DataLabel="Opis"><MudText Typo="Typo.subtitle1">Opis: @context.opis</MudText></MudTd>
+                        <MudTd DataLabel="Rodzaj"><MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @context.rodzaj)?.nazwa</MudText></MudTd>
                         <MudTd DataLabel="Dania">
-                            <MudText Typo="Typo.subtitle1">Dania:
-                            @* @foreach (var idDanie in @context.Danie_id_danie) *@
-                            @* { *@
-                            @* <span>@dania.FirstOrDefault(d => d.id_danie ==@dieta_danie.nazwa )?.nazwa</span> *@
-                            @* } *@
+                            <MudText Typo="Typo.subtitle1">Dania:<!--uzupelnic endpointem-->
                             </MudText>
                         </MudTd>
                     </MudStack>
-        
+
                     <MudStack Row="true" Justify="Justify.SpaceAround">
                         <div class="d-flex align-center">
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton><!--JAk to zrobić?-->
+                            <MudButton Variant="Variant.Filled" 
+                                       Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px" 
+                                       OnClick="() => onChangeDiet(context.id_dieta)">
+                                Zmień
+                            </MudButton>
+                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">
+                                Usuń
+                            </MudButton>
                         </div>
                     </MudStack>
                 </MudPaper>
             </RowTemplate>
         </MudTable>
 
-            <MudButton Variant="Variant.Filled" Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
-                       Href="/addDiet">Dodaj dietę</MudButton>
-    </MudItem>
-   
-    <!-- Sekcja filtrów-rodzaj diety -->
-    <MudItem xs="2">
-        <MudStack>
-            <MudText Typo=Typo.h6><strong>Filtry</strong></MudText>
-            <MudPaper Class="pa-10" Style="border: 6px black;border-radius: 20px;">
-                <MudText Typo="Typo.h6">Rodzaj:</MudText>
-                <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
-                    <MudStack>
-                        <MudRadio Value="@("wszystkieDiety")">wszystkie rodzaje</MudRadio>
-                        @foreach (var rodzaj in @rodzaje)
-                        {
-                            <MudRadio Value="@("rodzajDiety")">@rodzaj.nazwa</MudRadio>
-                        }
-                    </MudStack>
-              
-                </MudRadioGroup>
-
-                <MudText Color="Color.Error">
-                    <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
-                </MudText>
-
-                <div class="d-flex align-center">
-                    <MudButton ButtonType="ButtonType.Button"
-                               Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               OnClick="dietsFilter">
-                        Pokaż wyniki
-                    </MudButton>
-                </div>
-            </MudPaper>
-        </MudStack>
+        <MudButton Variant="Variant.Filled" 
+                   Style="width:300px; background:rgb(255,152,107);border-radius: 20px;" 
+                   Href="/addDiet">
+            Dodaj dietę
+        </MudButton>
     </MudItem>
 </MudGrid>
 
-@code
-{
-    //Zmienne, które są listami obiektów typu Dieta i Rodzaj, lista przechowuje dane, które pobrane są z API
+@code {
     private List<Dieta> diety;
     private List<Rodzaj> rodzaje;
     private List<Danie> dania;
-    
-    //Model formularza,Klasa "AllClientDiets" gdzie przechowywane są informację wprowadzone do formularza(filtracja)
+
     FilterForm modelFilter = new FilterForm();
-    bool success;
 
     public class FilterForm
     {
         public string SelectedOption { get; set; } = "wszystkieDiety";
-
     }
-    //Metoda, która jest wywoływana gdy komponent jest inicjalizowany-tworzony i wstawiany 
-    //async-asunchroniczna,co pozwala na wykonywanie operacji wejścia/wyjścia, jak np. pobieranie danych z serwera, bez blokowania głównego wątku aplikacji
+
     protected override async Task OnInitializedAsync()
     {
-//Http.GetFromJsonAsync<T> metoda pobiera dane z określonego endpointu API i deserializuje je do typu T(Dieta/Rodzaj), odpowiedz w formacie JSON, który może byc przekonwertowany na liste obiektów Dieta/Rodzaj
- diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-        rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania= await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-//dietyRodzaje=await Http.GetFromJsonAsync<List<Dieta>>($"api/Diet/Category/{id}");  
-    
-
-
+        // Poprawiono: Pobieranie danych z API
+        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
+        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
     }
-    
-    //obsługa filtrów
-    private async Task dietsFilter()
+
+    private void onChangeDiet(int id) // Dodano metodę do przekazywania ID diety do strony zmiany
     {
-        if (modelFilter.SelectedOption == "wszystkieDiety")
-        {
-            diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-        }
-        else
-        {
-            diety = diety.Where(d => rodzaje.FirstOrDefault(r => r.id_rodzaj == d.rodzaj)?.nazwa == modelFilter.SelectedOption).ToList();//nie działa
-        }
+        NavigationManager.NavigateTo($"/changeDiet/{id}");
     }
-    
-
 }
