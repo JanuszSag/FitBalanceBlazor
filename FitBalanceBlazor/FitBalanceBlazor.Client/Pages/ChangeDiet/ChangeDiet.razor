@@ -29,7 +29,7 @@
                             <MudStack>
                                 @foreach (var danie in dania)
                                 {
-                                <MudRadio Value="@("nazwaDania")">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to mają być dania z wybranej diety z poprzedniej strony-->
+                                <MudRadio Value="@danie.nazwa">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to mają być dania z wybranej diety z poprzedniej strony-->
                                 }
                             </MudStack>
                         </MudRadioGroup>
@@ -79,12 +79,14 @@ private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NE
 if (ModelIsValid())
 {
 success = true;
-NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+// NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+    NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+    
 }
 else
-{
-success = false;
-}
+{ 
+    success = false; 
+} 
 StateHasChanged();
 }
 
@@ -94,14 +96,15 @@ private Dieta selectedDiet;
 
 // Obsługa enpionta
 private List<Danie> dania;
+
 protected override async Task OnInitializedAsync()
-{
-try
-{
-selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}");
-dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+{ 
+    try
+{ 
+    selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}"); 
+    dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
 }
-catch (Exception ex)
+    catch (Exception ex)
 {
     Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
 }
