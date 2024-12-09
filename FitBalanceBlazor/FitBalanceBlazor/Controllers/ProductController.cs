@@ -24,5 +24,11 @@ public class ProductController : ControllerBase
     public async Task<ActionResult<Produkt>> GetProduct(int id)
     {
         return await _productService.GetProductByIdAsync(id);
-    }    
+    }
+
+    [HttpGet("Meal/{id}")]
+    public async Task<ActionResult<List<Produkt>>> GetMeal(int id)
+    {
+        return await _productService.GetProductsForMeal(id);
+    }
 }
