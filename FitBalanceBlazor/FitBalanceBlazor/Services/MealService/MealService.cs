@@ -26,7 +26,7 @@ public class MealService : IMealService
     /// </summary>
     /// <param name="mealId">id of meal</param>
     /// <returns>meal object</returns>
-    public async Task<Danie> GetMealByIdAsync(int mealId)
+    public async Task<Danie?> GetMealByIdAsync(int mealId)
     {
         return await _context.Danie.FindAsync(mealId);
     }

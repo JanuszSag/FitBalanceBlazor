@@ -39,7 +39,20 @@ public class DietService: IDietService
     /// <returns>diet object</returns>
     public async Task<Dieta?> GetDietAsync(int dietId)
     {
-        var result = await _context.Dieta.FindAsync(dietId);
+        var result = await _context.Dieta.Include(d => d.Danie_id_danie)
+                                         .Where(dieta => dieta.id_dieta == dietId)
+                                         .Select(d => new Dieta
+                                         {
+                                             id_dieta = d.id_dieta,
+                                             nazwa = d.nazwa,
+                                             opis = d.opis,
+                                             kalorycznosc = d.kalorycznosc,
+                                             Danie_id_danie = d.Danie_id_danie.Select(danie => new Danie
+                                             {
+                                                 id_danie = danie.id_danie,
+                                                 nazwa = danie.nazwa
+                                             }).ToList()
+                                         }).FirstAsync();
 
         
         return result;
