@@ -3,6 +3,7 @@
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
@@ -29,8 +30,8 @@
                                        OnClick="() => onChangeDiet(context.id_dieta)">
                                 Zmień
                             </MudButton>
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">
-                                Usuń
+                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
+                                       OnClick="snackBarFun">Usuń
                             </MudButton>
                         </div>
                     </MudStack>
@@ -140,6 +141,20 @@
         }
         StateHasChanged();
         // Console.WriteLine($"Number of diets after filter: {diety.Count}");
+    }
+    
+    //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+    private void snackBarFun()
+    {
+        bool isSuccess = true;
+        if (isSuccess)
+        {
+            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
+        }
     }
  
     

@@ -10,6 +10,7 @@
 @using System.ComponentModel.DataAnnotations
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
+@inject ISnackbar Snackbar
 
 <PageTitle>Add ingredients to new diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
@@ -37,7 +38,7 @@
 
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               Href="">Zatwierdź</MudButton><!-- dodanie do bazy i snakcbar(albo cos takiego) potwierdzający-->
+                               OnClick="snackBarFun">Zatwierdź</MudButton>
                 </div>
             </MudPaper>
         </MudStack>
@@ -102,4 +103,18 @@
     }
 
     Func<Ingredient,string> converter = i => i?.Name;
+    
+    //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+    private void snackBarFun()
+    {
+        bool isSuccess = true;
+        if (isSuccess)
+        {
+            Snackbar.Add("1. Tutaj bedzie informacja o (nie)powodzeniu dodania nowej diety do bazy danych. Nie mamy pewności czy ta strona jest potrzebna-czy ma sens.",Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu dodania nowej diety do bazy danych",Severity.Error);
+        }
+    }
 }
