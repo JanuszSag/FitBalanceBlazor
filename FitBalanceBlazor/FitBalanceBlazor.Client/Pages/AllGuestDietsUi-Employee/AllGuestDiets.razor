@@ -29,7 +29,11 @@
             
             <MudStack Row="true" Justify="Justify.SpaceAround">
                 <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
+                    <MudButton Variant="Variant.Filled"
+                               Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
+                               OnClick="() => onChangeDiet(context.id_dieta)">
+                        Zmień
+                    </MudButton>
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton><!--JAk to zrobić?-->
                 </div>
             </MudStack>
@@ -49,6 +53,11 @@
         diety = wszytskieDiety.Where((Item,Index)=>Index%6==0).Take(3).ToList();
         rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
         dania= await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+    }
+    // Metoda do przekazywania ID diety do strony zmiany
+    private void onChangeDiet(int id) 
+    {
+        NavigationManager.NavigateTo($"/changeDiet/{id}");
     }
 
     // private void ChangePage(string name)
