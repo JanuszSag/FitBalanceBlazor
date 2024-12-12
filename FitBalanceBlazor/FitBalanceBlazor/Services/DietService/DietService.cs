@@ -1,5 +1,4 @@
 using FitBalanceBlazor.Context;
-using FitBalanceBlazor.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitBalanceBlazor.Services.DietService;
@@ -62,10 +61,49 @@ public class DietService: IDietService
     /// method <c>RemoveDietAsync</c> removes diet from database based on id parameter
     /// </summary>
     /// <param name="dietId">id of diet to remove</param>
-    public void RemoveDietAsync(int dietId)
+    public async void RemoveDietAsync(int dietId)
     {
-        var ItemToRemove = _context.Dieta.Find(dietId);
-        
-        _context.Dieta.Remove(ItemToRemove);
+        try
+        {
+            var dieta = await _context.Dieta.FindAsync(dietId);
+            
+            _context.Dieta.Attach(await _context.Dieta.SingleAsync(d => d.id_dieta == dietId));
+            _context.Dieta.Remove(await _context.Dieta.SingleAsync(d => d.id_dieta == dietId));
+            
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Method <c>AddDietAsync</c> adds new entry of diet to database
+    /// </summary>
+    /// <param name="id">Id</param>
+    /// <param name="nazwa">Name</param>
+    /// <param name="opis">Description</param>
+    /// <param name="kalorycznosc">Calorie</param>
+    /// <param name="autor">Author</param>
+    /// <param name="rodzaj">Category</param>
+    public async void AddDietAsync(int id, string? nazwa, string? opis, int kalorycznosc, int autor, int rodzaj)
+    {
+        try{
+            await _context.Dieta.AddAsync(new Dieta
+            {
+                id_dieta = id,
+                nazwa = nazwa,
+                opis = opis,
+                kalorycznosc = kalorycznosc,
+                autor = autor,
+                rodzaj = rodzaj
+            });
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }
