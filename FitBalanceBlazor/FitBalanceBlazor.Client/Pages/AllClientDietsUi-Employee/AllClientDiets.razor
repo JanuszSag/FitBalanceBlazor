@@ -19,8 +19,8 @@
                     <MudStack Justify="Justify.SpaceAround">
                         <MudTd DataLabel="Opis"><MudText Typo="Typo.subtitle1">Opis: @context.opis</MudText></MudTd>
                         <MudTd DataLabel="Rodzaj"><MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @context.rodzaj)?.nazwa</MudText></MudTd>
-                        @* <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.Dieta_id_dieta== @context.id_dieta)?.nazwa</MudText></MudTd> *@
-                        @* <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.id_danie== @context.Danie_id_danie)?.nazwa</MudText></MudTd> *@
+                        @* <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.Dieta_id_dieta== @context.id_dieta)?.nazwa</MudText></MudTd>  *@
+                        <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.id_danie== @context.Danie_id_danie[0])?.nazwa</MudText></MudTd> 
                     </MudStack>
 
                     <MudStack Row="true" Justify="Justify.SpaceAround">
