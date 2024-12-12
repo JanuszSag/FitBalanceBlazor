@@ -53,6 +53,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5131/") });
 
 var app = builder.Build();
 

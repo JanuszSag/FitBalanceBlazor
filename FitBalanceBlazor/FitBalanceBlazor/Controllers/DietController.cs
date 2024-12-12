@@ -1,3 +1,4 @@
+using FitBalanceBlazor.Client.Pages.AddDiet;
 using FitBalanceBlazor.Models;
 using FitBalanceBlazor.Services;
 using FitBalanceBlazor.Services.DietService;
@@ -40,6 +41,13 @@ namespace FitBalanceBlazor.Controllers;
         public async Task<ActionResult> DeleteDiet(int id)
         {
             _dietService.RemoveDietAsync(id);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddDiet(int id, string? nazwa, string? opis, int kalorycznosc, int autor, int rodzaj)
+        {
+            _dietService.AddDietAsync(id,nazwa,opis,kalorycznosc,autor,rodzaj);
             return Ok();
         }
     }
