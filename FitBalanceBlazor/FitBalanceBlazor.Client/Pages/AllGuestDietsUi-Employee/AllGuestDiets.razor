@@ -3,7 +3,7 @@
 @using System.ComponentModel.DataAnnotations
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
-
+@inject ISnackbar Snackbar
 
 <PageTitle>All guest diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Lista diet dla gości</strong></MudText>
@@ -29,8 +29,15 @@
             
             <MudStack Row="true" Justify="Justify.SpaceAround">
                 <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px " Href="/changeDiet">Zmień</MudButton>
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">Usuń</MudButton><!--JAk to zrobić?-->
+                    <MudButton Variant="Variant.Filled"
+                               Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
+                               OnClick="() => onChangeDiet(context.id_dieta)">
+                        Zmień
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
+                               OnClick="snackBarFun">Usuń
+                    </MudButton>
+                    <!--JAk to zrobić?-->
                 </div>
             </MudStack>
         </MudPaper>
@@ -38,9 +45,9 @@
 </MudTable>
 
 @code {
-    private List<Dieta> diety;
-    private List<Rodzaj> rodzaje;
-    private List<Danie> dania;
+    private List<Dieta> diety=new List<Dieta>();
+    private List<Rodzaj> rodzaje=new List<Rodzaj>();
+    private List<Danie> dania=new List<Danie>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,10 +57,29 @@
         rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
         dania= await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
     }
+    // Metoda do przekazywania ID diety do strony zmiany
+    private void onChangeDiet(int id) 
+    {
+        NavigationManager.NavigateTo($"/changeDiet/{id}");
+    }
 
     // private void ChangePage(string name)
     // {
     //     NavigationManager.NavigateTo($"/changeDiet?name={name}");
     // }
+    
+    //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+    private void snackBarFun()
+    {
+        bool isSuccess = true;
+        if (isSuccess)
+        {
+            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
+        }
+    }
    
 }

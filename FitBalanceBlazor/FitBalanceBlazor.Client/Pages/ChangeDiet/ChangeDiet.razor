@@ -1,7 +1,7 @@
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 
-@page "/changeDiet"
+@page "/changeDiet/{DietId:int}"
 @inject NavigationManager NavigationManager
 
 @using System.ComponentModel.DataAnnotations
@@ -11,15 +11,14 @@
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana diety</strong></MudText>
 
-
 <EditForm Model="@modelChangeDiet" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
     <MudGrid>
-        <MudItem xs="6"> <!-- xs="liczba" oznacza ilość kolum, zajmowanych przez element xs=12 cala szerokosc, 6 pol ...-->
+        <MudItem xs="6">
+            <!-- Sekcja nazwy zmienianej diety -->
             <MudStack Spacing="3">
-                <!-- Sekcja nazwy zmienianej diety -->
                 <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                    <MudText Typo="Typo.h6">Dieta do zmieny:</MudText>   <!--dodanie z bazy albo jakoś inaczej zapmaiteany wybor poprzedniej strony-->
+                    <MudText Typo="Typo.h6">Dieta do zmieny:@selectedDiet?.nazwa</MudText>   <!--dodanie z bazy albo jakoś inaczej zapamiętany wybór poprzedniej strony-->
                 </MudPaper>
 
                 <!-- Sekcja wyboru dania do zmieny -->
@@ -30,19 +29,18 @@
                             <MudStack>
                                 @foreach (var danie in dania)
                                 {
-                                <MudRadio Value="@("nazwaDania")">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to maja być dania z wybranej diety z poprzedniej strony-->
+                                <MudRadio Value="@danie.nazwa">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to mają być dania z wybranej diety z poprzedniej strony-->
                                 }
-                     
-                                </MudStack> 
+                            </MudStack>
                         </MudRadioGroup>
-                    
                     </MudForm>
                     <div class="d-flex align-center">
                         <MudText Class="ml-4">Wybrana opcja: @modelChangeDiet.SelectedOption</MudText>
                         <MudButton ButtonType="ButtonType.Submit"
                                    Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
                             Zatwierdź
-                        </MudButton> </div>
+                        </MudButton>
+                    </div>
                 </MudPaper>
             </MudStack>
         </MudItem>
@@ -51,76 +49,64 @@
         <MudItem xs="6">
             <MudCard Style="width:100%; position: relative;">
                 <MudCardMedia Image="https://img.freepik.com/free-photo/top-view-healthy-vs-unhealthy-concept_23-2148193159.jpg?t=st=1729008537~exp=1729012137~hmac=ca30860a96fe1f68d47ea34c3609ddd56c928eeb8052136aefe0b5bc0dbe73db&w=360" Height="500" />
-
             </MudCard>
         </MudItem>
     </MudGrid>
-    
+
 </EditForm>
 
-
-
-    @code {
-//Model formularza,Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
+@code {
+// Model formularza, Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
 ChangeDietForm modelChangeDiet = new ChangeDietForm();
 bool success;
-    
+
 public class ChangeDietForm
 {
-    //Wymagania formularza required-wymagany
-    [Required(ErrorMessage = "Należy wybrać pozycję.")]
-    public string SelectedOption { get; set; }
-        
+// Wymagania formularza required-wymagany
+[Required(ErrorMessage = "Należy wybrać pozycję.")]
+public string SelectedOption { get; set; }
 }
 
-//Metoda sprawdzająca poprawnośc danych - czy nie są puste
+// Metoda sprawdzająca poprawność danych - czy nie są puste
 private bool ModelIsValid()
 {
-    return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
+return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
 }
 
-    
-//Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
-private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
+// Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
+private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
 {
-    if (ModelIsValid())
-    {
-        success = true;
-        NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
-
-    }
-    else
-    {
-        success = false;
-    }
-    StateHasChanged();
+if (ModelIsValid())
+{
+success = true;
+// NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+    NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+    
+}
+else
+{ 
+    success = false; 
+} 
+StateHasChanged();
 }
 
-//Nazwa diety ze strony AllGuestDiets-NIE DZIAŁA
-        private string name;
-        
-        protected override void OnInitialized()
-        {
-            //nowa instacja uri, która reprezentuje aktualny URL
-            var uri = new Uri(NavigationManager.Uri);
-            //System.Web.HttpUtility-analizuje ciąg zapytania części URL po znaku "?" i zwraca kolekcję par klucz-wartość.
-            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-        
-            name = query[name];
-        }
-        private List<Danie> dania;
-        
-        protected override async Task OnInitializedAsync()
-        {
-            try
-            {
-                dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-            }
-            catch (Exception ex)
-            {
-                
-            }
+// Nazwa diety ze strony AllGuestDiets
+[Parameter] public int DietId { get; set; }
+private Dieta selectedDiet;
 
+// Obsługa enpionta
+private List<Danie> dania =new List<Danie>();
 
-        }
-    }
+protected override async Task OnInitializedAsync()
+{ 
+    try
+{ 
+    selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}"); 
+    dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+}
+    catch (Exception ex)
+{
+    Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
+}
+}
+}

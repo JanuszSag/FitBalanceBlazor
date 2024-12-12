@@ -1,3 +1,4 @@
+
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager NavigationManager
 @page "/addDiet"
@@ -21,28 +22,37 @@
                                   Required="true" RequiredError="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
 
                     <!-- Sekcja wyboru dania do dodania -->
-                    <MudText Typo="Typo.h6">Która pozycję chcesz dodać?</MudText>
+                    <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText>
                     <MudForm>
-                        <MudRadioGroup @bind-Value="modelAddDiet.SelectedOption">
+                       <!--NIE DZIAŁA-->
+                        @* <MudCheckBox @bind-Value="modelAddDiet.SelectedOption"><!--to zaznaczenie działa--> *@
+                        @*     <MudStack> *@
+                        @*         @foreach (var danie in dania) *@
+                        @*         { *@
+                        @*         <MudCheckBox Value="@("nazwaDania")">@danie.nazwa</MudCheckBox><!-- to zaznaczenie nie działa--> *@
+                        @*         } *@
+                        @* *@
+                        @*     </MudStack> *@
+                        @* </MudCheckBox> *@
+                        <MudSelect @bind-Value="selectedDanie" Label="Wybierz danie"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
                             <MudStack>
                                 @foreach (var danie in dania)
                                 {
-                                <MudRadio Value="@("nazwaDania")">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to maja być dania z wybranej diety z poprzedniej strony-->
+                                <MudSelectItem Value="danie">@danie.nazwa</MudSelectItem>
                                 }
-
                             </MudStack>
-                        </MudRadioGroup>
+                        </MudSelect>
 
                     </MudForm>
                     <div class="d-flex align-center">
-                        <MudText Class="ml-4">Wybrana opcja: @modelAddDiet.SelectedOption</MudText>
+                        @* <MudText Class="ml-4">Wybrana opcja: @modelAddDiet.SelectedOption</MudText> *@
                         <MudButton ButtonType="ButtonType.Submit"
                                    Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
                             Zatwierdź
                         </MudButton> </div>
-                    <MudText Color="Color.Error">
-                    <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage>
-                    </MudText>
+                    @* <MudText Color="Color.Error"> *@
+                    @*     <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage> *@
+                    @* </MudText> *@
                 </MudCardContent>
             </MudCard>
         </MudItem>
@@ -61,58 +71,59 @@
 
 @code {
 
-    //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
-    AddNewDietForm modelAddDiet = new AddNewDietForm();
-    bool success;
+//Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
+AddNewDietForm modelAddDiet = new AddNewDietForm();
+bool success;
 
-    public class AddNewDietForm
-    {
-        //Wymagania formularza required-wymagany
-        [Required(ErrorMessage = "Należy wprowadzić nazwę diety.")]
-        [StringLength(20, ErrorMessage = "Nazwa powinna być ne dłuższa niż 20 znaków.")]
-        public string DietName { get; set; }
+public class AddNewDietForm 
+{
+//Wymagania formularza required-wymagany
+[Required(ErrorMessage = "Należy wprowadzić nazwę diety.")]
+[StringLength(20, ErrorMessage = "Nazwa powinna być ne dłuższa niż 20 znaków.")]
+public string DietName { get; set; }
 
-        [Required(ErrorMessage = "Należy wybrać pozycję.")]
-        public string SelectedOption { get; set; }
-
-    }
-
-    //Metoda sprawdzająca poprawnośc danych - czy nie są puste
-    private bool ModelIsValid()
-    {
-        return !string.IsNullOrEmpty(modelAddDiet.DietName) && !string.IsNullOrEmpty(modelAddDiet.SelectedOption);
-    }
-
-    //Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
-    private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
-    {
-        if (ModelIsValid())
-        {
-            success = true;
-            NavigationManager.NavigateTo($"/addDiet/addIngredientsToNewDiet?DietName={Uri.EscapeDataString(modelAddDiet.DietName)}&SelectedOption={Uri.EscapeDataString(modelAddDiet.SelectedOption)}");
-
-        }
-        else
-        {
-            success = false;
-        }
-
-        StateHasChanged();
-    }
-
-    private List<Danie> dania;
-
-    protected override async Task OnInitializedAsync(){
-        try
-        {
-            dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-        }
-        catch (Exception ex)
-        {
-            
-        } 
-    }
-    
+// [Required(ErrorMessage = "Należy wybrać pozycję.")]
+// public string SelectedOption { get; set; }
 
 }
 
+//Metoda sprawdzająca poprawnośc danych - czy nie są puste
+private bool ModelIsValid()
+{ 
+    // return !string.IsNullOrEmpty(modelAddDiet.DietName) && !string.IsNullOrEmpty(modelAddDiet.SelectedOption);
+    return !string.IsNullOrEmpty(modelAddDiet.DietName) ;
+}
+
+//Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
+private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
+{ 
+    if (ModelIsValid())
+{ 
+    success = true; 
+    // NavigationManager.NavigateTo($"/addDiet/addIngredientsToNewDiet?DietName={Uri.EscapeDataString(modelAddDiet.DietName)}&SelectedOption={Uri.EscapeDataString(modelAddDiet.SelectedOption)}");
+    NavigationManager.NavigateTo($"/addDiet/addIngredientsToNewDiet?DietName={Uri.EscapeDataString(modelAddDiet.DietName)}");
+}
+    else
+{ 
+    success = false;
+}
+    
+    StateHasChanged();
+}
+
+private List<Danie> dania=new List<Danie>();
+private Danie selectedDanie;
+
+protected override async Task OnInitializedAsync(){ 
+    try
+{ 
+    dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+}
+    catch (Exception ex)
+{
+
+}
+}
+
+
+}
