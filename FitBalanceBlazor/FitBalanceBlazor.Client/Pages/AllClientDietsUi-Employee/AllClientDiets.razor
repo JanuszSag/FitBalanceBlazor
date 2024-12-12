@@ -20,11 +20,12 @@
                     <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == dieta.rodzaj)?.nazwa</MudText>
 
                     @* <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.Dieta_id_dieta== @context.id_dieta)?.nazwa</MudText></MudTd>  *@
-                    @* <MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d => d.id_danie == @dieta.Danie_id_danie.ElementAt(1).id_danie)?.nazwa</MudText> *@
-                    @foreach (var bufor in @dieta.Danie_id_danie)
+                  <MudText Typo="Typo.subtitle1">Danie:  @*Class="d-inline" *@
+                    @foreach (var danie in @dieta.Danie_id_danie)
                     {
-                    <MudText Typo="Typo.subtitle1">Danie: @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == bufor.id_danie)?.nazwa</MudText>
+                    @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa
                     }
+                    </MudText>
                 </MudStack>
 
                 <MudStack Row="true" Justify="Justify.SpaceAround">

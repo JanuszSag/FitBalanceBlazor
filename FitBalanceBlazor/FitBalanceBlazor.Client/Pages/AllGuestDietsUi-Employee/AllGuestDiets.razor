@@ -15,14 +15,14 @@
             <MudStack Justify="Justify.SpaceAround">
                 <MudText Typo="Typo.subtitle1">Opis: @dieta.opis </MudText>
                 <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @dieta.rodzaj)?.nazwa</MudText>
-                <MudTd DataLabel="Dania">
-                    <MudText Typo="Typo.subtitle1">Dania:
-                        @* @foreach (var idDanie in @context.Danie_id_danie) *@
-                        @* { *@
-                        @* <span>@dania.FirstOrDefault(d => d.id_danie ==@dieta_danie.nazwa )?.nazwa</span> *@
-                        @* } *@
+                
+                    <MudText Typo="Typo.subtitle1">Danie:  @*Class="d-inline" *@
+                        @foreach (var danie in @dieta.Danie_id_danie)
+                        {
+                        @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa
+                        }
                     </MudText>
-                </MudTd>
+                
             </MudStack>
 
             <MudStack Row="true" Justify="Justify.SpaceAround">
