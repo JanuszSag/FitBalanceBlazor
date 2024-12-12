@@ -17,7 +17,25 @@ public class DietService: IDietService
     /// <returns>List of diets</returns>
     public async Task<List<Dieta>> GetAllDietsAsync()
     {
-        return await _context.Dieta.ToListAsync();
+        var result = await _context.Dieta.Include(d => d.Danie_id_danie)
+            .Select(d => new Dieta
+            {
+                id_dieta = d.id_dieta,
+                nazwa = d.nazwa,
+                opis = d.opis,
+                kalorycznosc = d.kalorycznosc,
+                autor = d.autor,
+                rodzaj = d.rodzaj,
+                Opinia = d.Opinia,
+                Przypisana_dieta = d.Przypisana_dieta,
+                Raport = d.Raport,
+                autorNavigation = d.autorNavigation,
+                rodzajNavigation = d.rodzajNavigation,
+                Danie_id_danie = d.Danie_id_danie,
+                id_produkt = d.id_produkt
+            }).ToListAsync();
+
+        return result;
     }
     
     /// <summary>
