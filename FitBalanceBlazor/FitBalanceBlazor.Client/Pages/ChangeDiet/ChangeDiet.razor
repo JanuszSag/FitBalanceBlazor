@@ -27,9 +27,10 @@
                     <MudForm>
                         <MudRadioGroup @bind-Value="modelChangeDiet.SelectedOption">
                             <MudStack>
-                                @foreach (var danie in dania)
+                                @foreach (var danie in selectedDiet.Danie_id_danie)
                                 {
-                                <MudRadio Value="@danie.nazwa">@danie.nazwa</MudRadio><!--trzeba uwzględnić, że to mają być dania z wybranej diety z poprzedniej strony-->
+                                    <MudRadio Value="@danie.nazwa"> @selectedDiet.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa</MudRadio>
+                                    <!--trzeba uwzględnić, że to mają być dania z wybranej diety z poprzedniej strony-->
                                 }
                             </MudStack>
                         </MudRadioGroup>
