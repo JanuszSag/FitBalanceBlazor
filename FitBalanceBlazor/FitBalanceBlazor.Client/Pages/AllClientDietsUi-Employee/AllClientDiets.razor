@@ -3,6 +3,7 @@
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
@@ -18,10 +19,8 @@
                     <MudStack Justify="Justify.SpaceAround">
                         <MudTd DataLabel="Opis"><MudText Typo="Typo.subtitle1">Opis: @context.opis</MudText></MudTd>
                         <MudTd DataLabel="Rodzaj"><MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @context.rodzaj)?.nazwa</MudText></MudTd>
-                        <MudTd DataLabel="Dania">
-                            <MudText Typo="Typo.subtitle1">Dania:<!--uzupelnic endpointem-->
-                            </MudText>
-                        </MudTd>
+                        @* <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.Dieta_id_dieta== @context.id_dieta)?.nazwa</MudText></MudTd> *@
+                        @* <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.id_danie== @context.Danie_id_danie)?.nazwa</MudText></MudTd> *@
                     </MudStack>
 
                     <MudStack Row="true" Justify="Justify.SpaceAround">
@@ -31,8 +30,8 @@
                                        OnClick="() => onChangeDiet(context.id_dieta)">
                                 Zmień
                             </MudButton>
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px">
-                                Usuń
+                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
+                                       OnClick="snackBarFun">Usuń
                             </MudButton>
                         </div>
                     </MudStack>
@@ -83,16 +82,16 @@
 
 @code {
     //Zmienne, które są listami obiektów typu Dieta i Rodzaj, lista przechowuje dane, które pobrane są z API
-    private List<Dieta> diety;
-    private List<Rodzaj> rodzaje;
-    private List<Danie> dania;
+    private List<Dieta> diety=new List<Dieta>();
+    private List<Rodzaj> rodzaje=new List<Rodzaj>();
+    private List<Danie> dania=new List<Danie>();
     
 
     protected override async Task OnInitializedAsync()
     {
-        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        //diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        // dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
   
     }
 
@@ -107,7 +106,7 @@
 
     public class FilterForm
     {
-        public string SelectedOption { get; set; }
+        public string SelectedOption { get; set; } = "wszytskieDiety";
 
     }
        //obsługa filtrów
@@ -121,7 +120,7 @@
         {
             //żadna nie działa poprawnie
             //diety = diety.Where(d => rodzaje.FirstOrDefault(r => r.id_rodzaj == d.rodzaj)?.nazwa == modelFilter.SelectedOption).ToList();
-            // diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
+           // diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
              //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && string.Equals(r.nazwa, modelFilter.SelectedOption, StringComparison.OrdinalIgnoreCase))).ToList();
              //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).ToList();
              //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).Where(d => d.rodzaj == modelFilter.SelectedOption) // lub inne warunki.ToList();
@@ -131,11 +130,31 @@
              //     bool isInt = int.TryParse(modelFilter.SelectedOption, out selectedId);
              //     return isInt && d.rodzaj == selectedId;
              // }).ToList();
+             diety = diety.Where(d => 
+                 rodzaje.Any(r => 
+                     r.id_rodzaj == d.rodzaj && 
+                     string.Equals(r.nazwa, modelFilter.SelectedOption, StringComparison.OrdinalIgnoreCase)
+                 )
+             ).ToList();
 
              
         }
         StateHasChanged();
         // Console.WriteLine($"Number of diets after filter: {diety.Count}");
+    }
+    
+    //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+    private void snackBarFun()
+    {
+        bool isSuccess = true;
+        if (isSuccess)
+        {
+            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
+        }
     }
  
     

@@ -271,17 +271,6 @@ private bool IsCorectEmail(string email)
 
 public string message { get; set; }
 
-//snackbar-wyswietla krotkie i tymczasowe wiadomosci
-void SnackBarEmail()
-{
-    if(IsCorectEmail(email)& !string.IsNullOrEmpty(message)){
-    Snackbar.Add("Wysłano pomyslnie maila!", Severity.Success);
-    }
-    else
-    {
-        Snackbar.Add("Należy wprowadzic poprawny mail adres i treść wiadomości", Severity.Error); 
-    }
-}
 
 //opinie
     private List<Opinia> opinie;
@@ -298,5 +287,15 @@ void SnackBarEmail()
         }
     }
 
-
+//snackbar-wyswietla krotkie i tymczasowe wiadomosci
+    void SnackBarEmail()
+    {
+        if(IsCorectEmail(email)& !string.IsNullOrEmpty(message)){
+            Snackbar.Add("Wysłano pomyslnie maila!", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Należy wprowadzic poprawny mail adres i treść wiadomości", Severity.Error); 
+        }
+    }
 }
