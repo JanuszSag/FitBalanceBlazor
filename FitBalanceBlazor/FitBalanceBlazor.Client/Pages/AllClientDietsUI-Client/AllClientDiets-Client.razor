@@ -14,39 +14,28 @@ using FitBalanceBlazor.Models
 <!-- Sekcja elementów listy diet -->
 <MudGrid>
     <MudItem xs="9">
-        <MudTable Items="@diety">
-            <RowTemplate>
-                <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                    <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
+        @foreach (var dieta in diety)
+        {
+            <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
+                <MudStack>
+                    <MudText Typo="Typo.body1"><strong>opis:</strong> @dieta.opis</MudText>
+                    <MudText Typo="Typo.body1"><strong>rodzaj:</strong> @rodzaje.FirstOrDefault(r => r.id_rodzaj == dieta.rodzaj)?.nazwa</MudText>
+                    <MudText Typo="Typo.body1"><strong>dania:</strong> @string.Join(", ", dieta.Danie_id_danie.Select(d => d.nazwa))</MudText>
+                </MudStack>
+            </MudPaper>
+        }
+    </MudItem>
 
-                    <MudGrid>
-                        <MudItem xs="4">
-                            <MudText Typo="Typo.subtitle1"><strong>Śniadanie</strong></MudText>
-                            <!--   <MudText Typo="Typo.body1">Danie: @(GetMealName(context.sniadanie))</MudText> -->
-                           </MudItem>
-                           <MudItem xs="4">
-                               <MudText Typo="Typo.subtitle1"><strong>Obiad</strong></MudText>
-                             <!--  <MudText Typo="Typo.body1">Danie: @(GetMealName(context.obiad))</MudText> -->
-                           </MudItem>
-                           <MudItem xs="4">
-                               <MudText Typo="Typo.subtitle1"><strong>Kolacja</strong></MudText>
-                            <!--   <MudText Typo="Typo.body1">Danie: @(GetMealName(context.kolacja))</MudText> -->
-                           </MudItem>
-                       </MudGrid>
-                   </MudPaper>
-               </RowTemplate>
-           </MudTable>
-       </MudItem>
-   
-       <!-- Sekcja filtrów-rodzaj diety i ilosci dan -->
-    <MudItem xs="2">
+    <!-- Sekcja filtrowania -->
+    <MudItem xs="3">
         <MudStack>
             <MudText Typo="Typo.h6"><strong>Filtry</strong></MudText>
             <MudPaper Class="pa-10" Style="border: 6px black;border-radius: 20px;">
                 <MudText Typo="Typo.h6">Rodzaj:</MudText>
                 <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
                     <MudStack>
-                        <MudRadio Value=@("wszystkieDiety")>Wszystkie rodzaje</MudRadio>
+                        <MudRadio Value=@("wszystkieDiety")>wszystkie rodzaje</MudRadio>
                         @foreach (var rodzaj in rodzaje)
                         {
                             <MudRadio Value="@rodzaj.nazwa">@rodzaj.nazwa</MudRadio>
@@ -54,15 +43,7 @@ using FitBalanceBlazor.Models
                     </MudStack>
                 </MudRadioGroup>
 
-                <MudText Typo="Typo.h6">Ilość posiłków:</MudText>
-                <MudRadioGroup @bind-Value="modelFilter.MealsCount">
-                    <MudStack>
-                        <MudRadio Value="3">3</MudRadio>
-                        <MudRadio Value="5">5</MudRadio>
-                    </MudStack>
-                </MudRadioGroup>
-
-                <div class="d-flex align-center">
+                <div class="d-flex align-center mt-3">
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;" OnClick="FilterDiets">
                         Pokaż wyniki
                     </MudButton>
@@ -73,45 +54,44 @@ using FitBalanceBlazor.Models
 </MudGrid>
 
 @code {
-    //Zmienne, które są listami obiektов Dieta, Rodzaj, Danie
+    
     private List<Dieta> diety;
     private List<Rodzaj> rodzaje;
     private List<Danie> dania;
 
     protected override async Task OnInitializedAsync()
     {
+        // Pobieranie danych
         diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
         dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+
+        // Polaczenie dania z dieta
+        foreach (var dieta in diety)
+        {
+            dieta.Danie_id_danie = dania.Where(d => dieta.Danie_id_danie.Select(m => m.id_danie).Contains(d.id_danie)).ToList();
+        }
     }
 
-    //
-    private string GetMealName(int? mealId)
-    {
-        return dania?.FirstOrDefault(d => d.id_danie == mealId)?.nazwa ?? "Brak";
-    }
-
-    // 
+    // Filtrowanie
     private FilterForm modelFilter = new FilterForm();
     public class FilterForm
     {
         public string SelectedOption { get; set; }
-        public int MealsCount { get; set; } = 3;
     }
 
-    // 
+    // Filtrowanie
     private async Task FilterDiets()
     {
-        if (!string.IsNullOrWhiteSpace(modelFilter.SelectedOption))
+        if (modelFilter.SelectedOption == "wszystkieDiety" || string.IsNullOrWhiteSpace(modelFilter.SelectedOption))
         {
-            diety = diety?.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
+            diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
         }
-
-        if (modelFilter.MealsCount > 0)
+        else
         {
-          <!--  diety = diety?.Where(d => d.meals?.Count == modelFilter.MealsCount).ToList(); -->
+            diety = diety.Where(d => rodzaje.FirstOrDefault(r => r.id_rodzaj == d.rodzaj)?.nazwa == modelFilter.SelectedOption).ToList();
         }
 
         StateHasChanged();
-    } 
+    }
 }

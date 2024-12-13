@@ -1,0 +1,50 @@
+@page "/allGuestDiets-Guest"
+using System.Net;
+using FitBalanceBlazor;
+using Microsoft.AspNetCore.Components.Web;
+using MudBlazor;
+using System.ComponentModel.DataAnnotations
+using FitBalanceBlazor.Models
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<PageTitle>Guest Diets</PageTitle>
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>lista diet dla gościa</strong></MudText>
+
+<!-- Sekcja elementów listy diet -->
+<MudGrid>
+    <MudItem xs="12">
+        @foreach (var dieta in diety)
+        {
+            <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
+                <MudStack>
+                    <MudText Typo="Typo.body1"><strong>opis:</strong> @dieta.opis</MudText>
+                    <MudText Typo="Typo.body1"><strong>rodzaj:</strong> @rodzaje.FirstOrDefault(r => r.id_rodzaj == dieta.rodzaj)?.nazwa</MudText>
+                    <MudText Typo="Typo.body1"><strong>dania:</strong> @string.Join(", ", dieta.Danie_id_danie.Select(d => d.nazwa))</MudText>
+                </MudStack>
+            </MudPaper>
+        }
+    </MudItem>
+</MudGrid>
+
+@code {
+  
+    private List<Dieta> diety;
+    private List<Rodzaj> rodzaje;
+    private List<Danie> dania;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Dane dan oraz diet
+        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
+        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+
+        // Polaczenie dan do diet
+        foreach (var dieta in diety)
+        {
+            dieta.Danie_id_danie = dania.Where(d => dieta.Danie_id_danie.Select(m => m.id_danie).Contains(d.id_danie)).ToList();
+        }
+    }
+}

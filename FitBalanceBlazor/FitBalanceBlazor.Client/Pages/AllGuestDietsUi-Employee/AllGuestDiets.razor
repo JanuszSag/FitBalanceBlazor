@@ -8,30 +8,28 @@
 <PageTitle>All guest diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Lista diet dla gości</strong></MudText>
 
-<MudTable Items="@diety">
-   
-    <RowTemplate>
+    @foreach (var dieta in diety)
+    {
         <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-            <MudTd Style="text-transform: uppercase" DataLabel="Nazwa"><strong>@context.nazwa</strong></MudTd>
+            <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
             <MudStack Justify="Justify.SpaceAround">
-            <MudTd DataLabel="Opis" >  <MudText Typo="Typo.subtitle1">Opis: @context.opis </MudText> </MudTd>
-            <MudTd DataLabel="Rodzaj"> <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @context.rodzaj)?.nazwa
-                </MudText> </MudTd>
-            <MudTd DataLabel="Dania">
-                <MudText Typo="Typo.subtitle1">Dania:
-                    @* @foreach (var idDanie in @context.Danie_id_danie) *@
-                    @* { *@
-                    @* <span>@dania.FirstOrDefault(d => d.id_danie ==@dieta_danie.nazwa )?.nazwa</span> *@
-                    @* } *@
-                </MudText>
-            </MudTd>
+                <MudText Typo="Typo.subtitle1">Opis: @dieta.opis </MudText>
+                <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @dieta.rodzaj)?.nazwa</MudText>
+                
+                    <MudText Typo="Typo.subtitle1">Danie:  @*Class="d-inline" *@
+                        @foreach (var danie in @dieta.Danie_id_danie)
+                        {
+                        @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa
+                        }
+                    </MudText>
+                
             </MudStack>
-            
+
             <MudStack Row="true" Justify="Justify.SpaceAround">
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled"
                                Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
-                               OnClick="() => onChangeDiet(context.id_dieta)">
+                               OnClick="() => onChangeDiet(dieta.id_dieta)">
                         Zmień
                     </MudButton>
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
@@ -41,10 +39,9 @@
                 </div>
             </MudStack>
         </MudPaper>
-    </RowTemplate>
-</MudTable>
+    }
 
-@code {
+    @code {
     private List<Dieta> diety=new List<Dieta>();
     private List<Rodzaj> rodzaje=new List<Rodzaj>();
     private List<Danie> dania=new List<Danie>();
