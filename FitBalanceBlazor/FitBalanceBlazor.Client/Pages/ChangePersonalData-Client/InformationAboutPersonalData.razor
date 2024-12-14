@@ -1,4 +1,7 @@
 @page "/informationAboutPersonalData"
+@using System.ComponentModel.DataAnnotations
+@using FitBalanceBlazor.Models
+@inject HttpClient Http
 
 
 <PageTitle>Information About Personal Data</PageTitle>
@@ -10,11 +13,19 @@
                 <!-- Sekcja opis -->
                 <MudStack Spacing="5">
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Informację o Tobie </strong></MudText>
+                    <MudText Typo="Typo.subtitle1">Pseudonim:</MudText>
+                    <MudText Typo="Typo.subtitle1">Adres mail:</MudText>
+                    <MudText Typo="Typo.subtitle1">Data urodzenia:</MudText>
+                    <MudText Typo="Typo.subtitle1">Wiek:</MudText>
+                    <MudText Typo="Typo.subtitle1">Płeć:</MudText>
+                    <MudText Typo="Typo.subtitle1">Wzrost:</MudText>
+                    <MudText Typo="Typo.subtitle1">Waga:</MudText>
+                    
                     
                 </MudStack>
                 <MudButton ButtonType="ButtonType.Submit"
                            Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"
-                           Href="/decisionWhatPersonalDataChange">
+                           Href="/informationAboutPersonalData/decisionWhatPersonalDataChange">
                     Edytuj
                 </MudButton>
                 <MudText Align="Align.Left" Typo="Typo.h4"><strong>Zapotrzebowanie kaloryczne: </strong></MudText>
@@ -36,5 +47,19 @@
 </MudGrid>
 
 @code{
+    //Obsługa endpointów
+    private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>();
+    
+    protected override async Task OnInitializedAsync()
+    { 
+        try
+        { 
+            // uzytkownicy = await Http.GetFromJsonAsync<List<Uzytkownik>("api/");//dodac api
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
+        }
+    }
 
 }
