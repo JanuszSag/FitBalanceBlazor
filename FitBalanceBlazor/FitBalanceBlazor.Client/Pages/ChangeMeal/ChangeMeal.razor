@@ -1,51 +1,101 @@
 @page "/changeMeal"
+using System.Net;
+using FitBalanceBlazor;
+using Microsoft.AspNetCore.Components.Web;
+using MudBlazor;
+using System.ComponentModel.DataAnnotations;
+using FitBalanceBlazor.Models;
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana posilku</strong></MudText>
 
 <MudGrid>
-    <MudItem xs="6"> <!-- xs="liczba" oznacza ilośc kolum, zajmowanych przez element xs=12 cala szerokosc, 6 pol ...-->
+    <!-- Lewa strona -->
+    <MudItem xs="6">
         <MudStack Spacing="3">
-            <!-- Sekcja dodawanie nazwy nowej diety -->
+         
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.h6">Twoja przypisana dieta:</MudText>   <!--dodanie z bazy albo jakoś inaczej zapmaiteany wybor poprzedniej strony-->
+                <MudText Typo="Typo.h6">Twoja przypisana dieta:</MudText>
+                <MudText Typo="Typo.body1">@currentDiet?.nazwa</MudText>
             </MudPaper>
 
-            <!-- Sekcja wyboru dania do zmieny -->
+            <!-- Sekcja wyboru dania -->
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.h6">Która pozycję chcesz zmienić?</MudText>
                 <MudForm>
-                    <MudRadioGroup @bind-Value="SelectedOption">
+                    <MudRadioGroup @bind-Value="selectedMeal">
                         <MudStack>
-                            <MudRadio Value="@("Śniadanie")" Color="Color.Primary">Śniadanie</MudRadio>
-                            <MudRadio Value="@("Drugie śniadanie")" Color="Color.Primary">Drugie śniadanie</MudRadio>
-                            <MudRadio Value="@("Obiad")" Color="Color.Primary">Obiad</MudRadio>
-                            <MudRadio Value="@("Podwieczorek")" Color="Color.Primary">Podwieczorek</MudRadio>
-                            <MudRadio Value="@("Kolacja")" Color="Color.Primary">Kolacja</MudRadio>
+                            @if (currentDiet?.Danie_id_danie != null && currentDiet.Danie_id_danie.Any())
+                            {
+                                @foreach (var danie in currentDiet.Danie_id_danie)
+                                {
+                                    <MudRadio Value="@danie.nazwa" Color="Color.Primary">@danie.nazwa</MudRadio>
+                                }
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body2">Brak dostępnych dań w tej diecie.</MudText>
+                            }
                         </MudStack>
                     </MudRadioGroup>
                 </MudForm>
                 <div class="d-flex align-center">
-                    <MudText Class="ml-4">Wybrana opcja: @SelectedOption</MudText>
+                    <MudText Class="ml-4">Wybrana opcja: @selectedMeal</MudText>
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                                Href="/changeCertainMeal">Zatwierdź</MudButton>
+                               OnClick="SubmitChange">
+                        Zatwierdź
+                    </MudButton>
                 </div>
             </MudPaper>
         </MudStack>
     </MudItem>
 
-    <!-- Sekcja grafiki -->
+    <!-- Obrazek -->
     <MudItem xs="6">
         <MudCard Style="width:100%; position: relative;">
             <MudCardMedia Image="/Images/ChangeMeal/ChangeMeal.png" Height="500" />
-
         </MudCard>
     </MudItem>
 </MudGrid>
 
-
-
 @code {
-public string TextValue { get; set; }
-public string SelectedOption { get; set; }
+    private Dieta currentDiet; 
+    private string selectedMeal; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Trzeba zamieniac ID
+            currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/1");
+
+            if (currentDiet == null)
+            {
+                Console.WriteLine("Diet not found.");
+            }
+            else if (currentDiet.Danie_id_danie == null || !currentDiet.Danie_id_danie.Any())
+            {
+                Console.WriteLine("No meals found for this diet.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+
+    private void SubmitChange()
+    {
+        if (!string.IsNullOrEmpty(selectedMeal))
+        {
+            Console.WriteLine($"Selected meal to change: {selectedMeal}");
+            NavigationManager.NavigateTo($"/changeCertainMeal?mealName={selectedMeal}");
+        }
+        else
+        {
+            Console.WriteLine("No meal selected.");
+        }
+    }
 }
