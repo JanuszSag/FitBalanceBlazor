@@ -1,4 +1,4 @@
-@page "/ChangePersonalData"
+@page "/informationAboutPersonalData/decisionWhatPersonalDataChange/ChangePersonalData"
 
 
 <PageTitle>ChangePersonal Data </PageTitle>
@@ -11,7 +11,14 @@
                 <!-- Sekcja opis -->
                 <MudStack Spacing="5">
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Dane do zmiany: </strong></MudText>
-                    <MudText Align="Align.Left" Typo="Typo.h4"><strong>textfiled </strong></MudText>
+                    <!-- Sekcja wpisywania nowej wartości danej -->
+                    <MudText Typo="Typo.h6">Nowa wartość</MudText>
+                    @* <MudTextField @bind-Value="modelAddDiet.DietName" Label="Wpisz nową wartość" *@
+                    @*               For="@(() => modelAddDiet.DietName)" *@
+                    @*               Required="true" RequiredError="Należy wprowadzić wartość" Variant="Variant.Text"></MudTextField> *@
+                    <MudTextField @bind-Value="TextValue" Label="Wpisz nową wartość"  Required="true" RequiredError="Należy wprowadzić wartość" Variant="Variant.Text"></MudTextField>
+
+
 
                 </MudStack>
                 <MudButton ButtonType="ButtonType.Submit"
@@ -31,5 +38,5 @@
     </MudItem>
 </MudGrid>
 @code {
-
+    public string TextValue { get; set; }
 }
