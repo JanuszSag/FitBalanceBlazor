@@ -3,6 +3,32 @@
 
 <PageTitle>Decision What Personal Data Change</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Zmiana danych osobowych</strong></MudText>
+
+<MudGrid>
+    <MudItem xs="6">
+        <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+            <MudCardContent>
+                <!-- Sekcja opis -->
+                <MudStack Spacing="5">
+                    <MudText Align="Align.Left" Typo="Typo.h4"><strong>Którą informacje chcesz edytować? </strong></MudText>
+
+                </MudStack>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/decisionWhatPersonalDataChange">
+                    Zatwierdź
+                </MudButton>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Sekcja grafiki -->
+    <MudItem xs="6">
+        <MudCard Style="width:100%; position: relative;">
+            <MudImage Fluid="true" Src="/Images/PersonalData/DataImage.png" Alt="Image" Class="rounded-lg"/>
+        </MudCard>
+    </MudItem>
+</MudGrid>
 @code {
 
 }
