@@ -21,19 +21,14 @@
                                   For="@(() => modelAddDiet.DietName)"
                                   Required="true" RequiredError="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
 
+                    <MudText Typo="Typo.h6">Opis: </MudText>
+                    <MudTextField @bind-Value="Description" Label="Należy wprowadzić opis" Variant="Variant.Text"></MudTextField>
+                    <MudText Typo="Typo.h6">Kaloryczność: </MudText>
+                    <MudTextField @bind-Value="Kcal" Label="Należy wprowadzić kaloryczność" Variant="Variant.Text"></MudTextField>
+
                     <!-- Sekcja wyboru dania do dodania -->
                     <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText>
                     <MudForm>
-                       <!--NIE DZIAŁA-->
-                        @* <MudCheckBox @bind-Value="modelAddDiet.SelectedOption"><!--to zaznaczenie działa--> *@
-                        @*     <MudStack> *@
-                        @*         @foreach (var danie in dania) *@
-                        @*         { *@
-                        @*         <MudCheckBox Value="@("nazwaDania")">@danie.nazwa</MudCheckBox><!-- to zaznaczenie nie działa--> *@
-                        @*         } *@
-                        @* *@
-                        @*     </MudStack> *@
-                        @* </MudCheckBox> *@
                         <MudSelect @bind-Value="selectedDanie" Label="Wybierz danie"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
                             <MudStack>
                                 @foreach (var danie in dania)
@@ -42,7 +37,6 @@
                                 }
                             </MudStack>
                         </MudSelect>
-
                     </MudForm>
                     <div class="d-flex align-center">
                         @* <MudText Class="ml-4">Wybrana opcja: @modelAddDiet.SelectedOption</MudText> *@
@@ -70,6 +64,8 @@
 
 
 @code {
+    public string Description { get; set; }
+    public string Kcal { get; set; }
 
 //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
 AddNewDietForm modelAddDiet = new AddNewDietForm();
