@@ -1,47 +1,47 @@
 @page "/myDiet"
+using System.Net;
+using FitBalanceBlazor;
+using Microsoft.AspNetCore.Components.Web;
+using MudBlazor;
+using System.ComponentModel.DataAnnotations
+using FitBalanceBlazor.Models
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
 
-<!-- Nagłówek strony -->
-<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase; font-weight: bold;">Moja dieta</MudText>
+<PageTitle>My Diet</PageTitle>
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>moja dieta</strong></MudText>
 
 <MudGrid>
-    <!-- Lewa część z informacjami -->
+    <!-- Lewa sekcja -->
     <MudItem xs="6">
-        <MudStack Spacing="3">
-            <!-- Sekcja z informacją o diecie -->
-            <MudPaper Class="pa-3" Style="background-color: #E0FFB3; border-radius: 20px;">
-                <MudText Typo="Typo.h6" Style="font-weight: bold;">Twoja przypisana dieta: nazwa diety</MudText>
-            </MudPaper>
+        <MudPaper Class="pa-3" Style="background:rgb(223,243,156);border-radius: 20px;">
+            <MudText Typo="Typo.subtitle1" Align="Align.Center"><strong>Twoja przypisana dieta : @currentDiet.nazwa</strong></MudText>
+        </MudPaper>
 
-            <!-- Sekcja z posiłkami -->
-            <MudPaper Class="pa-3" Style="background-color: #E0FFB3; border-radius: 20px;">
-                <MudText Typo="Typo.body1">
-                    Śniadanie: <br />
-                    Drugie śniadanie: <br />
-                    Obiad: <br />
-                    Podwieczorek: <br />
-                    Kolacja:
-                </MudText>
-
-                <!-- Pytanie i przycisk -->
-                <MudText Typo="Typo.body1" Style="font-weight: bold; margin-top: 20px;">
-                    Nie odpowiada Ci któraś pozycja?
-                </MudText>
-                
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="background-color: #FF986B; border-radius: 20px; margin-top: 10px;" Href="/changeMeal">
-                    zmień ją
-                </MudButton>
-            </MudPaper>
-        </MudStack>
+        <MudPaper Class="pa-3 mt-2" Style="background:rgb(223,243,156);border-radius: 20px;">
+            @foreach (var danie in currentDiet.Danie_id_danie)
+            {
+                <MudText Typo="Typo.body1">@danie.nazwa: @danie.nazwa</MudText>
+            }
+            <MudText Typo="Typo.body2" Class="mt-3"><strong>Nie odpowiada Ci któraś pozycja?</strong></MudText>
+            <MudButton Variant="Variant.Filled" Style="background:rgb(255,152,107);border-radius: 20px;" Href="/changeMeal">
+                zmień ją
+            </MudButton>
+        </MudPaper>
     </MudItem>
 
-    <!-- Prawa część z obrazkiem -->
+    <!-- Prawa sekcja -->
     <MudItem xs="6">
-        <MudCard Style="width: 100%;">
-            <MudCardMedia Image="/Images/MyDiet/MyDiet.png" />
-        </MudCard>
+        <img src="/Images/MyDiet/MyDiet.png" alt="Diet Image" Style="width:100%;border-radius: 20px;" />
     </MudItem>
 </MudGrid>
 
 @code {
-    public string SelectedOption { get; set; }
+    private Dieta currentDiet;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // zmienic tu zeby byla informacja o poprawnej diecie przypisanej uzytkownikowi
+        currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/3");
+    }
 }
