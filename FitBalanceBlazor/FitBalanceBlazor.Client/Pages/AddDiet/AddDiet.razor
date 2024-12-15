@@ -6,6 +6,7 @@
 @using System.ComponentModel.DataAnnotations
 @using FitBalanceBlazor.Models
 @inject HttpClient Http
+@inject ISnackbar Snackbar
 
 <PageTitle>Add diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
@@ -22,10 +23,10 @@
                     @*               For="@(() => modelAddDiet.DietName)" *@
                     @*               Required="true" RequiredError="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField> *@
                     <MudText Typo="Typo.h6">Nazwa diety</MudText>
-                    <MudTextField @bind-Value="newDiet.nazwa" Label="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
+                    <MudTextField @bind-Value="modelAddDiet.DietName" Label="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
 
                     <MudText Typo="Typo.h6">Opis: </MudText>
-                    <MudTextField @bind-Value="newDiet.opis" Label="Należy wprowadzić opis" Variant="Variant.Text"></MudTextField>
+                    <MudTextField @bind-Value="Description" Label="Należy wprowadzić opis" Variant="Variant.Text"></MudTextField>
                     <MudText Typo="Typo.h6">Kaloryczność: </MudText>
                     <MudForm>
                         <MudRadioGroup T="int" @bind-Value="newDiet.kalorycznosc">
@@ -38,29 +39,45 @@
                           
                         </MudRadioGroup>
                     </MudForm>
+                    <!-- Sekcja wyboru rodzaju diety -->
+                    <MudText Typo="Typo.h6">Rodzaj:</MudText>
+                    <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
+                        <MudStack>
+                            @foreach (var rodzaj in @rodzaje)
+                            {
+                            <MudRadio Value="@rodzaj.nazwa">@rodzaj.nazwa</MudRadio>
+                            }
+                        </MudStack>
 
+                    </MudRadioGroup>
                     <!-- Sekcja wyboru dania do dodania -->
+                    <!-- to trzeba innego endpointa-->
                     <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText>
                     <MudForm>
                         <MudSelect @bind-Value="selectedDanie" Label="Wybierz danie"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
                             <MudStack>
                                 @foreach (var danie in dania)
                                 {
-                                <MudSelectItem Value="danie">@danie.nazwa</MudSelectItem>
+                                    <MudSelectItem Value="danie">@danie.nazwa</MudSelectItem>
                                 }
                             </MudStack>
                         </MudSelect>
                     </MudForm>
+                    
+                    
+                    
+                   
+                    <div class="d-flex align-center">
+                        <MudButton Button OnClick="()=>AddDietD(0,modelAddDiet.DietName,Description,SelectedKcal,1,1)"
+                                   Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
+                            Zapisz nową diete
+                        </MudButton> </div>
+                    
                     @* <div class="d-flex align-center"> *@
-                    @*     <MudButton Button OnClick="()=>AddDietD(0,modelAddDiet.DietName,Description,SelectedKcal,1,1)" *@
+                    @*     <MudButton Button OnClick="AddDietD" *@
                     @*                Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"> *@
                     @*         Zapisz nową diete *@
                     @*     </MudButton> </div> *@
-                    <div class="d-flex align-center">
-                        <MudButton Button OnClick="AddDietD"
-                                   Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
-                            Zapisz nową diete
-                        </MudButton> </div>
                     @* <MudText Color="Color.Error"> *@
                     @*     <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage> *@
                     @* </MudText> *@
@@ -82,8 +99,7 @@
 
 @code {
     public string Description { get; set; }
-    public string Kcal { get; set; }
-
+    
 //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
 AddNewDietForm modelAddDiet = new AddNewDietForm();
 bool success;
@@ -106,12 +122,22 @@ private bool ModelIsValid()
 
 public int SelectedKcal{ get; set; }
 
+private List<Rodzaj> rodzaje=new List<Rodzaj>();
 private List<Danie> dania=new List<Danie>();
+
 private Danie selectedDanie { get; set; }
+
+FilterForm modelFilter = new FilterForm();
+public class FilterForm
+{
+    public string SelectedOption { get; set; } 
+
+}
 
 protected override async Task OnInitializedAsync(){ 
     try
 { 
+    rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
     dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
 }
     catch (Exception ex)
@@ -122,31 +148,34 @@ protected override async Task OnInitializedAsync(){
 
 //Zapisywanie nowj diety w bazie
     private Dieta newDiet=new();
-    private async Task AddDietD()
-    {
-            var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
-
-    }
-    // private async Task AddDietD(int id,string? nazwaD, string? opisD,int kalorycznoscD, int autorD, int rodzajD)
+    // private async Task AddDietD()
     // {
-    //     try
-    //     {
-    //         var newDiet = new Dieta  {
-    //             id_dieta = id,
-    //             nazwa = nazwaD,
-    //             opis = opisD,
-    //             kalorycznosc = kalorycznoscD,
-    //             autor = autorD,
-    //             rodzaj = rodzajD
-    //         };
     //         var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
     //
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         
-    //     }
     // }
+    private async Task AddDietD(int id,string? nazwaD, string? opisD,int kalorycznoscD, int autorD, int rodzajD)
+    {
+        try
+        {
+            var newDiet = new Dieta  {
+                id_dieta = id,
+                nazwa = nazwaD,
+                opis = opisD,
+                kalorycznosc = kalorycznoscD,
+                autor = autorD,
+                rodzaj = rodzajD
+            };
+            var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
+            //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu dodania nowej diety do bazy danych",Severity.Success);
+    
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu u dodania nowej diety do bazy danych",Severity.Error);
+        }
+    }
+
 
 // //Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
 // private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
