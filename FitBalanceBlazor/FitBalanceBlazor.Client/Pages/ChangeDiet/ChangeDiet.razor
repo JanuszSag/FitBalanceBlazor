@@ -80,7 +80,7 @@ if (ModelIsValid())
 {
 success = true;
 // NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
-    NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+    NavigationManager.NavigateTo($"/changeDiet/changeMealInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
     
 }
 else
