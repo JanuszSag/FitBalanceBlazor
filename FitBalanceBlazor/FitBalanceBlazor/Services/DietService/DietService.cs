@@ -107,10 +107,12 @@ public class DietService: IDietService
     /// <param name="rodzaj">Category</param>
     public async void AddDietAsync(int id, string? nazwa, string? opis, int kalorycznosc, int autor, int rodzaj)
     {
+        var max = await _context.Dieta.Select(d => d.id_dieta).MaxAsync();
+        
         try{
             await _context.Dieta.AddAsync(new Dieta
             {
-                id_dieta = id,
+                id_dieta = max+1,
                 nazwa = nazwa,
                 opis = opis,
                 kalorycznosc = kalorycznosc,
