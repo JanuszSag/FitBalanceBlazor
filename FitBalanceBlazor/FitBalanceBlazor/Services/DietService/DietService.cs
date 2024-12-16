@@ -1,3 +1,4 @@
+using ClassLibrary1;
 using FitBalanceBlazor.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -105,17 +106,20 @@ public class DietService: IDietService
     /// <param name="kalorycznosc">Calorie</param>
     /// <param name="autor">Author</param>
     /// <param name="rodzaj">Category</param>
-    public async void AddDietAsync(int id, string? nazwa, string? opis, int kalorycznosc, int autor, int rodzaj)
+    public async void AddDietAsync(DietaDTO dieta)
     {
+        var max = await _context.Dieta.Select(d => d.id_dieta).MaxAsync();
+        
         try{
             await _context.Dieta.AddAsync(new Dieta
             {
-                id_dieta = id,
-                nazwa = nazwa,
-                opis = opis,
-                kalorycznosc = kalorycznosc,
-                autor = autor,
-                rodzaj = rodzaj
+                
+                id_dieta = max+1,
+                nazwa = dieta.Nazwa,
+                opis = dieta.Opis,
+                kalorycznosc = dieta.Kalorycznosc,
+                autor = dieta.Autor,
+                rodzaj = dieta.Rodzaj
             });
             await _context.SaveChangesAsync();
         }
