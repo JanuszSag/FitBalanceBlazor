@@ -1,5 +1,4 @@
 using FitBalanceBlazor.Context;
-using FitBalanceBlazor.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitBalanceBlazor.Services.ReviewService;

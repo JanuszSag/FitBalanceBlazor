@@ -1,6 +1,5 @@
 @page "/allClientDiets"
 @using System.ComponentModel.DataAnnotations 
-@using FitBalanceBlazor.Models
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -69,9 +68,9 @@
 
                 </MudRadioGroup>
 
-                <MudText Color="Color.Error">
+                @*<MudText Color="Color.Error">
                     <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
-                </MudText>
+                </MudText>*@
 
                 <div class="d-flex align-center">
                     <MudButton ButtonType="ButtonType.Button"
@@ -117,32 +116,10 @@
        //obsługa filtrów
     private async Task dietsFilter()
     {
-        if (modelFilter.SelectedOption == "wszystkieDiety")
+        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        if(!modelFilter.SelectedOption.Equals("wszystkieDiety"))
         {
-            diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-        }
-        else
-        {
-            //żadna nie działa do końca poprawnie
-            //diety = diety.Where(d => rodzaje.FirstOrDefault(r => r.id_rodzaj == d.rodzaj)?.nazwa == modelFilter.SelectedOption).ToList();
-           diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
-             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && string.Equals(r.nazwa, modelFilter.SelectedOption, StringComparison.OrdinalIgnoreCase))).ToList();
-             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).ToList();
-             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).Where(d => d.rodzaj == modelFilter.SelectedOption) // lub inne warunki.ToList();
-             
-             // diety = diety.Where(d => {
-             //     int selectedId;
-             //     bool isInt = int.TryParse(modelFilter.SelectedOption, out selectedId);
-             //     return isInt && d.rodzaj == selectedId;
-             // }).ToList();
-             // diety = diety.Where(d => 
-             //     rodzaje.Any(r => 
-             //         r.id_rodzaj == d.rodzaj && 
-             //         string.Equals(r.nazwa, modelFilter.SelectedOption, StringComparison.OrdinalIgnoreCase)
-             //     )
-             // ).ToList();
-
-             
+            diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
         }
         StateHasChanged();
         // Console.WriteLine($"Number of diets after filter: {diety.Count}");

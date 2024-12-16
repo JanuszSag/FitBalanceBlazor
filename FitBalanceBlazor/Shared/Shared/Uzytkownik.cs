@@ -28,11 +28,9 @@ public partial class Uzytkownik
 
     public int zapotrzebowanie_kaloryczne { get; set; }
 
-    [Column(TypeName = "text")]
-    public string haslo_hashed { get; set; } = null!;
+    public byte[]? haslo_hashed { get; set; }
 
-    [Column(TypeName = "text")]
-    public string haslo_salt { get; set; } = null!;
+    public byte[]? haslo_salt { get; set; }
 
     [InverseProperty("id_uzytkownikNavigation")]
     public virtual ICollection<Opinia> Opinia { get; set; } = new List<Opinia>();

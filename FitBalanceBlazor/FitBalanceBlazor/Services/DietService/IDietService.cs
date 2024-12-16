@@ -1,5 +1,4 @@
 using ClassLibrary1;
-using FitBalanceBlazor.Models;
 
 namespace FitBalanceBlazor.Services.DietService;
 

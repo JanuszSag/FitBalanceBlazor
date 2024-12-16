@@ -1,6 +1,5 @@
 using ClassLibrary1;
 using FitBalanceBlazor.Client.Pages.AddDiet;
-using FitBalanceBlazor.Models;
 using FitBalanceBlazor.Services;
 using FitBalanceBlazor.Services.DietService;
 using Microsoft.AspNetCore.Mvc;
