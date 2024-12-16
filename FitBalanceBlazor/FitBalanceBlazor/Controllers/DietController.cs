@@ -1,3 +1,4 @@
+using ClassLibrary1;
 using FitBalanceBlazor.Client.Pages.AddDiet;
 using FitBalanceBlazor.Models;
 using FitBalanceBlazor.Services;
@@ -45,9 +46,9 @@ namespace FitBalanceBlazor.Controllers;
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddDiet(int id, string? nazwa, string? opis, int kalorycznosc, int autor, int rodzaj)
+        public async Task<ActionResult> AddDiet(DietaDTO dieta)
         {
-            _dietService.AddDietAsync(id,nazwa,opis,kalorycznosc,autor,rodzaj);
+            _dietService.AddDietAsync(dieta);
             return Ok();
         }
     }
