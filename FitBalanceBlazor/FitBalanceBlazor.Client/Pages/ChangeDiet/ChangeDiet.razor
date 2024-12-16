@@ -29,7 +29,6 @@
                                 @foreach (var danie in selectedDiet.Danie_id_danie)
                                 {
                                     <MudRadio Value="@danie.nazwa"> @selectedDiet.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa</MudRadio>
-                                    <!--trzeba uwzględnić, że to mają być dania z wybranej diety z poprzedniej strony-->
                                 }
                             </MudStack>
                         </MudRadioGroup>
@@ -80,7 +79,7 @@ if (ModelIsValid())
 {
 success = true;
 // NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
-    NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+    NavigationManager.NavigateTo($"/changeDiet/changeMealInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
     
 }
 else

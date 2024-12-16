@@ -1,0 +1,65 @@
+@page "/informationAboutPersonalData"
+@using System.ComponentModel.DataAnnotations
+@using FitBalanceBlazor.Models
+@inject HttpClient Http
+
+
+<PageTitle>Information About Personal Data</PageTitle>
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Zmiana danych osobowych</strong></MudText>
+<MudGrid>
+    <MudItem xs="6">
+        <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+            <MudCardContent>
+                <!-- Sekcja opis -->
+                <MudStack Spacing="5">
+                    <MudText Align="Align.Left" Typo="Typo.h4"><strong>Informację o Tobie </strong></MudText>
+                    <MudText Typo="Typo.subtitle1">Pseudonim:</MudText>
+                    <MudText Typo="Typo.subtitle1">Adres mail:</MudText>
+                    <MudText Typo="Typo.subtitle1">Data urodzenia:</MudText>
+                    <MudText Typo="Typo.subtitle1">Wiek:</MudText>
+                    <MudText Typo="Typo.subtitle1">Płeć:</MudText>
+                    <MudText Typo="Typo.subtitle1">Wzrost:</MudText>
+                    <MudText Typo="Typo.subtitle1">Waga:</MudText>
+                    
+                    
+                </MudStack>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/informationAboutPersonalData/decisionWhatPersonalDataChange">
+                    Edytuj
+                </MudButton>
+                <MudText Align="Align.Left" Typo="Typo.h4"><strong>Zapotrzebowanie kaloryczne: </strong></MudText>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/caloryCount">
+                    Oblicz na nowo zapotrzebowanie kaloryczne
+                </MudButton>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Sekcja grafiki -->
+    <MudItem xs="6">
+        <MudCard Style="width:100%; position: relative;">
+            <MudImage Fluid="true" Src="/Images/PersonalData/DataImage.png" Alt="Image" Class="rounded-lg"/>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code{
+    //Obsługa endpointów
+    private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>();
+    
+    protected override async Task OnInitializedAsync()
+    { 
+        try
+        { 
+            // uzytkownicy = await Http.GetFromJsonAsync<List<Uzytkownik>("api/");//dodac api
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
+        }
+    }
+
+}
