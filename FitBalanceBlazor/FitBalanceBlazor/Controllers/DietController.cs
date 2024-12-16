@@ -47,7 +47,7 @@ namespace FitBalanceBlazor.Controllers;
         [HttpPost]
         public async Task<ActionResult> AddDiet(DietaDTO dieta)
         {
-            _dietService.AddDietAsync(dieta);
+            _dietService.AddDiet(dieta);
             return Ok();
         }
     }

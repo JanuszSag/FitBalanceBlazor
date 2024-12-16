@@ -8,5 +8,5 @@ public interface IDietService
     Task<List<Dieta>> GetAllDietsByCategoryIdAsync(int categoryId);
     Task<Dieta?> GetDietAsync(int dietId);
     void RemoveDietAsync(int dietId);
-    void AddDietAsync(DietaDTO diet);
+    void AddDiet(DietaDTO diet);
 }

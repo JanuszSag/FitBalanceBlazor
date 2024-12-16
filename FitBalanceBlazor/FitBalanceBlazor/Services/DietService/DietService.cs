@@ -106,13 +106,13 @@ public class DietService: IDietService
     /// <param name="kalorycznosc">Calorie</param>
     /// <param name="autor">Author</param>
     /// <param name="rodzaj">Category</param>
-    public async void AddDietAsync(DietaDTO dieta)
+    public void AddDiet(DietaDTO dieta)
     {
-        var max = await _context.Dieta.Select(d => d.id_dieta).MaxAsync();
+        var max =  _context.Dieta.Select(d => d.id_dieta).Max();
         
         try{
-            await _context.Dieta.AddAsync(new Dieta
-            {
+             _context.Dieta.Add(new Dieta
+             {
                 
                 id_dieta = max+1,
                 nazwa = dieta.Nazwa,
@@ -120,8 +120,8 @@ public class DietService: IDietService
                 kalorycznosc = dieta.Kalorycznosc,
                 autor = dieta.Autor,
                 rodzaj = dieta.Rodzaj
-            });
-            await _context.SaveChangesAsync();
+             });
+            _context.SaveChangesAsync();
         }
         catch (Exception ex)
         {
