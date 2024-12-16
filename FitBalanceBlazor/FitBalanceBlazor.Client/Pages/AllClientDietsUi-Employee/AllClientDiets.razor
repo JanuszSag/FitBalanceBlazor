@@ -70,11 +70,7 @@
                     </MudStack>
 
                 </MudRadioGroup>
-
-                <MudText Color="Color.Error">
-                    <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
-                </MudText>
-
+                
                 <div class="d-flex align-center">
                     <MudButton ButtonType="ButtonType.Button"
                                Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
@@ -88,6 +84,7 @@
 </MudGrid>
 
 @code {
+    
     //Zmienne, które są listami obiektów typu Dieta i Rodzaj, lista przechowuje dane, które pobrane są z API
     private List<Dieta> diety=new List<Dieta>();
     private List<Rodzaj> rodzaje=new List<Rodzaj>();

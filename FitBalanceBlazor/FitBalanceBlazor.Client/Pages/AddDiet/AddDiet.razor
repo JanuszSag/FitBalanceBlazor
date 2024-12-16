@@ -100,17 +100,17 @@
 
 
 
-                    @* <div class="d-flex align-center"> *@
-                    @*     <MudButton Button OnClick="()=>AddDietD(0,modelAddDiet.DietName,Description,SelectedKcal,1,1)" *@
-                    @*                Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" > *@
-                    @*         Zapisz nową diete *@
-                    @*     </MudButton> </div> *@
-
                     <div class="d-flex align-center">
-                        <MudButton Button OnClick="AddDietD"
-                                   Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                        <MudButton Button OnClick="()=>AddDietD(0,modelAddDiet.DietName,Description,SelectedKcal,1,1)"
+                                   Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
                             Zapisz nową diete
                         </MudButton> </div>
+
+                    @* <div class="d-flex align-center"> *@
+                    @*     <MudButton Button OnClick="AddDietD" *@
+                    @*                Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"> *@
+                    @*         Zapisz nową diete *@
+                    @*     </MudButton> </div> *@
                     @* <MudText Color="Color.Error"> *@
                     @*     <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage> *@
                     @* </MudText> *@
@@ -180,49 +180,49 @@ protected override async Task OnInitializedAsync(){
 }
 
 //Zapisywanie nowj diety w bazie
-    private Dieta newDiet=new Dieta();
+    private Dieta newDiet=new Dieta();//new DietaDTO
     // private async Task AddDietD()
     // {
     //         var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
     //
     // }
-    // private async Task AddDietD(int id,string? nazwaD, string? opisD,int kalorycznoscD, int autorD, int rodzajD)
+    private async Task AddDietD(int id,string? nazwaD, string? opisD,int kalorycznoscD, int autorD, int rodzajD)
+    {
+        try
+        {
+            var newDiet = new Dieta  {//DietaDTO
+                id_dieta = id,
+                nazwa = nazwaD,
+                opis = opisD,
+                kalorycznosc = kalorycznoscD,
+                autor = autorD,
+                rodzaj = rodzajD
+            };
+            var response = await Http.PostAsJsonAsync("api/Diet", newDiet);//newDiet->DietaDTO
+            //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu dodania nowej diety do bazy danych",Severity.Success);
+    
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu u dodania nowej diety do bazy danych",Severity.Error);
+        }
+    }
+    // private async Task AddDietD()
     // {
-    //     try
+    //     var response = await Http.PostAsJsonAsync("api/diety", newDiet); 
+    //
+    //     if (response.IsSuccessStatusCode)
     //     {
-    //         var newDiet = new Dieta  {
-    //             id_dieta = id,
-    //             nazwa = nazwaD,
-    //             opis = opisD,
-    //             kalorycznosc = kalorycznoscD,
-    //             autor = autorD,
-    //             rodzaj = rodzajD
-    //         };
-    //         var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
     //         //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
     //         Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu dodania nowej diety do bazy danych",Severity.Success);
     //
     //     }
-    //     catch (Exception ex)
+    //     else
     //     {
     //         Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu u dodania nowej diety do bazy danych",Severity.Error);
     //     }
-    // }
-    private async Task AddDietD()
-    {
-        var response = await Http.PostAsJsonAsync("api/diety", newDiet); 
-
-        if (response.IsSuccessStatusCode)
-        {
-            //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu dodania nowej diety do bazy danych",Severity.Success);
-
-        }
-        else
-        {
-            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu u dodania nowej diety do bazy danych",Severity.Error);
-        }
-        }
+    //     }
 
 // //Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
 // private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
