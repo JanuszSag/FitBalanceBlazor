@@ -15,7 +15,7 @@
                 <MudText Typo="Typo.subtitle1">Opis: @dieta.opis </MudText>
                 <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @dieta.rodzaj)?.nazwa</MudText>
                 
-                    <MudText Typo="Typo.subtitle1">Danie:  @*Class="d-inline" *@
+                    <MudText Typo="Typo.subtitle1">Dania:  @*Class="d-inline" *@
                         @foreach (var danie in @dieta.Danie_id_danie)
                         {
                         @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa.ToString().PadRight(60)
