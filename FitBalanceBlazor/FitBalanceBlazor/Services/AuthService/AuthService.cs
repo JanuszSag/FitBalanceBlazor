@@ -16,19 +16,8 @@ public class AuthService : IAuthService
     
     public async Task<bool> LoginAsync(string email, string password)
     {
-        var user = await _context.Uzytkownik.FirstOrDefaultAsync(x => x.email.Equals(email));
-        if (user == null)
-        {
-            return false;
-        }
-        else if (!CheckPassword(password, Encoding.ASCII.GetBytes(user.haslo_hashed), Encoding.ASCII.GetBytes(user.haslo_salt)))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+
+        throw new NotImplementedException();
     }
 
     public async Task<bool> RegisterAsync(string username, string password)

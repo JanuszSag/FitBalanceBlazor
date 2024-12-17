@@ -1,7 +1,6 @@
-@page "/changeDiet/changeIngredientsInDiet"
+@page "/changeDiet/changeMealInDiet"
 @inject NavigationManager NavigationManager
 @using System.ComponentModel.DataAnnotations
-@using FitBalanceBlazor.Models
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
@@ -13,35 +12,34 @@
         <MudStack Spacing="3">
             <!-- Sekcja wyswietlenia wczesniej wybranych opcji-->
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                @* <MudText Typo="Typo.h6">Dieta do zmiany:@selectedDiet?.nazwa</MudText> *@
-                <MudText Typo="Typo.h6">Dieta: @selectedDiet?.nazwa</MudText>
-                @* @if (selectedDiet == null) *@
-                @* { *@
-                @* <MudText Typo="Typo.body1">Dieta nie została załadowana.</MudText> *@
-                @* } *@
-                @* @if (selectedDiet == null) *@
-                @* { *@
-                @* <MudText Typo="Typo.body1">Dieta o ID @DietId nie została załadowana</MudText> *@
-                @* } *@
-                @* else *@
-                @* { *@
-                @* <MudText Typo="Typo.h6">Dieta: @selectedDiet?.nazwa</MudText> *@
-                @* } *@
-                 <MudText Typo="Typo.h6">Danie do zmiany:@SelectedOption</MudText> 
+                <MudText Typo="Typo.h6">Dieta do zmiany: @selectedDiet?.nazwa</MudText>
+                 <MudText Typo="Typo.h6">Danie do zmiany: @SelectedOption</MudText> 
             </MudPaper>
 
             <!-- Sekcja wyboru składników-->
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.subtitle1" Class="mud-width-full">@(selectedProdukt == null ? "Nic nie wybrano" : $"Składnik: {selectedProdukt.nazwa}")</MudText>
+                <MudText Typo="Typo.h6">Na jakie danie chcesz zmienić?</MudText>
+                @* <MudText Typo="Typo.subtitle1" Class="mud-width-full">@(selectedProdukt == null ? "Nic nie wybrano" : $"Składnik: {selectedProdukt.nazwa}")</MudText> *@
 
-                <MudSelect @bind-Value="selectedProdukt" Label="Wybierz składnik"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
+                <MudText Typo="Typo.subtitle1" Class="mud-width-full">@(selectedMeal== null ? "Nic nie wybrano" : $"Wybrane danie: {selectedMeal.nazwa}")</MudText>
+                
+                <MudSelect @bind-Value="selectedMeal" Label="Wybierz danie"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
                     <MudStack>
-                        @foreach (var produkt in produkty)
+                        @foreach (var danie in dania)
                         {
-                        <MudSelectItem Value="produkt">@produkt.nazwa</MudSelectItem><!--produkt_danie- tabela musi byc updatowana-->
+                        <MudSelectItem Value="danie">@danie.nazwa</MudSelectItem>
                         }
                     </MudStack>
                 </MudSelect>
+                @* <MudSelect @bind-Value="selectedProdukt" Label="Wybierz składnik"> $1$ AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable#1# *@
+                @*     <MudStack> *@
+                @*         @foreach (var produkt in produkty) *@
+                @*         { *@
+                @*             <MudSelectItem Value="produkt">@produkt.nazwa</MudSelectItem> *@
+                @*             <!--produkt_danie- tabela musi byc updatowana--> *@
+                @*         } *@
+                @*     </MudStack> *@
+                @* </MudSelect> *@
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
                                OnClick="snackBarFun">Zatwierdź</MudButton>
@@ -88,10 +86,12 @@
         
     }
     //Wyciąganie z bazy 
-    private List<Produkt> produkty=new List<Produkt>();
-    private Produkt selectedProdukt;
-    // private List<Produkt> selectedProdukty = new List<Produkt>(); zrobic zeby dało sie wybrac wiecej niz 1 skladnik
-
+    private List<Danie> dania=new List<Danie>();
+    private Danie selectedMeal;
+   
+    // private List<Produkt> produkty=new List<Produkt>();
+    // private Produkt selectedProdukt;
+    
     protected override async Task OnInitializedAsync()
     {
         try
@@ -102,7 +102,8 @@
             {
                 Console.WriteLine($"Dieta o ID {DietId} nie została znaleziona.");
             }
-            produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Product");
+            // produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Product");
+            dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
         }
         catch (Exception ex)
         {

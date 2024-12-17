@@ -1,0 +1,85 @@
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@page "/addMealToDiet"
+
+@using ClassLibrary1
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<PageTitle>Add meal to diet</PageTitle>
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
+<MudGrid>
+    <MudItem xs="6">
+        <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+            <MudCardContent>
+              
+                <!-- Sekcja wyboru dania do dodania -->
+                
+                    <MudText Typo="Typo.h6">Która danie chcesz dodać? </MudText>
+                    <MudText Typo="Typo.subtitle1" Color="Color.Warning">Pamiętaj aby nacisnąć przycisk "Dodaj danie do diety" aby poprawnie dodać danie do diety</MudText>
+                    <MudSelect T="Danie" @bind-Value="selectedMeal" Label="Wybierz dania"  Variant="Variant.Filled">
+                        @foreach (var danie in dania)
+                        {
+                            <MudSelectItem Value="@danie">@danie.nazwa</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <!--Przycisk dodania dań do listy-->
+                    <MudButton OnClick="AddMealToList" Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">Dodaj danie do diety</MudButton>
+                
+                    @* <MudText Typo="Typo.h6">Wybrane dania do diety(id_dania): @string.Join(", ", listOfMeals)</MudText> *@
+
+
+                <!--Przycisk dodania dania do diety-->
+                <div class="d-flex align-center">
+                    <MudButton Button OnClick="()=>AddMeal()"
+                               Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
+                        Zapisz dania do diety
+                    </MudButton> </div>
+
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Sekcja grafiki -->
+    <MudItem xs="6">
+
+        <MudCard Style="width:100%; position: relative;">
+            <MudCardMedia Image="https://img.freepik.com/foto-gratis/manos-chef-cortando-verduras-su-cocina_155003-42435.jpg" Height="460"/>
+
+        </MudCard>
+    </MudItem>
+</MudGrid>
+@code {
+    // Aktualnie wybrany posiłek
+private Danie selectedMeal; 
+// Lista wszystkich wybranych posiłków
+private List<Danie> listOfMeals = new(); 
+
+private void AddMealToList()
+{
+    if (!listOfMeals.Contains(selectedMeal))
+    {
+        listOfMeals.Add(selectedMeal);
+        Snackbar.Add($"Dodano danie: {selectedMeal}", Severity.Success);
+    }
+}
+private void AddMeal()
+{
+
+}
+
+private List<Danie> dania=new List<Danie>();
+
+protected override async Task OnInitializedAsync(){ 
+    try
+    { 
+        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+    }
+    catch (Exception ex)
+    {
+
+    }
+}
+    
+}

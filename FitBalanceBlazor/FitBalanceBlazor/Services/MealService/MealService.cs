@@ -18,7 +18,13 @@ public class MealService : IMealService
     /// <returns>list of meals</returns>
     public async Task<List<Danie>> GetAllMealsAsync()
     {
-        return await _context.Danie.ToListAsync();
+        return await _context.Danie.Select(d => new Danie
+        {
+            Dieta_id_dieta = d.Dieta_id_dieta,
+            id_danie = d.id_danie,
+            nazwa = d.nazwa,
+            Produkt_Danie = d.Produkt_Danie,
+        }).ToListAsync();
     }
 
     /// <summary>

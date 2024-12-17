@@ -1,6 +1,5 @@
 @page "/allClientDiets"
 @using System.ComponentModel.DataAnnotations 
-@using FitBalanceBlazor.Models
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -8,23 +7,32 @@
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
 
+
 <!-- Sekcja elementów listy diet -->
 <MudGrid>
+ 
     <MudItem xs="9">
+        <div align="center">
+        <MudButton Variant="Variant.Filled"
+                   Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
+                   Href="/addDiet">
+            Dodaj dietę
+        </MudButton>
+        </div>
         @foreach (var dieta in diety)
         {
             <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
                 <MudStack>
                     <MudText Typo="Typo.subtitle1">Opis: @dieta.opis</MudText>
+                    <MudText Typo="Typo.subtitle1">Kaloryczność: @dieta.kalorycznosc</MudText>
                     <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == dieta.rodzaj)?.nazwa</MudText>
 
-                    @* <MudTd DataLabel="Dania"><MudText Typo="Typo.subtitle1">Dania: @dania.FirstOrDefault(d=>d.Dieta_id_dieta== @context.id_dieta)?.nazwa</MudText></MudTd>  *@
-                  <MudText Typo="Typo.subtitle1">Danie:  @*Class="d-inline" *@
-                    @foreach (var danie in @dieta.Danie_id_danie)
-                    {
-                    @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa
-                    }
+                    <MudText Typo="Typo.subtitle1" Class="d-inline">Dania:
+                        @foreach (var danie in @dieta.Danie_id_danie)
+                        {
+                            @dieta.Danie_id_danie.FirstOrDefault(d => d.id_danie == danie.id_danie)?.nazwa.ToString().PadRight(60)
+                        }
                     </MudText>
                 </MudStack>
 
@@ -44,12 +52,6 @@
 
         }
 
-        <MudButton Variant="Variant.Filled"
-                       Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
-                       Href="/addDiet">
-                Dodaj dietę
-            </MudButton>
-        
     </MudItem>
 
     <!-- Sekcja filtrów-rodzaj diety -->
@@ -63,16 +65,12 @@
                         <MudRadio Value="@("wszystkieDiety")">wszystkie rodzaje</MudRadio>
                         @foreach (var rodzaj in @rodzaje)
                         {
-                        <MudRadio Value="@rodzaj.nazwa">@rodzaj.nazwa</MudRadio>
+                            <MudRadio Value="@rodzaj.nazwa">@rodzaj.nazwa</MudRadio>
                         }
                     </MudStack>
 
                 </MudRadioGroup>
-
-                <MudText Color="Color.Error">
-                    <ValidationMessage For="@(() => modelFilter.SelectedOption)"Class="text-danger"></ValidationMessage>
-                </MudText>
-
+                
                 <div class="d-flex align-center">
                     <MudButton ButtonType="ButtonType.Button"
                                Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
@@ -86,6 +84,7 @@
 </MudGrid>
 
 @code {
+    
     //Zmienne, które są listami obiektów typu Dieta i Rodzaj, lista przechowuje dane, które pobrane są z API
     private List<Dieta> diety=new List<Dieta>();
     private List<Rodzaj> rodzaje=new List<Rodzaj>();
@@ -115,39 +114,17 @@
 
     }
        //obsługa filtrów
-    private async Task dietsFilter()
-    {
-        if (modelFilter.SelectedOption == "wszystkieDiety")
-        {
-            diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-        }
-        else
-        {
-            //żadna nie działa do końca poprawnie
-            //diety = diety.Where(d => rodzaje.FirstOrDefault(r => r.id_rodzaj == d.rodzaj)?.nazwa == modelFilter.SelectedOption).ToList();
-           diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
-             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && string.Equals(r.nazwa, modelFilter.SelectedOption, StringComparison.OrdinalIgnoreCase))).ToList();
-             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).ToList();
-             //diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj)).Where(d => d.rodzaj == modelFilter.SelectedOption) // lub inne warunki.ToList();
-             
-             // diety = diety.Where(d => {
-             //     int selectedId;
-             //     bool isInt = int.TryParse(modelFilter.SelectedOption, out selectedId);
-             //     return isInt && d.rodzaj == selectedId;
-             // }).ToList();
-             // diety = diety.Where(d => 
-             //     rodzaje.Any(r => 
-             //         r.id_rodzaj == d.rodzaj && 
-             //         string.Equals(r.nazwa, modelFilter.SelectedOption, StringComparison.OrdinalIgnoreCase)
-             //     )
-             // ).ToList();
+       private async Task dietsFilter()
+       {
+        
+           diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+           if (!modelFilter.SelectedOption.Equals("wszystkieDiety"))
+           {
+               diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
+           }
+           StateHasChanged();
+       }
 
-             
-        }
-        StateHasChanged();
-        // Console.WriteLine($"Number of diets after filter: {diety.Count}");
-    }
-    
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
     private void snackBarFun()
     {
@@ -161,8 +138,4 @@
             Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
         }
     }
- 
-    
-
-
 }

@@ -1,6 +1,5 @@
 using ClassLibrary1;
 using FitBalanceBlazor.Client.Pages.AddDiet;
-using FitBalanceBlazor.Models;
 using FitBalanceBlazor.Services;
 using FitBalanceBlazor.Services.DietService;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +24,13 @@ namespace FitBalanceBlazor.Controllers;
             return Ok(result);
         }
 
+        [HttpPost("id")]
+        public async Task<ActionResult<List<Dieta>>> GetDietById(List<int> id)
+        {
+            var result = await _dietService.GetAllDietsByIdAsync(id);
+            return Ok(result);
+        }
+        
         [HttpGet("Category/{id}")]
         public async Task<ActionResult<List<Dieta>>> GetDietsByCategory(int id)
         {
@@ -48,7 +54,7 @@ namespace FitBalanceBlazor.Controllers;
         [HttpPost]
         public async Task<ActionResult> AddDiet(DietaDTO dieta)
         {
-            _dietService.AddDietAsync(dieta);
+            _dietService.AddDiet(dieta);
             return Ok();
         }
     }
