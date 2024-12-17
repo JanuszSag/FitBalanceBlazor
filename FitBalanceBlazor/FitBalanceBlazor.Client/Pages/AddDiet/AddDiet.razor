@@ -37,30 +37,13 @@
                     <MudText Typo="Typo.h6">Rodzaj:</MudText>
                     <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
                         <MudStack>
-                            @foreach (var rodzaj in @rodzaje)
+                            @foreach (var categorie in @categories)
                             {
-                            <MudRadio Value="@rodzaj.id_rodzaj">@rodzaj.nazwa</MudRadio>
+                            <MudRadio Value="@categorie.id_rodzaj">@categorie.nazwa</MudRadio>
                             }
                         </MudStack>
                     
                     </MudRadioGroup>
-                    <!-- Sekcja wyboru dania do dodania -->
-                    
-                    @* <MudStack> *@
-                    @*     <MudText Typo="Typo.h6">Która danie chcesz dodać? </MudText> *@
-                    @*     <MudText Typo="Typo.subtitle1" Color="Color.Warning">Pamiętaj aby nacisnąć przycisk "Dodaj danie do diety" aby poprawnie dodać danie do diety</MudText>  *@
-                    @*     <MudSelect T="Danie" @bind-Value="selectedMeal" Label="Wybierz dania"  Variant="Variant.Filled"> *@
-                    @*         @foreach (var danie in dania) *@
-                    @*         { *@
-                    @*             <MudSelectItem Value="@danie">@danie.nazwa</MudSelectItem>  *@
-                    @*         } *@
-                    @*     </MudSelect> *@
-                    @*     <!--Przycisk dodania ndań do diety--> *@
-                    @*     <MudButton OnClick="AddMeal" Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">Dodaj danie do diety</MudButton> *@
-                    @* *@
-                    @*     <MudText Typo="Typo.h6">Wybrane dania do diety(id_dania): @string.Join(", ", listOfMealsId)</MudText> *@
-                    
-                    
                         <!--Przycisk dodania nowej diety-->
                         <div class="d-flex align-center">
                             <MudButton Button OnClick="()=>AddDietD(0,modelAddDiet.DietName,Description,SelectedKcal,1,modelFilter.SelectedOption)"
@@ -82,8 +65,7 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-@* </EditForm> *@
-
+    
 
 @code {
 //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
@@ -101,46 +83,19 @@ public string DietName { get; set; }
 
 public string Description { get; set; }
 public int SelectedKcal{ get; set; }
-// public List<Danie> SelectedDishes { get; set; } = new List<Danie>();
-// public List<Danie> SelectedDishes { get; set; } = new List<Danie>();
-// public Danie SelectedDish { get; set; } 
-
-private List<Rodzaj> rodzaje=new List<Rodzaj>();
-private List<Danie> dania=new List<Danie>();
-
-// private Danie selectedDanie { get; set; }
+private List<Rodzaj> categories=new List<Rodzaj>();
 
 FilterForm modelFilter = new FilterForm();
 public class FilterForm
 {
     public int SelectedOption { get; set; }
     
-
 }
-
-
-
-
-// Aktualnie wybrany posiłek
-// private Danie selectedMeal; 
-// // Lista wszystkich wybranych posiłków
-// private List<Danie> listOfMealsId = new(); 
-//
-// private void AddMeal()
-// {
-//     if (!listOfMealsId.Contains(selectedMeal))
-//     {
-//         listOfMealsId.Add(selectedMeal);
-//         Snackbar.Add($"Dodano danie: {selectedMeal}", Severity.Success);
-//     }
-// }
-
 
 protected override async Task OnInitializedAsync(){ 
     try
 { 
-    rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-    dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+    categories = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
 }
     catch (Exception ex)
 {
@@ -151,11 +106,11 @@ protected override async Task OnInitializedAsync(){
 //Zapisywanie nowj diety w bazie
     private DietaDTO newDiet;
 
-    private async Task AddDietD(int id,string? nazwaD, string? opisD,int kalorycznoscD, int autorD, int rodzajD)
+    private async Task AddDietD(int id,string? nameDiet, string? description,int kcal, int author, int category)
     {
         try
         {
-            newDiet = new DietaDTO(id, nazwaD, opisD, kalorycznoscD, autorD, rodzajD);
+            newDiet = new DietaDTO(id, nameDiet, description, kcal, author, category);
             var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
             //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
             Snackbar.Add("Dodano nową dietę do bazy danych",Severity.Success);
