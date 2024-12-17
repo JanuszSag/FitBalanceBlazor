@@ -1,6 +1,6 @@
 @using System.ComponentModel.DataAnnotations
 @inject NavigationManager NavigationManager
-@page "/addDiet/addMealToDiet"
+@page "/addMealToDiet"
 
 @using ClassLibrary1
 @inject HttpClient Http
@@ -23,18 +23,18 @@
                             <MudSelectItem Value="@danie">@danie.nazwa</MudSelectItem>
                         }
                     </MudSelect>
-                    <!--Przycisk dodania ndań do diety-->
-                    <MudButton OnClick="AddMeal" Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">Dodaj danie do diety</MudButton>
+                    <!--Przycisk dodania dań do listy-->
+                    <MudButton OnClick="AddMealToList" Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">Dodaj danie do diety</MudButton>
                 
-                    <MudText Typo="Typo.h6">Wybrane dania do diety(id_dania): @string.Join(", ", listOfMealsId)</MudText>
+                    @* <MudText Typo="Typo.h6">Wybrane dania do diety(id_dania): @string.Join(", ", listOfMeals)</MudText> *@
 
 
-                <!--Przycisk dodania nowej diety-->
-                @* <div class="d-flex align-center"> *@
-                @*     <MudButton Button OnClick="()=>metoda)" *@
-                @*                Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" > *@
-                @*         Zapisz dania do diety *@
-                @*     </MudButton> </div> *@
+                <!--Przycisk dodania dania do diety-->
+                <div class="d-flex align-center">
+                    <MudButton Button OnClick="()=>AddMeal()"
+                               Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
+                        Zapisz dania do diety
+                    </MudButton> </div>
 
 
             </MudCardContent>
@@ -54,15 +54,19 @@
     // Aktualnie wybrany posiłek
 private Danie selectedMeal; 
 // Lista wszystkich wybranych posiłków
-private List<Danie> listOfMealsId = new(); 
+private List<Danie> listOfMeals = new(); 
 
-private void AddMeal()
+private void AddMealToList()
 {
-    if (!listOfMealsId.Contains(selectedMeal))
+    if (!listOfMeals.Contains(selectedMeal))
     {
-        listOfMealsId.Add(selectedMeal);
+        listOfMeals.Add(selectedMeal);
         Snackbar.Add($"Dodano danie: {selectedMeal}", Severity.Success);
     }
+}
+private void AddMeal()
+{
+
 }
 
 private List<Danie> dania=new List<Danie>();
