@@ -38,12 +38,30 @@ public class DietService: IDietService
 
         return result;
     }
-    
+
     /// <summary>
     /// Method <c>GetAllDietsByCategoryIdAsync</c> return list of all diets with specific category stored in database
     /// </summary>
     /// <param name="categoryId">Id of category</param>
     /// <returns>List of diets with specific category</returns>
+
+    public async Task<List<Dieta>> GetAllDietsByIdAsync(List<int> dietId)
+    {
+        var result = await _context.Dieta.Include(d => d.Danie_id_danie)
+                                              .Select(d => new Dieta
+                                              {
+                                                  id_dieta = d.id_dieta,
+                                                  nazwa = d.nazwa,
+                                                  opis = d.opis,
+                                                  kalorycznosc = d.kalorycznosc,
+                                                  rodzaj = d.rodzaj,
+                                                  Danie_id_danie = d.Danie_id_danie
+                                              }).Where(d => dietId.Contains(d.id_dieta))
+                                              .ToListAsync();
+        
+        return result;
+    }
+    
     public async Task<List<Dieta>> GetAllDietsByCategoryIdAsync(int categoryId)
     {
         return await _context.Dieta.Where(d => d.rodzaj == categoryId).ToListAsync();

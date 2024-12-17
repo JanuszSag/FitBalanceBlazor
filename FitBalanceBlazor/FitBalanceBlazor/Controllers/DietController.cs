@@ -24,6 +24,13 @@ namespace FitBalanceBlazor.Controllers;
             return Ok(result);
         }
 
+        [HttpPost("id")]
+        public async Task<ActionResult<List<Dieta>>> GetDietById(List<int> id)
+        {
+            var result = await _dietService.GetAllDietsByIdAsync(id);
+            return Ok(result);
+        }
+        
         [HttpGet("Category/{id}")]
         public async Task<ActionResult<List<Dieta>>> GetDietsByCategory(int id)
         {
