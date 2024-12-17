@@ -57,6 +57,14 @@ namespace FitBalanceBlazor.Controllers;
             _dietService.AddDiet(dieta);
             return Ok();
         }
+
+        [HttpPut("{dietId}")]
+        public async Task<ActionResult> UpdateDiet(String dietId,[FromBody] List<Danie> meals)
+        {
+            if(await _dietService.AddMealsToDiet(Int32.Parse(dietId), meals))
+                return Ok("Zaktualizowano liste dan");
+            return NotFound("Nie znaleziono diety");
+        }
     }
     
     
