@@ -218,7 +218,7 @@ protected override async Task OnInitializedAsync(){
     {
         try
         {
-            newDiet = new DietaDTO(id, nazwaD, opisD, kalorycznoscD, autorD, rodzajD,idDanie);
+            newDiet = new DietaDTO(id, nazwaD, opisD, kalorycznoscD, autorD, rodzajD);
             var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
             //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
             Snackbar.Add("Dodano nową dietę do bazy danych",Severity.Success);

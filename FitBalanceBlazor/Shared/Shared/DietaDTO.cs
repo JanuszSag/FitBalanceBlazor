@@ -10,9 +10,8 @@ public class DietaDTO
     public int Kalorycznosc { get; set; }
     public int Autor { get; set; }
     public int Rodzaj { get; set; }
-    public List<Danie> Dania  { get; set; }
-
-    public DietaDTO(int id, string nazwa, string opis, int kalorycznosc, int autor, int rodzaj, List<Danie> danie)
+    
+    public DietaDTO(int id, string nazwa, string opis, int kalorycznosc, int autor, int rodzaj)
     {
         this.id = id;
         Nazwa = nazwa;
@@ -20,6 +19,5 @@ public class DietaDTO
         Kalorycznosc = kalorycznosc;
         Autor = autor;
         Rodzaj = rodzaj;
-        Dania = danie;
     }
 }
