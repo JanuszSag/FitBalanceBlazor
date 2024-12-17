@@ -137,7 +137,8 @@ public class DietService: IDietService
                 opis = dieta.Opis,
                 kalorycznosc = dieta.Kalorycznosc,
                 autor = dieta.Autor,
-                rodzaj = dieta.Rodzaj
+                rodzaj = dieta.Rodzaj,
+                Danie_id_danie = dieta.Dania
              });
             _context.SaveChangesAsync();
         }
