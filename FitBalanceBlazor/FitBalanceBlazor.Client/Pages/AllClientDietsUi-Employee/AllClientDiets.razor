@@ -1,6 +1,5 @@
 @page "/allClientDiets"
 @using System.ComponentModel.DataAnnotations 
-@using FitBalanceBlazor.Models
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -26,6 +25,7 @@
                 <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
                 <MudStack>
                     <MudText Typo="Typo.subtitle1">Opis: @dieta.opis</MudText>
+                    <MudText Typo="Typo.subtitle1">Kaloryczność: @dieta.kalorycznosc</MudText>
                     <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == dieta.rodzaj)?.nazwa</MudText>
 
                     <MudText Typo="Typo.subtitle1" Class="d-inline">Danie:

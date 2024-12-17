@@ -3,60 +3,19 @@
 @inject NavigationManager NavigationManager
 @page "/addDiet"
 
-@using System.ComponentModel.DataAnnotations
 @using ClassLibrary1
-@using FitBalanceBlazor.Models
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
 <PageTitle>Add diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
 
-@* <EditForm Model="@modelAddDiet" OnValidSubmit="OnValidSubmit"> *@
     <DataAnnotationsValidator/>
     <MudGrid>
         <MudItem xs="6">
             <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudCardContent>
-                    <!-- Sekcja dodawanie nazwy nowej diety -->
-                    @* <MudText Typo="Typo.h6">Nazwa diety</MudText> *@
-                    @* <MudTextField @bind-Value="modelAddDiet.DietName" Label="Wpisz nazwę diety" *@
-                    @*               For="@(() => modelAddDiet.DietName)" *@
-                    @*               Required="true" RequiredError="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField> *@
-                    @* <MudText Typo="Typo.h6">Nazwa diety</MudText> *@
-                    @* <MudTextField @bind-Value="newDiet.nazwa" Label="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField> *@
-                    @* *@
-                    @* <MudText Typo="Typo.h6">Opis: </MudText> *@
-                    @* <MudTextField @bind-Value="newDiet.opis" Label="Należy wprowadzić opis" Variant="Variant.Text"></MudTextField> *@
-                    @* <MudText Typo="Typo.h6">Kaloryczność: </MudText> *@
-                    @* <MudForm> *@
-                    @*     <MudRadioGroup T="int" @bind-Value="newDiet.kalorycznosc"> *@
-                    @*         <MudRadio Value="1200" >1200</MudRadio> *@
-                    @*         <MudRadio Value="1500" >1500</MudRadio> *@
-                    @*         <MudRadio Value="1800" >1800</MudRadio> *@
-                    @*         <MudRadio Value="2000" >2000</MudRadio> *@
-                    @*         <MudRadio Value="2500" >2500</MudRadio> *@
-                    @*         <MudRadio Value="3000" >3000</MudRadio> *@
-                    @* *@
-                    @*     </MudRadioGroup> *@
-                    @* </MudForm> *@
-                    @* <!-- Sekcja wyboru rodzaju diety --> *@
-                    @* <MudText Typo="Typo.h6">Rodzaj:</MudText> *@
-                    @* <MudRadioGroup @bind-Value="modelFilter.SelectedOption"> *@
-                    @*     <MudStack> *@
-                    @*         @foreach (var rodzaj in @rodzaje) *@
-                    @*         { *@
-                    @*         <MudRadio Value="@rodzaj.nazwa">@rodzaj.nazwa</MudRadio> *@
-                    @*         } *@
-                    @*     </MudStack> *@
-                    @* *@
-                    @* </MudRadioGroup> *@
-                    <!-- Sekcja dodawanie nazwy nowej diety -->
-                    @* <MudText Typo="Typo.h6">Nazwa diety</MudText> *@
-                    @* <MudTextField @bind-Value="modelAddDiet.DietName" Label="Wpisz nazwę diety" *@
-                    @*               For="@(() => modelAddDiet.DietName)" *@
-                    @*               Required="true" RequiredError="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField> *@
-                    <MudText Typo="Typo.h6">Nazwa diety</MudText>
+                <MudText Typo="Typo.h6">Nazwa diety</MudText>
                     <MudTextField @bind-Value="modelAddDiet.DietName" Label="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
                     
                     <MudText Typo="Typo.h6">Opis: </MudText>
@@ -73,48 +32,84 @@
                     
                         </MudRadioGroup>
                     </MudForm>
+                    
                     <!-- Sekcja wyboru rodzaju diety -->
                     <MudText Typo="Typo.h6">Rodzaj:</MudText>
                     <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
                         <MudStack>
                             @foreach (var rodzaj in @rodzaje)
                             {
-                            <MudRadio Value="@rodzaj.id_rodzaj">@rodzaj.id_rodzaj</MudRadio>
+                            <MudRadio Value="@rodzaj.id_rodzaj">@rodzaj.nazwa</MudRadio>
                             }
                         </MudStack>
                     
                     </MudRadioGroup>
                     <!-- Sekcja wyboru dania do dodania -->
-                    <!-- to trzeba innego endpointa-->
-                    <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText>
-                    <MudForm>
-                        <MudSelect @bind-Value="selectedDanie" Label="Wybierz danie"> @* AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable*@
-                            <MudStack>
-                                @foreach (var danie in dania)
-                                {
-                                    <MudSelectItem Value="danie">@danie.nazwa</MudSelectItem>
-                                }
-                            </MudStack>
-                        </MudSelect>
-                    </MudForm>
+                    @* <MudSelect T="Danie" Label="Należy wybrać dania" MultiSelection="true" @bind-Value="SelectedMeals"></MudSelect> *@
+                   
+                    
+                    @* <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText> *@
+                    @*     <MudSelect T="List<Danie>" @bind-Value="SelectedDishes" MultiSelection="true" Clearable="true" Label="Należy wybrać dania"> $1$ AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable#1# *@
+                    @*          *@
+                    @*             @foreach (var danie in dania) *@
+                    @*             { *@
+                    @*                 <MudSelectItem Value="dania">@danie.nazwa</MudSelectItem> *@
+                    @*             } *@
+                    @*         *@
+                    @*     </MudSelect> *@
 
 
+                    @* <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText> *@
+                    @* <MudSelect T="List<Danie>" @bind-Value="SelectedDishes" MultiSelection="true" Clearable="true" Label="Należy wybrać dania"> $1$ AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable#1# *@
+                    @*     @foreach (var danie in dania) *@
+                    @*     { *@
+                    @*     <MudSelectItem Value="@danie.id_danie">@danie.nazwa</MudSelectItem><!--zaznacza sie cala lista albo nic --> *@
+                    @*     } *@
+                    @*      *@
+                    @* </MudSelect> *@
+                    @* <MudText Typo="Typo.h6">Która danie chcesz dodać?</MudText> *@
+                    @* <MudSelect T="Danie" @bind-Value="SelectedDish"  Label="Należy wybrać danie"> $1$ AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable#1# *@
+                    @*     @foreach (var danie in dania) *@
+                    @*     { *@
+                    @*     <MudSelectItem Value="@dania">@danie.nazwa</MudSelectItem> *@
+                    @*     } *@
+                    @* *@
+                    @* </MudSelect> *@
+                    <MudText Typo="Typo.h6">Danie 1:</MudText>
+                    <MudSelect @bind-Value="modelFilter.SelectedMeal1" @onselect="OnMealChanged">
+                        <MudStack>
+                            @foreach (var danie in dania)
+                            {
+                                <MudSelectItem Value="@danie.id_danie">@danie.nazwa</MudSelectItem>
+                            }
+                        </MudStack>
+                    </MudSelect>
+                    <MudText Typo="Typo.h6">Danie 2:</MudText>
+                    <MudSelect @bind-Value="modelFilter.SelectedMeal2" @onselect="OnMealChanged">
+                        <MudStack>
+                            @foreach (var danie in dania)
+                            {
+                            <MudSelectItem Value="@danie.id_danie">@danie.nazwa</MudSelectItem>
+                            }
+                        </MudStack>
+                    </MudSelect>
+                    <MudText Typo="Typo.h6">Danie 3:</MudText>
+                    <MudSelect @bind-Value="modelFilter.SelectedMeal3" @onselect="OnMealChanged" >
+                        <MudStack>
+                            @foreach (var danie in dania)
+                            {
+                                <MudSelectItem Value="@danie.id_danie">@danie.nazwa</MudSelectItem>
+                            }
+                        </MudStack>
+                    </MudSelect>
 
-
+                    <p>Lista wybranych posiłków: @string.Join(", ", listOfMealsId)</p>
                     <div class="d-flex align-center">
                         <MudButton Button OnClick="()=>AddDietD(0,modelAddDiet.DietName,Description,SelectedKcal,1,modelFilter.SelectedOption)"
                                    Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
                             Zapisz nową diete
                         </MudButton> </div>
 
-                    @* <div class="d-flex align-center"> *@
-                    @*     <MudButton Button OnClick="AddDietD" *@
-                    @*                Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"> *@
-                    @*         Zapisz nową diete *@
-                    @*     </MudButton> </div> *@
-                    @* <MudText Color="Color.Error"> *@
-                    @*     <ValidationMessage For="@(() => modelAddDiet.SelectedOption)"Class="text-danger"></ValidationMessage> *@
-                    @* </MudText> *@
                 </MudCardContent>
             </MudCard>
         </MudItem>
@@ -132,10 +127,6 @@
 
 
 @code {
-    public string Description { get; set; }
-    // public int Kalorycznosc { get; set; }
-    public int SelectedKcal{ get; set; }
-    
 //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
 AddNewDietForm modelAddDiet = new AddNewDietForm();
 bool success;
@@ -149,25 +140,43 @@ public string DietName { get; set; }
 
 }
 
-//Metoda sprawdzająca poprawnośc danych - czy nie są puste
-private bool ModelIsValid()
-{ 
-    return !string.IsNullOrEmpty(modelAddDiet.DietName) ;
-}
-
-
+public string Description { get; set; }
+public int SelectedKcal{ get; set; }
+// public List<Danie> SelectedDishes { get; set; } = new List<Danie>();
+public List<Danie> SelectedDishes { get; set; } = new List<Danie>();
+public Danie SelectedDish { get; set; } 
 
 private List<Rodzaj> rodzaje=new List<Rodzaj>();
 private List<Danie> dania=new List<Danie>();
 
-private Danie selectedDanie { get; set; }
+// private Danie selectedDanie { get; set; }
 
 FilterForm modelFilter = new FilterForm();
 public class FilterForm
 {
-    public int SelectedOption { get; set; } 
+    public int SelectedOption { get; set; }
+    public int SelectedMeal1 { get; set; } = 0;
+    public int SelectedMeal2 { get; set; } = 0;
+    public int SelectedMeal3 { get; set; } = 0;
+    
 
 }
+
+public List<int> listOfMealsId = new List<int>();
+private void OnMealChanged()
+{
+   listOfMealsId.Add(modelFilter.SelectedMeal1);
+   listOfMealsId.Add(modelFilter.SelectedMeal2);
+   listOfMealsId.Add(modelFilter.SelectedMeal3);
+        
+    Snackbar.Add($"Lista posiłków: {string.Join(", ", listOfMealsId)}", Severity.Info);
+    Snackbar.Add("Aktualna lista posiłków: " + string.Join(", ", listOfMealsId), Severity.Info);
+   
+    
+    StateHasChanged();
+
+}
+
 
 protected override async Task OnInitializedAsync(){ 
     try
@@ -195,14 +204,21 @@ protected override async Task OnInitializedAsync(){
             newDiet = new DietaDTO(id, nazwaD, opisD, kalorycznoscD, autorD, rodzajD);
             var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
             //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu dodania nowej diety do bazy danych",Severity.Success);
+            Snackbar.Add("Dodano nową dietę do bazy danych",Severity.Success);
     
         }
         catch (Exception ex)
         {
-            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu u dodania nowej diety do bazy danych",Severity.Error);
+            Snackbar.Add("Nie udało się dodać nowej diety do bazy danych",Severity.Error);
         }
     }
+
+    // //Metoda sprawdzająca poprawnośc danych - czy nie są puste
+// private bool ModelIsValid()
+// { 
+//     return !string.IsNullOrEmpty(modelAddDiet.DietName) ;
+// }
+
     // private async Task AddDietD()
     // {
     //     var response = await Http.PostAsJsonAsync("api/diety", newDiet); 
