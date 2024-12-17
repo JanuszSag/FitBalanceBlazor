@@ -10,4 +10,5 @@ public interface IDietService
     Task<Dieta?> GetDietAsync(int dietId);
     void RemoveDietAsync(int dietId);
     void AddDiet(DietaDTO diet);
+    Task<bool> AddMealsToDiet(int id, List<Danie> meals);
 }

@@ -146,4 +146,29 @@ public class DietService: IDietService
             Console.WriteLine(ex.Message);
         }
     }
+
+    public async Task<bool> AddMealsToDiet(int id, List<Danie> meals)
+    {
+        try
+        {
+            var diet = await _context.Dieta
+                .Include(d => d.Danie_id_danie)
+                .FirstOrDefaultAsync(d => d.id_dieta == id);
+
+            if (diet == null) return false;
+            diet.Danie_id_danie.Clear();
+            foreach (var meal in meals)
+            {
+                diet.Danie_id_danie.Add(meal);
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return false;
+        }
+    }
 }
