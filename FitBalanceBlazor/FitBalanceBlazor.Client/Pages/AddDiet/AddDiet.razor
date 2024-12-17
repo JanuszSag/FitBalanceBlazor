@@ -39,23 +39,20 @@
                         <MudStack>
                             @foreach (var categorie in @categories)
                             {
-                            <MudRadio Value="@categorie.id_rodzaj">@categorie.nazwa</MudRadio>
+                                <MudRadio Value="@categorie.id_rodzaj">@categorie.nazwa</MudRadio>
                             }
                         </MudStack>
                     
                     </MudRadioGroup>
-                        <!--Przycisk dodania nowej diety-->
+                    
+                    <!--Przycisk dodania nowej diety-->
                         <div class="d-flex align-center">
-                            <MudButton Button OnClick="()=>AddDietD(0,modelAddDiet.DietName,Description,SelectedKcal,1,modelFilter.SelectedOption)"
-                                       Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
+                            <MudButton Button OnClick="() => AddDietD(0, modelAddDiet.DietName, Description, SelectedKcal, 1, modelFilter.SelectedOption)"
+                                       Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
                                 Zapisz nową diete
-                            </MudButton> </div>
-                    <div class="d-flex align-center">
-                        <MudButton Href="/addMealToDiet"
-                                   Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
-                            Dodaj danie do diety
-                        </MudButton> </div>
-
+                            </MudButton>
+                        </div>
+                  
                 </MudCardContent>
             </MudCard>
         </MudItem>
@@ -118,6 +115,7 @@ protected override async Task OnInitializedAsync(){
             var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
             //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
             Snackbar.Add("Dodano nową dietę do bazy danych",Severity.Success);
+            NavigationManager.NavigateTo($"/addMealToDiet/{id}");
     
         }
         catch (Exception ex)
@@ -126,7 +124,7 @@ protected override async Task OnInitializedAsync(){
         }
     }
 
-
+   
     // //Metoda sprawdzająca poprawnośc danych - czy nie są puste
 // private bool ModelIsValid()
 // { 

@@ -31,12 +31,13 @@
 
 
                 <!--Przycisk dodania dania do diety-->
-                <div class="d-flex align-center">
-                    <MudButton Button OnClick="()=>AddMeal()"
-                               Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
-                        Zapisz dania do diety
-                    </MudButton> </div>
-
+                <MudStack Spacing="3">
+                    <div class="d-flex align-center">
+                        <MudButton Button OnClick="()=>AddMeal()"
+                                   Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
+                            Zapisz dania do diety
+                        </MudButton> </div>
+                    </MudStack>
 
             </MudCardContent>
         </MudCard>
