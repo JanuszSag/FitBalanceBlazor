@@ -15,13 +15,13 @@ public partial class Danie
     public string nazwa { get; set; } = null!;
 
     [InverseProperty("id_danieNavigation")]
-    public virtual ICollection<Produkt_Danie> Produkt_Danie { get; set; } = new List<Produkt_Danie>();
+    public virtual ICollection<Produkt_Danie> Produkt_Danie { get; set; } = null;
 
     [ForeignKey("Danie_id_danie")]
     [InverseProperty("Danie_id_danie")]
-    public virtual ICollection<Dieta> Dieta_id_dieta { get; set; } = new List<Dieta>();
+    public virtual ICollection<Dieta> Dieta_id_dieta { get; set; } = null;
 
     [ForeignKey("id_danie")]
     [InverseProperty("id_danie")]
-    public virtual ICollection<Przypisana_dieta> id_przypisana_dieta { get; set; } = new List<Przypisana_dieta>();
+    public virtual ICollection<Przypisana_dieta> id_przypisana_dieta { get; set; } = null;
 }

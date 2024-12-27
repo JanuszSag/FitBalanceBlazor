@@ -12,7 +12,7 @@ public partial class Dieta
     public int id_dieta { get; set; }
 
     [Column(TypeName = "text")]
-    public string nazwa { get; set; } = null!;
+    public string nazwa { get; set; } = null;
 
     [Column(TypeName = "text")]
     public string? opis { get; set; }
@@ -34,11 +34,11 @@ public partial class Dieta
 
     [ForeignKey("autor")]
     [InverseProperty("Dieta")]
-    public virtual Pracownik autorNavigation { get; set; } = null!;
+    public virtual Pracownik autorNavigation { get; set; } = null;
 
     [ForeignKey("rodzaj")]
     [InverseProperty("Dieta")]
-    public virtual Rodzaj rodzajNavigation { get; set; } = null!;
+    public virtual Rodzaj rodzajNavigation { get; set; } = null;
 
     [ForeignKey("Dieta_id_dieta")]
     [InverseProperty("Dieta_id_dieta")]
