@@ -9,10 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FitBalanceBlazor.Services.AuthService;
 
-public class AuthService(MyDbContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+public class AuthService(MyDbContext context, IConfiguration configuration)
     : IAuthService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public async Task<bool> UserExists(string email)
     {
@@ -41,33 +40,6 @@ public class AuthService(MyDbContext context, IConfiguration configuration, IHtt
         
         return response;
     }
-
-    //public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
-    //{
-    //    var response = new ServiceResponse<bool>();
-    //    
-    //    var user = await context.Uzytkownik.FindAsync(userId);
-    //    if (user == null)
-    //    {
-    //        response.Success = false;
-    //        response.Message = "User not found";
-    //    }
-    //    else
-    //    {
-    //        CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
-    //        
-    //        user.haslo_hashed = passwordHash;
-    //        user.haslo_salt = passwordSalt;
-    //        
-    //        await context.SaveChangesAsync();
-    //        
-    //        response.Data = true;
-    //        response.Message = "Password changed";
-    //        response.Success = true;
-    //    }
-    //    
-    //    return response;
-    //}
 
     public async Task<ServiceResponse<int>> Register(RegisterModel registerModel)
     {
@@ -142,11 +114,6 @@ public class AuthService(MyDbContext context, IConfiguration configuration, IHtt
         passwordSalt = hmac.Key;
         var passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
         passwordHash = hmac.ComputeHash(passwordBytes);
-    }
-
-    public int GetUserId()
-    {
-        return int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "-1");
     }
     
 }

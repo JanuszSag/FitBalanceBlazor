@@ -12,6 +12,7 @@ using FitBalanceBlazor.Services.ProductService;
 using FitBalanceBlazor.Services.ProgramService;
 using FitBalanceBlazor.Services.ReportService;
 using FitBalanceBlazor.Services.ReviewService;
+using FitBalanceBlazor.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -53,6 +55,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5131/") });
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = 64 * 1024;
+});
 
 var app = builder.Build();
 
