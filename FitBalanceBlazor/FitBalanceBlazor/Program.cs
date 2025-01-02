@@ -55,10 +55,6 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5131/") });
-builder.Services.AddSignalR(options =>
-{
-    options.MaximumReceiveMessageSize = 64 * 1024;
-});
 
 var app = builder.Build();
 
