@@ -147,28 +147,33 @@ public class DietService: IDietService
         }
     }
 
-    public async Task<bool> AddMealsToDiet(int id, List<Danie> meals)
+    public async Task<ServiceResponse<bool>> AddMealsToDiet(int id, List<int> meals)
     {
-        try
-        {
+        var response = new ServiceResponse<bool>();
+        
             var diet = await _context.Dieta
-                .Include(d => d.Danie_id_danie)
                 .FirstOrDefaultAsync(d => d.id_dieta == id);
 
-            if (diet == null) return false;
+            if (diet == null)
+            {
+                response.Success = false;
+                response.Message = "Diet not found";
+                
+                return response;
+            }
             diet.Danie_id_danie.Clear();
+            diet.Danie_id_danie = null;
             foreach (var meal in meals)
             {
-                diet.Danie_id_danie.Add(meal);
+                diet.Danie_id_danie.Add(_context.Danie.Find(meal));
             }
-
+            
             await _context.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            return false;
-        }
+
+            response.Data = true;
+            response.Success = true;
+            
+            return response;
+
     }
 }

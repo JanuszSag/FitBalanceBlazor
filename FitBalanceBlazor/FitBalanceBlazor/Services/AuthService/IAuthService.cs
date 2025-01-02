@@ -8,7 +8,5 @@ public interface IAuthService
     Task<ServiceResponse<int>> Register(RegisterModel registerModel);
     Task<bool> UserExists(string email);
     Task<ServiceResponse<string>> Login(LoginModel loginModel);
-    //Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword);
-    public int GetUserId();
 
 }

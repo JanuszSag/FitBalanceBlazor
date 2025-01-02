@@ -58,12 +58,16 @@ namespace FitBalanceBlazor.Controllers;
             return Ok();
         }
 
-        [HttpPut("{dietId}")]
-        public async Task<ActionResult> UpdateDiet(String dietId,[FromBody] List<Danie> meals)
+        [HttpPut]
+        [Route("UpdateMeals/{dietId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateListOfMeals(int dietId, [FromBody] List<int> meals)
         {
-            if(await _dietService.AddMealsToDiet(Int32.Parse(dietId), meals))
-                return Ok("Zaktualizowano liste dan");
-            return NotFound("Nie znaleziono diety");
+            var response = _dietService.AddMealsToDiet(dietId, meals);
+            if (!response.Result.Success)
+            {
+                return BadRequest(response.Result.Message);
+            }
+            return Ok("Zaktualizowano liste dan");
         }
     }
     
