@@ -10,15 +10,18 @@
 
 <!-- Sekcja elementów listy diet -->
 <MudGrid>
- 
     <MudItem xs="9">
-        <div align="center">
-        <MudButton Variant="Variant.Filled"
-                   Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
-                   Href="/addDiet">
-            Dodaj dietę
-        </MudButton>
-        </div>
+        <AuthorizeView Roles="employee">
+            <Authorized>
+            <div align="center">
+                <MudButton Variant="Variant.Filled"
+                           Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
+                           Href="/addDiet">
+                    Dodaj dietę
+                </MudButton>
+            </div>
+            </Authorized>
+        </AuthorizeView>
         @foreach (var dieta in diety)
         {
             <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
@@ -36,18 +39,22 @@
                     </MudText>
                 </MudStack>
 
-                <MudStack Row="true" Justify="Justify.SpaceAround">
-                    <div class="d-flex align-center">
-                        <MudButton Variant="Variant.Filled"
-                                   Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
-                                   OnClick="() => onChangeDiet(dieta.id_dieta)">
-                            Zmień
-                        </MudButton>
-                        <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
-                                   OnClick="snackBarFun">Usuń
-                        </MudButton>
-                    </div>
-                </MudStack>
+                <AuthorizeView Roles="employee">
+                    <Authorized>
+                    <MudStack Row="true" Justify="Justify.SpaceAround">
+                        <div class="d-flex align-center">
+                            <MudButton Variant="Variant.Filled"
+                                       Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
+                                       OnClick="() => onChangeDiet(dieta.id_dieta)">
+                                Zmień
+                            </MudButton>
+                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
+                                       OnClick="snackBarFun">Usuń
+                            </MudButton>
+                        </div>
+                    </MudStack>
+                    </Authorized>
+                </AuthorizeView>
             </MudPaper>
 
         }
@@ -70,7 +77,7 @@
                     </MudStack>
 
                 </MudRadioGroup>
-                
+
                 <div class="d-flex align-center">
                     <MudButton ButtonType="ButtonType.Button"
                                Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
