@@ -60,4 +60,26 @@ public class UserService(MyDbContext context) : IUserService
         }
         return response;
     }
+
+    public async Task<ServiceResponse<List<Uzytkownik>>> SearchListUserData(List<int> userIds)
+    {
+        var response = new ServiceResponse<List<Uzytkownik>>();
+        
+        foreach (var i in userIds)
+        {
+            var person = await context.Uzytkownik.FindAsync(i);
+            if (person is null)
+            {
+                response.Success = false;
+                response.Message = $"Cannot find user. Id: {i}";
+                return response;
+            }
+            response.Data.Add(person);
+        }
+        response.Success = true;
+        response.Message = "Success";
+        
+        return response;
+    }
+
 }
