@@ -71,7 +71,7 @@ using FitBalanceBlazor.Models;
         try
         {
             // Trzeba zamieniac ID
-            currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/1");
+            currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/3");
 
             if (currentDiet == null)
             {
