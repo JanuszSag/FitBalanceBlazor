@@ -91,7 +91,7 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
             new Claim(ClaimTypes.NameIdentifier, user.id_uzytkownik.ToString()),
             new Claim(ClaimTypes.Name, user.email),
             new Claim(ClaimTypes.Role,
-                context.Pracownik.Any(p => p.id_uzytkownik == user.id_uzytkownik) ? "Pracownik" : "Uzytkownik")
+                context.Pracownik.Any(p => p.id_uzytkownik == user.id_uzytkownik) ? "Employee" : "User")
         ];
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value!));
