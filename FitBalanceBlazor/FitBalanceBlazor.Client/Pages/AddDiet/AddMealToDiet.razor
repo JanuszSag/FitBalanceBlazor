@@ -22,7 +22,9 @@
                         {
                             <MudSelectItem Value="@danie">@danie.nazwa</MudSelectItem>
                         }
-                    </MudSelect>    
+                    </MudSelect>
+
+                <MudStack Spacing="3">
                 <MudButton OnClick="()=>AddMealToList(selectedMeal.id_danie)" Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">Dodaj danie do diety</MudButton>
 
                 <!--Przycisk dodania dań do listy-->
@@ -31,12 +33,13 @@
 
 
                 <!--Przycisk dodania dania do diety-->
-                <div class="d-flex align-center">
-                    <MudButton Button OnClick="()=>AddMeal()"
-                               Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
-                        Zapisz dania do diety
-                    </MudButton> </div>
-
+              
+                    <div class="d-flex align-center">
+                        <MudButton Button OnClick="()=>AddMeal()"
+                                   Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;" >
+                            Zapisz dania do diety
+                        </MudButton> </div>
+                    </MudStack>
 
             </MudCardContent>
         </MudCard>

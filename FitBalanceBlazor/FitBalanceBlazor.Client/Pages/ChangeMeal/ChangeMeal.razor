@@ -43,10 +43,12 @@ using FitBalanceBlazor.Models;
                 </MudForm>
                 <div class="d-flex align-center">
                     <MudText Class="ml-4">Wybrana opcja: @selectedMeal</MudText>
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               OnClick="SubmitChange">
+                    <MudButton Variant="Variant.Filled"
+                               Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                               Href="/changeCertainMeal">
                         Zatwierdź
                     </MudButton>
+
                 </div>
             </MudPaper>
         </MudStack>
@@ -69,7 +71,7 @@ using FitBalanceBlazor.Models;
         try
         {
             // Trzeba zamieniac ID
-            currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/1");
+            currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/3");
 
             if (currentDiet == null)
             {
@@ -86,16 +88,5 @@ using FitBalanceBlazor.Models;
         }
     }
 
-    private void SubmitChange()
-    {
-        if (!string.IsNullOrEmpty(selectedMeal))
-        {
-            Console.WriteLine($"Selected meal to change: {selectedMeal}");
-            NavigationManager.NavigateTo($"/changeCertainMeal?mealName={selectedMeal}");
-        }
-        else
-        {
-            Console.WriteLine("No meal selected.");
-        }
-    }
+   
 }
