@@ -14,7 +14,7 @@
     <MudItem xs="12">
         <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 20px;">
             <MudText Typo="Typo.h6" Style="font-weight: bold;">
-                Twoje przypisane śniadanie: @CurrentMeal
+                Twoje przypisane danie: @CurrentMeal
             </MudText>
         </MudPaper>
     </MudItem>
@@ -64,7 +64,7 @@
 @code {
     private List<Danie> AvailableMeals = new(); 
     private string SelectedOption { get; set; } 
-    private string CurrentMeal { get; set; } = "Brak dania"; 
+    private string CurrentMeal { get; set; } = "Brak dania"; //teraz nie mozna tego zmienic skoro nie mamy uzytkownika
     private bool isDialogVisible = false;
 
     protected override async Task OnInitializedAsync()
