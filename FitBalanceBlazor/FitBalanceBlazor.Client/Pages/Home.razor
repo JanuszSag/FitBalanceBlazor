@@ -188,7 +188,7 @@
             <RowTemplate>
                 <MudPaper Class="pa-10 my-4" Style="background:rgb(223,243,156);border-radius: 25px;margin-left: 30px; margin-right: 30px;">
                     <MudTd DataLabel="Autor">@context.id_uzytkownik</MudTd><!--pseudonim-->
-                    <MudRating SelectedValue="@context.ocena" Size="Size.Medium"/>
+                    <MudRating SelectedValue="@context.ocena.Value" Size="Size.Medium"/>
                     <MudTd DataLabel="Opis">@context.zawartosc</MudTd>
                 </MudPaper>
 

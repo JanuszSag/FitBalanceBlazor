@@ -1,7 +1,9 @@
 @page "/changeCertainMeal"
 @using MudBlazor
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
 
+<p>Dialog state: @isDialogVisible</p>
 <PageTitle>Zmiana Dania</PageTitle>
 
 
@@ -46,10 +48,24 @@
     </MudItem>
 </MudGrid>
 
+<MudDialog @bind-IsVisible="isDialogVisible" MaxWidth="MaxWidth.Small">
+    <DialogContent>
+        <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight: bold;">
+            Twoje danie zostało zmienione!
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CloseDialog" Variant="Variant.Filled" Style="background-color: #FF986B;">
+            OK
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
 @code {
     private List<Danie> AvailableMeals = new(); 
     private string SelectedOption { get; set; } 
     private string CurrentMeal { get; set; } = "Brak dania"; 
+    private bool isDialogVisible = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,10 +85,18 @@
             Console.WriteLine($"Nie udalo sie pobrac dane {ex.Message}");
         }
     }
-
+    
+    
     private void SubmitChange()
     {
+        isDialogVisible = true;
         Console.WriteLine($"Wybrano: {SelectedOption}");
-        // 
+        
+    }
+    
+    private void CloseDialog()
+    {
+        isDialogVisible = false; 
+        NavigationManager.NavigateTo("/myDiet"); 
     }
 }
