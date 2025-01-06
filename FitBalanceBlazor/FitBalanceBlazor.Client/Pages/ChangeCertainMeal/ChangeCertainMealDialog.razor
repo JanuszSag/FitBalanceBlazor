@@ -1,0 +1,25 @@
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight: bold;">
+            Twoje danie zostało zmienione na: @SelectedOption!
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="ConfirmDialog" Variant="Variant.Filled" Style="background-color: #FF986B;">
+            OK
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public string SelectedOption { get; set; } = string.Empty; 
+
+    private void ConfirmDialog()
+    {
+        MudDialog.Close(DialogResult.Ok(true)); 
+    }
+}
