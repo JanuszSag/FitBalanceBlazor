@@ -27,7 +27,7 @@ public partial class Dieta
 
     public virtual Rodzaj rodzajNavigation { get; set; } = null!;
 
-    public virtual ICollection<Danie>? Danie_id_danie { get; set; } = new List<Danie>();
+    public virtual ICollection<Danie> Danie_id_danie { get; set; } = new List<Danie>();
 
     public virtual ICollection<Produkt> id_produkt { get; set; } = new List<Produkt>();
 }

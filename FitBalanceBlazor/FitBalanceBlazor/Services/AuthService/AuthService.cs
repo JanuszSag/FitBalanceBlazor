@@ -1,4 +1,4 @@
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -15,15 +15,16 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
 
     public async Task<bool> UserExists(string email)
     {
-        return await context.Uzytkownik.AnyAsync(u => u.email.ToLower().Equals(email.ToLower()));
+        var entity = await context.Uzytkownik.FirstOrDefaultAsync();
+        return entity is null;
     }
 
     public async Task<ServiceResponse<string>> Login(LoginModel loginModel)
     {
         var response = new ServiceResponse<string>();
-        var account = context.Uzytkownik.FirstOrDefault(x => x.email == loginModel.email);
+        var account = context.Uzytkownik.FirstOrDefaultAsync(x => x.email == loginModel.Email).Result;
         
-        if (account == null)
+        if (account is null)
         {
             response.Success = false;
             response.Message = "User not found";
@@ -37,15 +38,18 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
         {
             response.Data = CreateToken(account);
         }
-        
+        response.Success = true;
+        response.Message = "Login successful";
         return response;
     }
 
     public async Task<ServiceResponse<int>> Register(RegisterModel registerModel)
     {
         var response = new ServiceResponse<int>();
+        var findAccount = await context.Uzytkownik.FirstOrDefaultAsync(x => x.email.ToLower().Equals(registerModel.Email.ToLower()));
 
-        if (await context.Uzytkownik.AnyAsync(u => u.email.ToLower().Equals(registerModel.Email.ToLower())))
+        
+        if (findAccount is not null)
         {
             response.Success = false;
             response.Message = "User already exists";
@@ -57,7 +61,7 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
 
         var user = new Uzytkownik
         {
-            id_uzytkownik = context.Uzytkownik.Count(),
+            id_uzytkownik = context.Uzytkownik.Count()+1,
             email = registerModel.Email,
             haslo_hashed = passwordHash,
             haslo_salt = passwordSalt,
@@ -65,7 +69,7 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
             waga = registerModel.Weight,
             plec = registerModel.Gender,
             pseudonim = registerModel.Username,
-            data_urodzenia = registerModel.Birthday
+            data_urodzenia = DateOnly.FromDateTime((DateTime)registerModel.Birthday)
         };
 
         context.Uzytkownik.Add(user);
@@ -80,9 +84,15 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
 
     private bool CheckPassword(string password, byte[] passwordHash, byte[] passwordSalt)
     {
-        using var hmac = new HMACSHA256(passwordSalt);
-        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-        return computedHash.SequenceEqual(passwordHash);
+        using (var hmac = new HMACSHA256(passwordSalt))
+        {
+            byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            for(int i = 0; i < passwordHash.Length; i++)
+                if (computedHash[i] != passwordHash[i])
+                    return false;
+        }
+
+        return true;
     }
     private string CreateToken(Uzytkownik user)
     {
