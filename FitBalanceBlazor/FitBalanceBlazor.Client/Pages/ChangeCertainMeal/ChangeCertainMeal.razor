@@ -2,15 +2,13 @@
 @using MudBlazor
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
-<p>Dialog state: @isDialogVisible</p>
 <PageTitle>Zmiana Dania</PageTitle>
-
 
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase; font-weight: bold;">Zmiana Dania</MudText>
 
 <MudGrid Class="mt-5">
-  
     <MudItem xs="12">
         <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 20px;">
             <MudText Typo="Typo.h6" Style="font-weight: bold;">
@@ -23,7 +21,6 @@
         <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 20px;">
             <MudText Typo="Typo.h6" Style="font-weight: bold;">Możliwa zamiana ze względu na zapotrzebowanie kaloryczne:</MudText>
 
-            
             <MudRadioGroup @bind-Value="SelectedOption" Class="mt-3">
                 @if (AvailableMeals != null && AvailableMeals.Any())
                 {
@@ -38,34 +35,19 @@
                 }
             </MudRadioGroup>
 
-           
             <MudButton Variant="Variant.Filled" Color="Color.Primary"
                        Style="background-color: #FF986B; border-radius: 20px; margin-top: 20px;"
-                       OnClick="SubmitChange">
+                       OnClick="ShowDialog">
                 ZATWIERDŹ
             </MudButton>
         </MudPaper>
     </MudItem>
 </MudGrid>
 
-<MudDialog @bind-IsVisible="isDialogVisible" MaxWidth="MaxWidth.Small">
-    <DialogContent>
-        <MudText Typo="Typo.h6" Align="Align.Center" Style="font-weight: bold;">
-            Twoje danie zostało zmienione!
-        </MudText>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="CloseDialog" Variant="Variant.Filled" Style="background-color: #FF986B;">
-            OK
-        </MudButton>
-    </DialogActions>
-</MudDialog>
-
 @code {
     private List<Danie> AvailableMeals = new(); 
-    private string SelectedOption { get; set; } 
-    private string CurrentMeal { get; set; } = "Brak dania"; //teraz nie mozna tego zmienic skoro nie mamy uzytkownika
-    private bool isDialogVisible = false;
+    private string SelectedOption { get; set; } = string.Empty; 
+    private string CurrentMeal { get; set; } = "Brak dania"; // teraz nie mozemy tego zmienic bo nie mamy uzytkownika
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,7 +57,6 @@
 
             if (allMeals != null && allMeals.Any())
             {
-                
                 var random = new Random();
                 AvailableMeals = allMeals.OrderBy(x => random.Next()).Take(5).ToList();
             }
@@ -85,18 +66,34 @@
             Console.WriteLine($"Nie udalo sie pobrac dane {ex.Message}");
         }
     }
-    
-    
-    private void SubmitChange()
+
+    private async Task ShowDialog()
     {
-        isDialogVisible = true;
-        Console.WriteLine($"Wybrano: {SelectedOption}");
-        
-    }
-    
-    private void CloseDialog()
-    {
-        isDialogVisible = false; 
-        NavigationManager.NavigateTo("/myDiet"); 
+        if (string.IsNullOrEmpty(SelectedOption))
+        {
+            Console.WriteLine("Nie wybrano żadnego dania.");
+            return; 
+        }
+
+        var parameters = new DialogParameters
+        {
+            ["SelectedOption"] = SelectedOption 
+        };
+
+        var options = new DialogOptions
+        {
+            CloseButton = false,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = DialogService.Show<ChangeCertainMealDialog>("Zmiana Dania", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) 
+        {
+            Console.WriteLine($"Dialog confirmed: {SelectedOption}");
+            NavigationManager.NavigateTo("/myDiet");
+        }
     }
 }
