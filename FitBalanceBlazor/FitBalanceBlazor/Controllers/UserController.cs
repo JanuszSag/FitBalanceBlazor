@@ -32,9 +32,9 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ServiceResponse<List<Uzytkownik>>>> GetAllUsersByIds(List<int> ids)
+    public async Task<ActionResult<ServiceResponse<List<Uzytkownik>>>> GetAllUsersByIds()
     {
-        var response = await _userService.SearchListUserData(ids);
+        var response = await _userService.SearchListUserData();
         
         if(!response.Success)
             return BadRequest(response);

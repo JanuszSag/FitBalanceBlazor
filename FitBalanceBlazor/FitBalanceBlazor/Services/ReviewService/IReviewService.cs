@@ -1,9 +1,11 @@
 
 
+using ClassLibrary1;
+
 namespace FitBalanceBlazor.Services.ReviewService;
 
 public interface IReviewService
 {
-    Task<List<Opinia>> GetAllReviewsAsync();
+    Task<ServiceResponse<List<Opinia>>> GetAllReviewsAsync();
     Task<Opinia> GetReviewByIdAsync(int id);
 }
