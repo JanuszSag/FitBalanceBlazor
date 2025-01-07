@@ -14,11 +14,16 @@ using FitBalanceBlazor.Services.ReportService;
 using FitBalanceBlazor.Services.ReviewService;
 using FitBalanceBlazor.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<MyDbContext>();
+builder.Services.AddDbContext<MyDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 
 // Add MudBlazor services
 builder.Services.AddMudServices();

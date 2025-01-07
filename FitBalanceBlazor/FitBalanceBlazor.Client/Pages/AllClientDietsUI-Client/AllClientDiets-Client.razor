@@ -14,7 +14,7 @@ using FitBalanceBlazor.Models
 <!-- Sekcja elementów listy diet -->
 <MudGrid>
     <MudItem xs="9">
-        @foreach (var dieta in diety)
+        @foreach (var dieta in diety) //dla kazdej diety wyswietlamy opis,rodzaj,dania
         {
             <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
