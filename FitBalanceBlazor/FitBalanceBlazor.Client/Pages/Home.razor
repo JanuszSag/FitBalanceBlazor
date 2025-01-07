@@ -188,7 +188,7 @@
             @foreach (var opinia in opinie)
             {
                 <MudPaper Class="pa-10 my-4" Style="background:rgb(223,243,156);border-radius: 25px;margin-left: 30px; margin-right: 30px;">
-                    @* <MudText>Autor: @uzytkownicy.FirstOrDefault(u=>u.id_uzytkownik==opinia.id_uzytkownik)?.pseudonim</MudText> *@
+                    <MudText>Autor: @uzytkownicy.FirstOrDefault(u=>u.id_uzytkownik==opinia.id_uzytkownik)?.pseudonim</MudText> 
                     <MudRating SelectedValue="@opinia.ocena.Value" Size="Size.Medium"/> 
                     <MudText>Opis: @opinia.zawartosc</MudText>
                 </MudPaper>
