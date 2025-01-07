@@ -9,7 +9,7 @@ public partial class Uzytkownik
 
     public string? pseudonim { get; set; }
 
-    public string? email { get; set; }
+    public string email { get; set; } = null!;
 
     public DateOnly? data_urodzenia { get; set; }
 

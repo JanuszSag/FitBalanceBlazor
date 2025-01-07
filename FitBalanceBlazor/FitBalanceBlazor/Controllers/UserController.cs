@@ -11,7 +11,7 @@ public class UserController(IUserService userService) : ControllerBase
 {
     private readonly IUserService _userService = userService;
 
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<ServiceResponse<Uzytkownik>>> GetUser(int id)
     {
         var response = await _userService.GetAllUserData(id);

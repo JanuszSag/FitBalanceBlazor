@@ -1,21 +1,23 @@
 @page "/registration"
 @using System.ComponentModel.DataAnnotations
+@using ClassLibrary1
+
+@inject HttpClient Http
 
 <MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background:rgb(223,243,156); border-radius: 20px;">
     <MudText Typo="Typo.h4" Class="mb-4" Align="Align.Center">Zarejestruj się</MudText>
 
     <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="HandleValidSubmit">
         <!-- Login -->
-        <MudTextField Label="Login*" @bind-Value="userRegistration.Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
-                      For="@(() => userRegistration.Login)" />
+        <MudTextField Label="Login*" @bind-Value="userRegistration.Username" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+                      For="@(() => userRegistration.Username)" />
 
         <!-- Email -->
         <MudTextField Label="E-mail*" @bind-Value="userRegistration.Email" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
                       For="@(() => userRegistration.Email)" />
 
         <!-- Data urodzenia -->
-        <MudTextField Label="Data urodzenia*" @bind-Value="userRegistration.BirthDate" InputType="InputType.Date" Variant="Variant.Outlined" Class="mb-3"
-                      For="@(() => userRegistration.BirthDate)" />
+        <MudDatePicker Label="Data urodzenia*" @bind-Date="userRegistration.Birthday" Variant="Variant.Outlined" Class="mb-3"/>
 
         <!-- Płeć -->
         <MudSelect Label="Płeć" @bind-Value="userRegistration.Gender" Variant="Variant.Outlined" Class="mb-3" For="@(() => userRegistration.Gender)">
@@ -37,11 +39,11 @@
                       For="@(() => userRegistration.Password)" />
 
         <!-- Akceptacja regulaminu -->
-        <MudCheckBox @bind-Checked="userRegistration.AcceptTerms" T="bool" Class="mb-3" For="@(() => userRegistration.AcceptTerms)">
+        <MudCheckBox @bind-Checked="AcceptTerms" T="bool" Class="mb-3" For="@(() => AcceptTerms)" ValueChanged="@(() => acceptingTerms())">
             Akceptuję regulamin portalu *
         </MudCheckBox>
         
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" OnClick="Register">
             Załóż konto
         </MudButton>
         
@@ -55,19 +57,18 @@
     private string errorMessage = string.Empty;
 
     
-    private UserRegistration userRegistration = new();
+    private RegisterModel userRegistration = new();
 
     
     private void HandleValidSubmit()
     {
         Console.WriteLine("Form submitted successfully!");
-        Console.WriteLine($"Login: {userRegistration.Login}, Email: {userRegistration.Email}");
+        Console.WriteLine($"Login: {userRegistration.Username}, Email: {userRegistration.Email}");
         
     }
 
     
-    public class UserRegistration
-    {
+
         [Required(ErrorMessage = "Pole login jest wymagane.")]
         [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
         public string Login { get; set; } = string.Empty;
@@ -77,7 +78,7 @@
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Data urodzenia jest wymagana.")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime? BirthDate { get; set; }
 
         [Required(ErrorMessage = "Pole płeć jest wymagane.")]
@@ -95,5 +96,22 @@
 
         [Required(ErrorMessage = "Musisz zaakceptować regulamin.")]
         public bool AcceptTerms { get; set; }
-    }
+
+        private async void Register()
+        {
+            if (!AcceptTerms)
+            {
+                errorMessage = "Nie zaakceptowano regulaminu";
+                return;
+            }
+
+            var response = await Http.PostAsJsonAsync("api/auth/register",userRegistration);
+            
+        }
+
+        private void acceptingTerms()
+        {
+            AcceptTerms = !AcceptTerms;
+        }
+
 }

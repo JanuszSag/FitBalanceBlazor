@@ -1,3 +1,4 @@
+using ClassLibrary1;
 using FitBalanceBlazor.Context;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
@@ -13,8 +14,10 @@ public class ReportService : IReportService
         _context = context;
     }
     
-    public async Task<List<Raport>> GetDietRaportsAsync(int id)
+    public async Task<ServiceResponse<List<Raport>>> GetDietRaportsAsync(int id)
     {
+        var response = new ServiceResponse<List<Raport>>();
+        
         var result = await _context.Raport.Select(r => new Raport
         {
             id_raport = r.id_raport,
@@ -24,12 +27,25 @@ public class ReportService : IReportService
             uzytkownik = r.uzytkownik,
             uzytkownikNavigation = r.uzytkownikNavigation
         }).Where(r => r.id_raport == id).ToListAsync();
+
+        if (result.Count == 0)
+        {
+            response.Success = false;
+            response.Message = "Can't get diet raports";
+            
+            return response;
+        }
         
-        return result;
+        response.Success = true;
+        response.Data = result;
+        
+        return response;
     }
 
-    public async Task<List<Wypita_woda>> GetWaterRaportsAsync(int id)
+    public async Task<ServiceResponse<List<Wypita_woda>>> GetWaterRaportsAsync(int id)
     {
+        var response = new ServiceResponse<List<Wypita_woda>>();
+
         var result = await _context.Wypita_woda.Select(w => new Wypita_woda
         {
             id_wypita_woda = w.id_wypita_woda,
@@ -38,12 +54,23 @@ public class ReportService : IReportService
             id_uzytkownik = w.id_uzytkownik,
             id_uzytkownikNavigation = w.id_uzytkownikNavigation
         }).Where(w => w.id_wypita_woda == id).ToListAsync();
+
+        if (result.Count == 0)
+        {
+            response.Success = false;
+            response.Message = "Can't get water raports";
+            return response;
+        }
+        response.Success = true;
+        response.Data = result;
         
-        return result;
+        return response;
     }
 
-    public async Task<List<Pomiar_wagi>> GetWeightRaportsAsync(int id)
+    public async Task<ServiceResponse<List<Pomiar_wagi>>> GetWeightRaportsAsync(int id)
     {
+        var response = new ServiceResponse<List<Pomiar_wagi>>();
+        
         var result = await _context.Pomiar_wagi.Select(w => new Pomiar_wagi
         {
             id_pomiar = w.id_pomiar,
@@ -53,6 +80,14 @@ public class ReportService : IReportService
             id_uzytkownikNavigation = w.id_uzytkownikNavigation
         }).Where(w => w.id_pomiar == id).ToListAsync();
 
-        return result;
+        if (result.Count == 0)
+        {
+            response.Success = false;
+            response.Message = "Can't get weight raports";
+            return response;
+        }
+        response.Success = true;
+        response.Data = result;
+        return response;
     }
 }
