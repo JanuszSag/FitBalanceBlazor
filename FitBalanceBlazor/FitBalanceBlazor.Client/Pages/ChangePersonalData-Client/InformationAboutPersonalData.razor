@@ -1,6 +1,5 @@
 @page "/informationAboutPersonalData"
 @using System.ComponentModel.DataAnnotations
-
 @inject HttpClient Http
 
 
@@ -12,6 +11,12 @@
             <MudCardContent>
                 <!-- Sekcja opis -->
                 <MudStack Spacing="5">
+                    @* @foreach (var uzytkownik in uzytkownicy) *@
+                    @* { *@
+                    @* <MudText Align="Align.Left" Typo="Typo.h4"><strong>Informację o Tobie </strong></MudText> *@
+                    @* <MudText Typo="Typo.subtitle1">Pseudonim:@uzytkownik.pseudonim</MudText> *@
+                    @* <MudText Typo="Typo.subtitle1">Adres mail:@uzytkownik.email</MudText>} *@
+                    
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Informację o Tobie </strong></MudText>
                     <MudText Typo="Typo.subtitle1">Pseudonim:</MudText>
                     <MudText Typo="Typo.subtitle1">Adres mail:</MudText>
@@ -20,8 +25,8 @@
                     <MudText Typo="Typo.subtitle1">Płeć:</MudText>
                     <MudText Typo="Typo.subtitle1">Wzrost:</MudText>
                     <MudText Typo="Typo.subtitle1">Waga:</MudText>
-                    
-                    
+
+
                 </MudStack>
                 <MudButton ButtonType="ButtonType.Submit"
                            Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"
@@ -53,8 +58,8 @@
     protected override async Task OnInitializedAsync()
     { 
         try
-        { 
-            // uzytkownicy = await Http.GetFromJsonAsync<List<Uzytkownik>("api/");//dodac api
+        {    
+            uzytkownicy = await Http.GetFromJsonAsync<List<Uzytkownik>>("api/user");//dodac api
         }
         catch (Exception ex)
         {
