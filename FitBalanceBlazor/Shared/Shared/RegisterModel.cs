@@ -6,10 +6,10 @@ public class RegisterModel
 {
     [Required]
     public string Username { get; set; }
-    [Required][EmailAddress]
+    [Required]
     public string Email { get; set; }
     [Required]
-    public DateOnly Birthday { get; set; }
+    public DateTime? Birthday { get; set; }
     [Required]
     public string Gender { get; set; }
     [Required]
