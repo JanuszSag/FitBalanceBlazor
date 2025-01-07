@@ -1,3 +1,4 @@
+using ClassLibrary1;
 using FitBalanceBlazor.Services.ReportService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,23 +16,30 @@ public class ReportController : ControllerBase
     }
 
     [HttpGet("Diet/{Id}")]
-    public async Task<ActionResult> GetDietReportAsync(int Id)
+    public async Task<ActionResult<ServiceResponse<List<Raport>>>> GetDietReportAsync(int Id)
     {
-        var result = await _reportService.GetDietRaportsAsync(Id);
-        return Ok(result);
+        
+        var response = await _reportService.GetDietRaportsAsync(Id);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
     
     [HttpGet("Water/{Id}")]
-    public async Task<ActionResult> GetWaterReportAsync(int Id)
+    public async Task<ActionResult<ServiceResponse<List<Wypita_woda>>>> GetWaterReportAsync(int Id)
     {
-        var result = await _reportService.GetWaterRaportsAsync(Id);
-        return Ok(result);
+        var response = await _reportService.GetWaterRaportsAsync(Id);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
     
     [HttpGet("Weight/{Id}")]
-    public async Task<ActionResult> GetWeightReportAsync(int Id)
+    public async Task<ActionResult<ServiceResponse<List<Pomiar_wagi>>>> GetWeightReportAsync(int Id)
     {
-        var result = await _reportService.GetWeightRaportsAsync(Id);
-        return Ok(result);
+        var response = await _reportService.GetWeightRaportsAsync(Id);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
 }
