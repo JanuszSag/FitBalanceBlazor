@@ -1,3 +1,4 @@
+using ClassLibrary1;
 using FitBalanceBlazor.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +16,22 @@ public class ReviewService : IReviewService
     /// Method <c>GetAllDietsAsync</c> return list of all reviews stored in database
     /// </summary>
     /// <returns>List of reviews</returns>
-    public async Task<List<Opinia>> GetAllReviewsAsync()
+    public async Task<ServiceResponse<List<Opinia>>> GetAllReviewsAsync()
     {
-        return await _context.Opinia.ToListAsync();
+        var response = new ServiceResponse<List<Opinia>>();
+        
+        var result = await _context.Opinia.ToListAsync();
+
+        if (result.Count == 0)
+        {
+            response.Success = false;
+            response.Message = "Cannot find reviews";
+            return response;
+        }
+        response.Data = result;
+        response.Success = true;
+        
+        return response;
     }
     
     /// <summary>

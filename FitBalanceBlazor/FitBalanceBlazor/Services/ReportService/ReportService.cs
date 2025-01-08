@@ -26,7 +26,7 @@ public class ReportService : IReportService
             dietaNavigation = r.dietaNavigation,
             uzytkownik = r.uzytkownik,
             uzytkownikNavigation = r.uzytkownikNavigation
-        }).Where(r => r.id_raport == id).ToListAsync();
+        }).Where(r => r.uzytkownik == id).ToListAsync();
 
         if (result.Count == 0)
         {
@@ -53,7 +53,7 @@ public class ReportService : IReportService
             ilosc = w.ilosc,
             id_uzytkownik = w.id_uzytkownik,
             id_uzytkownikNavigation = w.id_uzytkownikNavigation
-        }).Where(w => w.id_wypita_woda == id).ToListAsync();
+        }).Where(w => w.id_uzytkownik == id).ToListAsync();
 
         if (result.Count == 0)
         {
@@ -78,7 +78,7 @@ public class ReportService : IReportService
             waga = w.waga,
             id_uzytkownik = w.id_uzytkownik,
             id_uzytkownikNavigation = w.id_uzytkownikNavigation
-        }).Where(w => w.id_pomiar == id).ToListAsync();
+        }).Where(w => w.id_uzytkownik == id).ToListAsync();
 
         if (result.Count == 0)
         {

@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Pages\WeightLossProgram\WeightLossProgram.razor" />
+      <_ContentIncludedByDefault Remove="Pages\AllGuestDietsUI-Guest\AllGuestDiet-Guest.razor" />
     </ItemGroup>
 
     <ItemGroup>

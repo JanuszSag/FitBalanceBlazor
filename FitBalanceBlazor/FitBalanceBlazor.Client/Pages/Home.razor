@@ -3,6 +3,7 @@
 @inject ISnackbar Snackbar
 
 @using System.ComponentModel.DataAnnotations
+@using ClassLibrary1
 @inject HttpClient Http
  
 <PageTitle>Home</PageTitle>
@@ -184,16 +185,16 @@
     <!--Sekcja opinii-->
     <div id="sectionOpinions">
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>opinie</strong></MudText>
-        <MudTable Items="@opinie">
-            <RowTemplate>
+        <MudStack>
+            @foreach (var opinia in opinie)
+            {
                 <MudPaper Class="pa-10 my-4" Style="background:rgb(223,243,156);border-radius: 25px;margin-left: 30px; margin-right: 30px;">
-                    <MudTd DataLabel="Autor">@context.id_uzytkownik</MudTd><!--pseudonim-->
-                    <MudRating SelectedValue="@context.ocena.Value" Size="Size.Medium"/>
-                    <MudTd DataLabel="Opis">@context.zawartosc</MudTd>
+                    <MudText>Autor: @uzytkownicy.FirstOrDefault(u=>u.id_uzytkownik==opinia.id_uzytkownik)?.pseudonim</MudText> 
+                    <MudRating SelectedValue="@opinia.ocena.Value" Size="Size.Medium"/> 
+                    <MudText>Opis: @opinia.zawartosc</MudText>
                 </MudPaper>
-
-            </RowTemplate>
-        </MudTable>
+            }
+        </MudStack>
     </div>
 
     <!--Sekcja Q&A-->
@@ -272,13 +273,17 @@ public string message { get; set; }
 
 
 //opinie
-    private List<Opinia> opinie;
-   
+    private List<Opinia> opinie=new List<Opinia>();
+    private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>();
+    
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            opinie = await Http.GetFromJsonAsync<List<Opinia>>("api/Review");
+            var test = await Http.GetFromJsonAsync<ServiceResponse<List<Opinia>>>("api/Review");
+            opinie = test.Data;
+            var test2 = await Http.GetFromJsonAsync<ServiceResponse<List<Uzytkownik>>>("api/user");
+            uzytkownicy = test2.Data;
         }
         catch (Exception ex)
         {
