@@ -7,13 +7,9 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/> @*to zbedne bedzie*@
+       
         <MudText Typo="Typo.h5" Class="ml-3">FitBalance</MudText>
         <MudSpacer/>
-        <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/> @*to zbedne bedzie*@
-
-        <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2"> @*to zbedne bedzie*@
             <div class="sidebar">
 
                 <NavMenu/>
@@ -60,14 +56,12 @@
                         </Authorized>
                         </AuthorizeView>
                     </MudMenu>
-                    
+                    <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
                     
 
                 </MudStack>
             </MudPaper>
-
-
-        </MudDrawer>
+        
     </MudAppBar>
 </MudLayout>
 
