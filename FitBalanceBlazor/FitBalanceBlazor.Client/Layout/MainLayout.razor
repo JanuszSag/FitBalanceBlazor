@@ -52,10 +52,15 @@
                         <MudMenuItem>
                             <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
                         </MudMenuItem>
+                        <AuthorizeView Roles="Employee"><!--po zalogowaniu i tylko dla pracownika-przetestować-->
+                        <Authorized>
                         <MudMenuItem>
-                            <MudNavLink Href="/employee">Panel pracownika</MudNavLink><!--po zalogowaniu i tylko dla pracownika-->
+                            <MudNavLink Href="/employee">Panel pracownika</MudNavLink>
                         </MudMenuItem>
+                        </Authorized>
+                        </AuthorizeView>
                     </MudMenu>
+                    
                     
 
                 </MudStack>
