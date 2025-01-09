@@ -71,14 +71,7 @@ public class ReportService : IReportService
     {
         var response = new ServiceResponse<List<Pomiar_wagi>>();
         
-        var result = await _context.Pomiar_wagi.Select(w => new Pomiar_wagi
-        {
-            id_pomiar = w.id_pomiar,
-            data = w.data,
-            waga = w.waga,
-            id_uzytkownik = w.id_uzytkownik,
-            id_uzytkownikNavigation = w.id_uzytkownikNavigation
-        }).Where(w => w.id_uzytkownik == id).ToListAsync();
+        var result = await _context.Pomiar_wagi.Where(w => w.id_uzytkownik == id).ToListAsync();
 
         if (result.Count == 0)
         {
