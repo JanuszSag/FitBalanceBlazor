@@ -1,8 +1,6 @@
 @page "/clientHomePage"
 @using System.Security.Claims
-@using Microsoft.Identity.Client
 @using MudBlazor
-
 @inject HttpClient Http
 
 <MudGrid>
@@ -22,7 +20,7 @@
         </MudItem>
     </MudGrid>
 
-    <!-- Sekcja z przyciskami na dole obrazka powitalnego -->
+    <!-- Sekcja z przyciskami -->
     <MudItem xs="12" Class="mt-4">
         <MudGrid>
             <MudItem xs="2">
@@ -78,84 +76,60 @@
         </MudGrid>
     </MudItem>
 
-    <!-- Sekcja z ilością wypitej wody -->
-    <MudPaper Class="pa-4 rounded" Style="border: 2px solid #00BFFF; border-radius: 20px;">
-        <MudGrid>
-            <!-- Lewa część z informacją o całkowitej ilości wody -->
-            <MudItem xs="3">
-                <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
-                    <h5 style="font-weight: bold;">WODA</h5>
-                    <MudText Style="color: grey; font-weight: bold;">TOTAL</MudText>
-                    <h1 style="font-size: 3rem;">@totalWater ml</h1>
-                </MudPaper>
-            </MudItem>
+    <!-- Sekcja z wyswietleniem wody -->
+    <MudItem xs="12" Class="mt-4">
+        <MudPaper Class="pa-4 rounded" Style="border: 2px solid #00BFFF; border-radius: 20px;">
+            <MudGrid>
+                <!-- Calkowita ilosc wody -->
+                <MudItem xs="12" Class="text-center">
+                    <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
+                        <h5 style="font-weight: bold;">WODA</h5>
+                        <MudText Style="color: grey; font-weight: bold;">TOTAL</MudText>
+                        <h1 style="font-size: 3rem;">@totalWater ml</h1>
+                    </MudPaper>
+                </MudItem>
 
-            <!-- Prawa część ze szklankami -->
-            <MudItem xs="9">
-                <MudText Style="font-weight: bold;">Wskaż, ile wody wypiłeś dzisiaj</MudText>
-                <MudGrid Class="mt-4">
-                    @for (int i = 0; i < totalCups; i++)
-                    {
-                        <MudItem xs="1">
-                            <MudButton Variant="Variant.Text" Style="min-width: 0; padding: 0;" OnClick="@(() => ToggleCup(i))">
-                                <MudIcon Icon="@GetCupIcon(i)" 
-                                         Size="Size.Large" 
-                                         Style="@($"color: {GetCupColor(i)};")" />
-                            </MudButton>
-                        </MudItem>
-                    }
-                </MudGrid>
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
+                <!-- Przyciski odejmowania i dodawania wody -->
+                <MudItem xs="12" Class="text-center mt-4">
+                    <MudButton Style="background-color: #1976D2; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWater">
+                        Dodaj 250 ml
+                    </MudButton>
+                    <MudButton Style="background-color: #FF5733; color: white; font-size: 1.5rem; margin-left: 10px;" Variant="Variant.Filled" OnClick="@RemoveWater">
+                        Odejmij 250 ml
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
 </MudGrid>
 
 @code {
     private string name { get; set; } = "User";
     private Uzytkownik user;
     private int totalWater = 0;
-    private int totalCups = 7; 
-    private bool[] cupFilled; 
-
-    protected override void OnInitialized()
-    {
-        cupFilled = new bool[totalCups];
-    }
 
     protected override async Task OnInitializedAsync()
     {
-        base.OnInitializedAsync();
+        // Otrzymanie danych o uzytkowniku
         user = await Http.GetFromJsonAsync<Uzytkownik>($"api/user/{ClaimTypes.NameIdentifier}");
-        name = user.pseudonim;
+        name = user.pseudonim ?? "User"; 
     }
 
-    private void ToggleCup(int index)
+    private void AddWater()
     {
-        if (index >= 0 && index < cupFilled.Length)
+        totalWater += 250; 
+    }
+
+    private void RemoveWater()
+    {
+        if (totalWater >= 250)
         {
-            cupFilled[index] = !cupFilled[index];
-            
-            totalWater = cupFilled.Count(c => c) * 250;
-            
-            StateHasChanged();
+            totalWater -= 250; 
         }
     }
 
-    private string GetCupIcon(int index)
+    private class Uzytkownik
     {
-        if (index >= 0 && index < cupFilled.Length)
-        {
-            return cupFilled[index] ? Icons.Material.Filled.LocalDrink : Icons.Material.Outlined.LocalDrink;
-        }
-        return Icons.Material.Outlined.LocalDrink;
-    }
-
-    private string GetCupColor(int index)
-    {
-        if (index >= 0 && index < cupFilled.Length)
-        {
-            return cupFilled[index] ? "#1976D2" : "#000000"; 
-        }
-        return "#000000"; 
+        public string pseudonim { get; set; }
     }
 }
