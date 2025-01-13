@@ -2,17 +2,17 @@
 @using System.Net
 @using System.Net.Http.Json
 @using MudBlazor
-
+@inject HttpClient Http
 
 <MudGrid Class="pa-4">
-    <!-- Заголовок -->
+    <!-- Naglowek -->
     <MudItem xs="12" Class="text-center">
         <MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4">
             Miesięczny raport zmiany wagi
         </MudText>
     </MudItem>
 
-    <!-- Таблица данных -->
+    <!-- Tabela danych -->
     <MudItem xs="12" Class="mt-4">
         @if (Weights != null)
         {
@@ -44,7 +44,7 @@
         try
         {
             // Pobieranie danych z API
-            var response = await Http.GetFromJsonAsync<WeightResponse>($"api/Report/Weight/{UserId}");
+            var response = await Http.GetFromJsonAsync<WeightResponse>($"api/Report/Weight/2");
 
             if (response?.Data != null)
             {
