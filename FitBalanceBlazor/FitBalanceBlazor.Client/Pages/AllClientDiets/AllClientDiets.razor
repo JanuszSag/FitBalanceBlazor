@@ -3,6 +3,7 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
+@* @inject IDialogService DialogService *@
 
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
@@ -113,6 +114,7 @@
     </MudItem>
 </MudGrid>
 
+
 @code {
     
     //Zmienne, które są listami obiektów typu Dieta i Rodzaj, lista przechowuje dane, które pobrane są z API
@@ -184,4 +186,27 @@
             Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
         }
     }
+    //
+    // private async Task ShowDialog()
+    // {
+    //     
+    //     var parameters = new DialogParameters
+    //     {
+    //     };
+    //
+    //     var options = new DialogOptions
+    //     {
+    //         CloseButton = false,
+    //         MaxWidth = MaxWidth.Small,
+    //         FullWidth = true
+    //     };
+    //
+    //     var dialog = DialogService.Show<AllClientDietsDialog>("Usunięcie diety", parameters, options);
+    //     var result = await dialog.Result;
+    //
+    //     if (!result.Canceled) 
+    //     {
+    //         NavigationManager.NavigateTo("/AllClientDiets");
+    //     }
+    //}
 }
