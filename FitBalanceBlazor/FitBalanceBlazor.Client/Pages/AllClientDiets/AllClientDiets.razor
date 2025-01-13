@@ -3,6 +3,7 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
+@* @inject IDialogService DialogService *@
 
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
@@ -79,16 +80,40 @@
                 </MudRadioGroup>
 
                 <div class="d-flex align-center">
-                    <MudButton ButtonType="ButtonType.Button"
-                               Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               OnClick="dietsFilter">
-                        Pokaż wyniki
-                    </MudButton>
+                <MudButton ButtonType="ButtonType.Button"
+                           Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                           OnClick="dietsFilter">
+                    Pokaż wyniki
+                </MudButton>
                 </div>
+
+
+                    <MudText Typo="Typo.h6">Kaloryczność:</MudText>
+                    <MudRadioGroup @bind-Value="modelFilter.SelectedKcal">
+                        <MudStack>
+                            <MudRadio Value="0">wszystkie kcal</MudRadio>
+                            <MudRadio Value="1200">1200</MudRadio>
+                            <MudRadio Value="1500">1500</MudRadio>
+                            <MudRadio Value="1800">1800</MudRadio>
+                            <MudRadio Value="2000">2000</MudRadio>
+                            <MudRadio Value="2500">2500</MudRadio>
+                            <MudRadio Value="3000">3000</MudRadio>
+                        </MudStack>
+
+                    </MudRadioGroup>
+
+                    <div class="d-flex align-center">
+                        <MudButton ButtonType="ButtonType.Button"
+                                   Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                   OnClick="dietsFilterKcal">
+                            Pokaż wyniki
+                        </MudButton>
+                    </div>
             </MudPaper>
         </MudStack>
     </MudItem>
 </MudGrid>
+
 
 @code {
     
@@ -117,7 +142,8 @@
 
     public class FilterForm
     {
-        public string SelectedOption { get; set; } 
+        public string SelectedOption { get; set; }
+        public int SelectedKcal { get; set; }
 
     }
        //obsługa filtrów
@@ -131,7 +157,22 @@
            }
            StateHasChanged();
        }
+       private async Task dietsFilterKcal()
+       {
+           if (!modelFilter.SelectedKcal.Equals("wszystkieKcal"))
+           {
 
+               diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+           }
+
+           if (modelFilter.SelectedKcal > 0)
+               {
+                   // Filtrowanie dokładnie po wybranej kaloryczności
+                   diety = diety.Where(d => d.kalorycznosc == modelFilter.SelectedKcal).ToList();
+               }
+           
+           StateHasChanged();
+       }
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
     private void snackBarFun()
     {
@@ -145,4 +186,27 @@
             Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
         }
     }
+    //
+    // private async Task ShowDialog()
+    // {
+    //     
+    //     var parameters = new DialogParameters
+    //     {
+    //     };
+    //
+    //     var options = new DialogOptions
+    //     {
+    //         CloseButton = false,
+    //         MaxWidth = MaxWidth.Small,
+    //         FullWidth = true
+    //     };
+    //
+    //     var dialog = DialogService.Show<AllClientDietsDialog>("Usunięcie diety", parameters, options);
+    //     var result = await dialog.Result;
+    //
+    //     if (!result.Canceled) 
+    //     {
+    //         NavigationManager.NavigateTo("/AllClientDiets");
+    //     }
+    //}
 }

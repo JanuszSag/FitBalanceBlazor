@@ -1,153 +1,148 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">FitBalance</a>
+        @* <a class="navbar-brand" href="">FitBalance</a> *@
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
+@* <input type="checkbox" title="Navigation menu" class="navbar-toggler"/> *@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="employee">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Employee
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="addDiet">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Add diet
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="allClientDiets">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All client diets Employee
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="allClientDiets-Client">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All client diets Client
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="allGuestDiets">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All guest diet Employee
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="changeDiet">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change diet
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="changeDiet/changeMealInDiet">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change meal in diet
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Login
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="registration">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Registration
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="clientHomePage">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> ClientHomePage
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="myDiet">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> MyDiet
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="changeMeal">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> ChangeMeal
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="changeCertainMeal">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> ChangeCertainMeal
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="caloryCount">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> CaloryCount
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="raport">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Raport
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="programLoseWeight">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Program lose weight
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="programKeepWeight">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Program keep weight
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="programForUnderweight">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Program for underweight
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="employee">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>Employee panel
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="informationAboutPersonalData">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Information about personal data
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="decisionWhatPersonalDataChange">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Decision what personal data change
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="changePersonalData">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Change personal data
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="addMealToDiet">
-                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Add meal to diet
-            </NavLink>
-        </div>
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> *@
+        @*         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="employee"> *@
+        @*         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Employee *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="addDiet"> *@
+        @*         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Add diet *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="allClientDiets"> *@
+        @*         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All client diets  *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="allGuestDiets"> *@
+        @*         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> All guest diet  *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="changeDiet"> *@
+        @*         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change diet *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="changeDiet/changeMealInDiet"> *@
+        @*         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change meal in diet *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="login"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Login *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="registration"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Registration *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="clientHomePage"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> ClientHomePage *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="myDiet"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> MyDiet *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="changeMeal"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> ChangeMeal *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="changeCertainMeal"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> ChangeCertainMeal *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="caloryCount"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> CaloryCount *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="raport"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Raport *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="programLoseWeight"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Program lose weight *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="programKeepWeight"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Program keep weight *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="programForUnderweight"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Program for underweight *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="employee"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>Employee panel *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="informationAboutPersonalData"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Information about personal data *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="decisionWhatPersonalDataChange"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Decision what personal data change *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="changePersonalData"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Change personal data *@
+        @*     </NavLink> *@
+        @* </div> *@
+        @* <div class="nav-item px-3"> *@
+        @*     <NavLink class="nav-link" href="addMealToDiet"> *@
+        @*         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Add meal to diet *@
+        @*     </NavLink> *@
+        @* </div> *@
     </nav>
 </div>
