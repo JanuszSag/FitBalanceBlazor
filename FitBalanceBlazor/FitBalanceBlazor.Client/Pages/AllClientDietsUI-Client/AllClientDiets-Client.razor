@@ -1,4 +1,5 @@
 @page "/allClientDiets-Client"
+@using ClassLibrary1
 using System.Net;
 using FitBalanceBlazor;
 using Microsoft.AspNetCore.Components.Web;
@@ -62,9 +63,12 @@ using FitBalanceBlazor.Models
     protected override async Task OnInitializedAsync()
     {
         // Pobieranie danych
-        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-        rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+        var DietBufor = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+        diety = DietBufor.Data;
+        var RodzajBufor = await Http.GetFromJsonAsync<ServiceResponse<List<Rodzaj>>>("api/Category"); //TODO: ogarnąć ServiceReponse w rodzaju i diecie
+        rodzaje = RodzajBufor.Data;
+        var DaniaBufor = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");
+        dania = DaniaBufor.Data;
 
         // Polaczenie dania z dieta
         foreach (var dieta in diety)
@@ -85,7 +89,8 @@ using FitBalanceBlazor.Models
     {
         if (modelFilter.SelectedOption == "wszystkieDiety" || string.IsNullOrWhiteSpace(modelFilter.SelectedOption))
         {
-            diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+            var buffor = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+            diety = buffor.Data;
         }
         else
         {
