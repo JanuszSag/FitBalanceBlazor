@@ -5,6 +5,7 @@
 @inject NavigationManager NavigationManager
 
 @using System.ComponentModel.DataAnnotations
+@using ClassLibrary1
 @inject HttpClient Http
 
 <PageTitle>Change diet</PageTitle>
@@ -12,6 +13,9 @@
 
 <EditForm Model="@modelChangeDiet" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
+    @if (selectedDiet is not null)
+    {
+      
     <MudGrid>
         <MudItem xs="6">
             <!-- Sekcja nazwy zmienianej diety -->
@@ -51,61 +55,60 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-
+  
+    }
 </EditForm>
 
 @code {
-// Model formularza, Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
-ChangeDietForm modelChangeDiet = new ChangeDietForm();
-bool success;
-
-public class ChangeDietForm
-{
-// Wymagania formularza required-wymagany
-[Required(ErrorMessage = "Należy wybrać pozycję.")]
-public string SelectedOption { get; set; }
-}
-
-// Metoda sprawdzająca poprawność danych - czy nie są puste
-private bool ModelIsValid()
-{
-return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
-}
-
-// Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
-private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
-{
-if (ModelIsValid())
-{
-success = true;
-// NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
-    NavigationManager.NavigateTo($"/changeDiet/changeMealInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+    // Model formularza, Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
+    ChangeDietForm modelChangeDiet = new ChangeDietForm();
+    bool success;
     
-}
-else
-{ 
-    success = false; 
-} 
-StateHasChanged();
-}
-
-// Nazwa diety ze strony AllGuestDiets
-[Parameter] public int DietId { get; set; }
-private Dieta selectedDiet;
-
-// Obsługa enpionta
-private List<Danie> dania =new List<Danie>();
-
-protected override async Task OnInitializedAsync()
-{ 
-    try
-{ 
-    selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}"); 
-    dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-}
-    catch (Exception ex)
-{
-    Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
-}
-}
+    public class ChangeDietForm
+    {
+    // Wymagania formularza required-wymagany
+    [Required(ErrorMessage = "Należy wybrać pozycję.")]
+    public string SelectedOption { get; set; }
+    }
+    
+    // Metoda sprawdzająca poprawność danych - czy nie są puste
+    private bool ModelIsValid()
+    {
+    return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
+    }
+    
+    // Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
+    private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
+    {
+    if (ModelIsValid())
+    {
+    success = true;
+    // NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+        NavigationManager.NavigateTo($"/changeDiet/changeMealInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
+        
+    }
+    else
+    { 
+        success = false; 
+    } 
+    StateHasChanged();
+    }
+    
+    // Nazwa diety ze strony AllGuestDiets
+    [Parameter] public int DietId { get; set; }
+    public Dieta selectedDiet { get; set; }
+    
+    // Obsługa enpionta
+    private List<Danie> dania =new List<Danie>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        var DietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"api/Diet/{DietId}");
+        selectedDiet = DietResponse.Data;
+        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+    
+        StateHasChanged();
+    }
 }

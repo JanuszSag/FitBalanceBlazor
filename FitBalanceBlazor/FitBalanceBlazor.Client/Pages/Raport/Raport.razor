@@ -3,6 +3,8 @@
 @using System.Net.Http.Json
 @using MudBlazor
 
+@inject HttpClient Http
+
 
 <MudGrid Class="pa-4">
     <!-- Заголовок -->
@@ -35,7 +37,7 @@
 </MudGrid>
 
 @code {
-    [Parameter] public int UserId { get; set; }
+    [Parameter] public int UserId { get; set; } = 2;
 
     private List<UserWeight> Weights;
 

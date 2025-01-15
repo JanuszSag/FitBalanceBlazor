@@ -5,10 +5,10 @@ namespace FitBalanceBlazor.Services.DietService;
 public interface IDietService
 {
     Task<List<Dieta>> GetAllDietsAsync();
-    Task<List<Dieta>> GetAllDietsByIdAsync(List<int> dietId);
-    Task<List<Dieta>> GetAllDietsByCategoryIdAsync(int categoryId);
-    Task<Dieta?> GetDietAsync(int dietId);
-    void RemoveDietAsync(int dietId);
-    void AddDiet(DietaDTO diet);
+    Task<ServiceResponse<List<Dieta>>> GetAllDietsByIdAsync(List<int> dietId);
+    Task<ServiceResponse<List<Dieta>>> GetAllDietsByCategoryIdAsync(int categoryId);
+    Task<ServiceResponse<Dieta?>> GetDietAsync(int dietId);
+    Task<ServiceResponse<bool>> RemoveDietAsync(int dietId);
+    ServiceResponse<bool> AddDiet(DietaDTO diet);
     Task<ServiceResponse<bool>> AddMealsToDiet(int id, List<int> meals);
 }

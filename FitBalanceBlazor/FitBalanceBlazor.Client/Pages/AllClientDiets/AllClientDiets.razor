@@ -50,7 +50,7 @@
                                 Zmień
                             </MudButton>
                             <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
-                                       OnClick="snackBarFun">Usuń
+                                       OnClick="() => DeleteDiet(dieta.id_dieta)">Usuń
                             </MudButton>
                         </div>
                     </MudStack>
@@ -174,9 +174,8 @@
            StateHasChanged();
        }
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-    private void snackBarFun()
+    private void snackBarFun(bool isSuccess)
     {
-        bool isSuccess = true;
         if (isSuccess)
         {
             Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
@@ -209,4 +208,11 @@
     //         NavigationManager.NavigateTo("/AllClientDiets");
     //     }
     //}
+    private async void DeleteDiet(int id)
+    {
+        var result = await Http.DeleteAsync($"api/Diet/{id}");
+        
+        StateHasChanged();
+    }
+
 }
