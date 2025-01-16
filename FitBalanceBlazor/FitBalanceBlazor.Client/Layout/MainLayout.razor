@@ -5,70 +5,63 @@
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudLayout>
-    <MudAppBar Elevation="1">
+    <MudAppBar Elevation="0" >
 
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="width: 100%;">
+                <MudNavLink Href="/#sectionStarter">
+                    <MudImage Src="/Images/Logo/logoFB.jpg" Style="width: 80px; height: 70px;" />
+                </MudNavLink>
+                <MudText Typo="Typo.h5">FitBalance</MudText>
+                <MudSpacer />
+           
+                <MudNavLink Href="/#sectionAboutUs" Style="text-transform: uppercase;color: black;">o nas</MudNavLink>
+                <MudNavLink Href="/#sectionServices" Style="text-transform: uppercase; color: black;">usługi</MudNavLink>
+                <MudNavLink Href="/#sectionProgram" Style="text-transform: uppercase;color: black;">program</MudNavLink>
+                <MudNavLink Href="/#sectionOpinions" Style="text-transform: uppercase;color: black;">opinie</MudNavLink>
+                <MudNavLink Href="/#sectionQ&A" Style="text-transform: uppercase;color: black;">Q&A</MudNavLink>
+                <MudNavLink Href="/#sectionQ&A" Style="text-transform: uppercase;color: black;">kontakt</MudNavLink>
+                <MudNavLink Href="/caloryCount" Style="text-transform: uppercase;color: black;">kalkulator kalorii</MudNavLink>
+                <MudNavLink Href="/login" Style="text-transform: uppercase;color: black;">logowanie</MudNavLink>
 
-        <MudLink Href="/#sectionStarter" Typo="Typo.h5" Class="ml-3">FitBalance</MudLink>
-        <MudSpacer/>
-            <div class="sidebar">
+                <!--dostepne po zalogowaniu do systemu -->
+                <MudMenu Label="Moje konto" Dense="true">
+                    <MudMenuItem>
+                        <MudNavLink Href="/myDiet">Moja dieta</MudNavLink>
+                    </MudMenuItem>
+                    <MudMenuItem>
+                        <MudNavLink Href="/clientHomePage">Uzupełnij ilość wypitej wody</MudNavLink>
+                    </MudMenuItem>
+                    <MudMenuItem>
+                        <MudNavLink Href="/allClientDiets">Diety</MudNavLink>
+                    </MudMenuItem>
+                    <MudMenuItem>
+                        <MudNavLink Href="/raport">Raport zmian</MudNavLink>
+                    </MudMenuItem>
+                    <MudMenuItem>
+                        <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
+                    </MudMenuItem>
 
-                <NavMenu/>
-            </div>
-
-            <MudPaper Class="pa-2" Elevation="0">
-                <MudStack Row="true" Justify="Justify.FlexStart">
-                    @* <MudLink Href="/#sectionStarter" Style="text-transform: uppercase;">home</MudLink> *@
-                    <MudLink Href="/#sectionAboutUs" Style="text-transform: uppercase;">o nas</MudLink>
-                    <MudLink Href="/#sectionServices" Style="text-transform: uppercase;">usługi</MudLink>
-                    <MudLink Href="/#sectionProgram" Style="text-transform: uppercase;">program</MudLink>
-                    <MudLink Href="/#sectionOpinions" Style="text-transform: uppercase;">opinie</MudLink>
-                    <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">Q&A</MudLink>
-                    <MudLink Href="/#sectionQ&A" Style="text-transform: uppercase;">kontakt</MudLink>
-                    <MudLink Href="/login" Style="text-transform: uppercase;">logowanie</MudLink>
-                    <MudLink Href="/caloryCount"Style="text-transform: uppercase;">oblicz zapotrzebowanie kaloryczne</MudLink>
-                   
-
-
-
-                    <!--to powinno byc dopieo po zalogowaniu-->
-                    <MudMenu Label="Moje konto" Dense="true">
-                        <MudMenuItem>
-                            <MudNavLink Href="/myDiet">Moja dieta</MudNavLink>
-                        </MudMenuItem>
-                        <MudMenuItem>
-                            <MudNavLink Href="/clientHomePage">Uzupełnij ilość wypitej wody</MudNavLink><!--dodać scieżę-->
-                        </MudMenuItem>
-                        <MudMenuItem>
-                            <MudNavLink Href="/allClientDiets">Diety</MudNavLink>
-                        </MudMenuItem>
-                        <MudMenuItem>
-                            <MudNavLink Href="/raport">Raport zmiany wagi</MudNavLink>
-                        </MudMenuItem>
-                        <MudMenuItem>
-                            <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
-                        </MudMenuItem>
-                        <AuthorizeView Roles="Employee"><!--po zalogowaniu i tylko dla pracownika-przetestować-->
+                    <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
+                    <AuthorizeView Roles="Employee">
                         <Authorized>
-                        <MudMenuItem>
-                            <MudNavLink Href="/employee">Panel pracownika</MudNavLink>
-                        </MudMenuItem>
+                            <MudMenuItem>
+                                <MudNavLink Href="/employee">Panel pracownika</MudNavLink>
+                            </MudMenuItem>
                         </Authorized>
-                        </AuthorizeView>
-                    </MudMenu>
-                    <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
-                    
-
-                </MudStack>
-            </MudPaper>
-        
+                    </AuthorizeView>
+                </MudMenu>
+                
+                <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
+            </MudStack>
+        @* </MudPaper> *@
     </MudAppBar>
+
 </MudLayout>
 
 
     <MudMainContent Class="mt-16 pa-4">
         @Body
     </MudMainContent>
-
 
 
 <div id="blazor-error-ui">
