@@ -1,7 +1,8 @@
 @page "/informationAboutPersonalData"
 @using System.ComponentModel.DataAnnotations
+@using ClassLibrary1
 @inject HttpClient Http
-
+@inject NavigationManager NavigationManager
 
 <PageTitle>Information About Personal Data</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Zmiana danych osobowych</strong></MudText>
@@ -18,19 +19,19 @@
                     @* <MudText Typo="Typo.subtitle1">Adres mail:@uzytkownik.email</MudText>} *@
                     
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Informację o Tobie </strong></MudText>
-                    <MudText Typo="Typo.subtitle1">Pseudonim:</MudText>
-                    <MudText Typo="Typo.subtitle1">Adres mail:</MudText>
-                    <MudText Typo="Typo.subtitle1">Data urodzenia:</MudText>
-                    <MudText Typo="Typo.subtitle1">Wiek:</MudText>
-                    <MudText Typo="Typo.subtitle1">Płeć:</MudText>
-                    <MudText Typo="Typo.subtitle1">Wzrost:</MudText>
-                    <MudText Typo="Typo.subtitle1">Waga:</MudText>
+                    <MudText Typo="Typo.subtitle1">Pseudonim: @uzytkownicy!.pseudonim</MudText>
+                    <MudText Typo="Typo.subtitle1">Adres mail: @uzytkownicy!.email</MudText>
+                    <MudText Typo="Typo.subtitle1">Data urodzenia: @uzytkownicy!.data_urodzenia</MudText>
+                    <MudText Typo="Typo.subtitle1">Data urodzenia: @uzytkownicy!.data_urodzenia</MudText>
+                    <MudText Typo="Typo.subtitle1">Płeć: @uzytkownicy!.plec</MudText>
+                    <MudText Typo="Typo.subtitle1">Wzrost: @uzytkownicy!.wzrost</MudText>
+                    <MudText Typo="Typo.subtitle1">Waga: @uzytkownicy!.waga</MudText>
 
 
                 </MudStack>
                 <MudButton ButtonType="ButtonType.Submit"
                            Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"
-                           Href="/informationAboutPersonalData/decisionWhatPersonalDataChange">
+                           OnClick=changeData>
                     Edytuj
                 </MudButton>
                 <MudText Align="Align.Left" Typo="Typo.h4"><strong>Zapotrzebowanie kaloryczne: </strong></MudText>
@@ -53,18 +54,21 @@
 
 @code{
     //Obsługa endpointów
-    private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>();
-    
+    private Uzytkownik? uzytkownicy= new Uzytkownik();
+    private const int UserId = 51;
+
     protected override async Task OnInitializedAsync()
     { 
-        try
-        {    
-            uzytkownicy = await Http.GetFromJsonAsync<List<Uzytkownik>>("api/user");//dodac api
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
-        }
+   
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{UserId}");//dodac api
+            if(userResponse!.Success)
+                uzytkownicy = userResponse.Data;
+
+    }
+
+    private void changeData()
+    {
+        NavigationManager.NavigateTo($"/informationAboutPersonalData/decisionWhatPersonalDataChange/{UserId}");
     }
 
 }
