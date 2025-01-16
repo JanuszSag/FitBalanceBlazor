@@ -1,7 +1,9 @@
+using ClassLibrary1;
+
 namespace FitBalanceBlazor.Services.MealService;
 
 public interface IMealService
 {
-    Task<List<Danie>> GetAllMealsAsync();
+    Task<ServiceResponse<List<Danie>>> GetAllMealsAsync();
     Task<Danie?> GetMealByIdAsync(int mealId);
 }

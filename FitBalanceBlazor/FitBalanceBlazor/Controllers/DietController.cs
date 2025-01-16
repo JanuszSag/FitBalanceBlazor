@@ -18,7 +18,7 @@ namespace FitBalanceBlazor.Controllers;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Dieta>>> GetDiets()
+        public async Task<ActionResult<ServiceResponse<List<Dieta>>>> GetDiets()
         {
             var response = await _dietService.GetAllDietsAsync();
             return Ok(response);

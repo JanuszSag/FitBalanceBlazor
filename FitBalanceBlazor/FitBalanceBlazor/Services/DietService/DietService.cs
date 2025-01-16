@@ -16,10 +16,10 @@ public class DietService: IDietService
     /// Method <c>GetAllDietsAsync</c> return list of all diets stored in database
     /// </summary>
     /// <returns>List of diets</returns>
-    public async Task<List<Dieta>> GetAllDietsAsync()
+    public async Task<ServiceResponse<List<Dieta>>> GetAllDietsAsync()
     {
-        
-        return await _context.Dieta.Include(d => d.Danie_id_danie)
+        var response = new ServiceResponse<List<Dieta>>();
+        var diets = await _context.Dieta.Include(d => d.Danie_id_danie)
             .Select(d => new Dieta
             {
                 id_dieta = d.id_dieta,
@@ -36,6 +36,14 @@ public class DietService: IDietService
                 Danie_id_danie = d.Danie_id_danie,
                 id_produkt = d.id_produkt
             }).ToListAsync();
+        if (diets is null)
+        {
+            response.Success = false;
+            response.Message = "Cannot find any diets";
+        }
+        response.Data = diets;
+        response.Success = true;
+        return response;
     }
 
     /// <summary>

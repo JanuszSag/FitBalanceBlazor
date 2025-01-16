@@ -4,7 +4,7 @@ namespace FitBalanceBlazor.Services.DietService;
 
 public interface IDietService
 {
-    Task<List<Dieta>> GetAllDietsAsync();
+    Task<ServiceResponse<List<Dieta>>> GetAllDietsAsync();
     Task<ServiceResponse<List<Dieta>>> GetAllDietsByIdAsync(List<int> dietId);
     Task<ServiceResponse<List<Dieta>>> GetAllDietsByCategoryIdAsync(int categoryId);
     Task<ServiceResponse<Dieta?>> GetDietAsync(int dietId);

@@ -1,5 +1,6 @@
 @page "/allClientDiets"
 @using System.ComponentModel.DataAnnotations 
+@using ClassLibrary1
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -125,10 +126,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        var dietResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+        diety = dietResponse.Data;
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-  
+        var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");
+        dania = MealResponse.Data;
+
     }
 
     // Metoda do przekazywania ID diety do strony zmiany
