@@ -9,8 +9,6 @@
 
 <PageTitle>Add diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
-
-    <DataAnnotationsValidator/>
     <MudGrid>
         <MudItem xs="6">
             <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
@@ -47,7 +45,7 @@
                     
                     <!--Przycisk dodania nowej diety-->
                         <div class="d-flex align-center">
-                            <MudButton Button OnClick="() => AddDietD(0, modelAddDiet.DietName, Description, SelectedKcal, 1, modelFilter.SelectedOption)"
+                            <MudButton Button OnClick="() => AddDietD(allDiet.Count+1, modelAddDiet.DietName, Description, SelectedKcal, 1, modelFilter.SelectedOption)"
                                        Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
                                 Zapisz nową dietę
                             </MudButton>
@@ -72,6 +70,8 @@
 //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
 AddNewDietForm modelAddDiet = new AddNewDietForm();
 bool success;
+public List<Dieta> allDiet;
+
 
 public class AddNewDietForm 
 {
@@ -93,15 +93,12 @@ public class FilterForm
     
 }
 
-protected override async Task OnInitializedAsync(){ 
-    try
-{ 
-    categories = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-}
-    catch (Exception ex)
+protected override async Task OnInitializedAsync()
 {
-
-}
+    await base.OnInitializedAsync();
+    
+    categories = (await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category"))!;
+    allDiet = (await Http.GetFromJsonAsync<List<Dieta>>("api/Diet"))!;
 }
 
 //Zapisywanie nowj diety w bazie

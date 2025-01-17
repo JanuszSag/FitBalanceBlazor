@@ -34,11 +34,11 @@ public class UserService(MyDbContext context) : IUserService
         return response;
     }
 
-    public async Task<ServiceResponse<bool>> UpdateUserData(int userId, Uzytkownik uzytkownik)
+    public async Task<ServiceResponse<bool>> UpdateUserData(Uzytkownik uzytkownik)
     {
         var response = new ServiceResponse<bool>();
         
-        var person = await context.Uzytkownik.FindAsync(userId);
+        var person = await context.Uzytkownik.FindAsync(uzytkownik.id_uzytkownik);
 
         if (person == null)
         {
@@ -52,6 +52,7 @@ public class UserService(MyDbContext context) : IUserService
             person.pseudonim = uzytkownik.pseudonim;
             person.waga = uzytkownik.waga;
             person.wzrost = uzytkownik.wzrost;
+            person.email = uzytkownik.email;
             
             response.Data = true;
             response.Success = true;

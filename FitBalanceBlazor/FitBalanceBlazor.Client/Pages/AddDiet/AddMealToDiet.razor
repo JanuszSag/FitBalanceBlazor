@@ -59,37 +59,36 @@
     [Parameter] 
     public String? Id_diet { get; set; }
     // Aktualnie wybrany posiłek
-private Danie selectedMeal; 
-// Lista wszystkich wybranych posiłków
-private List<Danie> ListOfMeals = []; 
-
-private void AddMealToList(int id)
-{
-    var tmp = dania.Find(d=> d.id_danie==id);
+    private Danie selectedMeal; 
+    // Lista wszystkich wybranych posiłków
+    private List<int> ListOfMeals = []; 
     
-    if (!ListOfMeals.Contains(tmp))
+    private void AddMealToList(int id)
     {
-        ListOfMeals.Add(tmp);
-        Snackbar.Add($"Dodano danie: {selectedMeal}", Severity.Success);
+        var tmp = dania.Find(d=> d.id_danie==id).id_danie;
+        
+        if (!ListOfMeals.Contains(tmp))
+        {
+            ListOfMeals.Add(tmp);
+            Snackbar.Add($"Dodano danie: {selectedMeal.nazwa}", Severity.Success);
+        }
     }
-}
-private async void AddMeal()
-{
-    //TODO: uzupełnić URL 
-    await Http.PutAsJsonAsync($"api/Diet/{Id_diet}",  ListOfMeals);
-}
-
-private List<Danie> dania=new List<Danie>();
-
-protected override async Task OnInitializedAsync(){ 
-    try
-    { 
-        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-    }
-    catch (Exception ex)
+    private async void AddMeal()
     {
-
+        var response = await Http.PutAsJsonAsync($"api/Diet/UpdateMeals/{Id_diet}", (ListOfMeals));
     }
-}
+    
+    private List<Danie> dania=new List<Danie>();
+    
+    protected override async Task OnInitializedAsync(){ 
+        try
+        { 
+            dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+        }
+        catch (Exception ex)
+        {
+    
+        }
+    }
     
 }

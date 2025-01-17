@@ -267,7 +267,7 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.id_uzytkownik).HasName("Uzytkownik_pk");
 
             entity.Property(e => e.id_uzytkownik).ValueGeneratedNever();
-            entity.Property(e => e.email).HasColumnType("text");
+            entity.Property(e => e.email).IsUnicode(false);
             entity.Property(e => e.plec).HasColumnType("text");
             entity.Property(e => e.pseudonim).HasColumnType("text");
         });

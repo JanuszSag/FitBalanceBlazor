@@ -17,7 +17,10 @@ public class MealController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Danie>>> GetMeals()
     {
-        return await _mealService.GetAllMealsAsync();
+        var response = await _mealService.GetAllMealsAsync();
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]

@@ -1,3 +1,4 @@
+using ClassLibrary1;
 using FitBalanceBlazor.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,15 +17,20 @@ public class MealService : IMealService
     /// Method <c>GetAllMealsAsync</c> return list of meals stored in database
     /// </summary>
     /// <returns>list of meals</returns>
-    public async Task<List<Danie>> GetAllMealsAsync()
+    public async Task<ServiceResponse<List<Danie>>> GetAllMealsAsync()
     {
-        return await _context.Danie.Select(d => new Danie
+        var response = new ServiceResponse<List<Danie>>();
+        var meals = await _context.Danie.ToListAsync();
+
+        if (meals is null)
         {
-            Dieta_id_dieta = d.Dieta_id_dieta,
-            id_danie = d.id_danie,
-            nazwa = d.nazwa,
-            Produkt_Danie = d.Produkt_Danie,
-        }).ToListAsync();
+            response.Success = false;
+            response.Message = "Cannot get all meals.";
+            return response;
+        }
+        response.Data = meals;
+        response.Success = true;
+        return response;
     }
 
     /// <summary>
