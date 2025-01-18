@@ -1,3 +1,4 @@
+using System.Data.Entity;
 using Blazored.LocalStorage;
 using FitBalanceBlazor;
 using Microsoft.AspNetCore.Components.Authorization;

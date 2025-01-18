@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using Blazored.LocalStorage;
 using MudBlazor.Services;
 using FitBalanceBlazor.Client.Pages;
 using FitBalanceBlazor.Components;
@@ -32,6 +33,8 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 builder.Services.AddScoped<IDietService,DietService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
@@ -41,6 +44,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -89,6 +93,7 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
+    .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies(typeof(FitBalanceBlazor.Client._Imports).Assembly);
 
 app.MapControllers();

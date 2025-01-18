@@ -99,7 +99,6 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
         List<Claim> claims =
         [
             new Claim(ClaimTypes.NameIdentifier, user.id_uzytkownik.ToString()),
-            new Claim(ClaimTypes.Name, user.email),
             new Claim(ClaimTypes.Role,
                 context.Pracownik.Any(p => p.id_uzytkownik == user.id_uzytkownik) ? "Employee" : "User")
         ];
