@@ -13,7 +13,9 @@ public class UserService(MyDbContext context) : IUserService
     {
         var response = new ServiceResponse<Uzytkownik>();
 
-        var person = await context.Uzytkownik.FindAsync(userId);
+        var person = await context.Uzytkownik
+            .Include(u => u.Przypisana_dieta)
+            .FirstAsync(u => u.id_uzytkownik==userId);
 
         if (person == null)
         {

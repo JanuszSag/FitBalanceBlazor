@@ -78,6 +78,7 @@
     private async void AddMeal()
     {
         var response = await Http.PutAsJsonAsync($"api/Diet/UpdateMeals/{Id_diet}", (ListOfMeals));
+        NavigationManager.NavigateTo("http://localhost:5131/AllClientDiets");
     }
     
     private List<Danie> dania=new List<Danie>();
@@ -85,7 +86,9 @@
     protected override async Task OnInitializedAsync(){ 
         try
         { 
-            dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+            var daniaResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");
+            dania = daniaResponse.Data;
+            StateHasChanged();
         }
         catch (Exception ex)
         {

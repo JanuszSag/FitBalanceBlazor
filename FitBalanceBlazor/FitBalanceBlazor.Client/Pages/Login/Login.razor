@@ -74,11 +74,13 @@
         {
             errorMessage = string.Empty;
 
-            await LocalStorage.SetItemAsync("authToken", content.Data);
+            await LocalStorage.SetItemAsStringAsync("authToken", content.Data??"Error");
+            Console.WriteLine(content.Data);
+            Console.WriteLine("Test");
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
             
             
-            /*NavigationManager.NavigateTo("http://localhost:5131/clientHomePage");*/
+            NavigationManager.NavigateTo("http://localhost:5131/clientHomePage");
         }
         else
         {

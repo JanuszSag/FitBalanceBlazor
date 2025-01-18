@@ -13,48 +13,44 @@
         <MudItem xs="6">
             <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudCardContent>
-                    <!-- Sekcja nadania nazwy diety -->
-                    <MudText Typo="Typo.h6">Nazwa diety</MudText>
+                <MudText Typo="Typo.h6">Nazwa diety</MudText>
                     <MudTextField @bind-Value="modelAddDiet.DietName" Label="Należy wprowadzić nazwę" Variant="Variant.Text"></MudTextField>
-
-                    <!-- Sekcja dodania opisu do diety -->
+                    
                     <MudText Typo="Typo.h6">Opis: </MudText>
                     <MudTextField @bind-Value="Description" Label="Należy wprowadzić opis" Variant="Variant.Text"></MudTextField>
-
-                    <!-- Sekcja wyboru kaloryczności diety -->
                     <MudText Typo="Typo.h6">Kaloryczność: </MudText>
                     <MudForm>
                         <MudRadioGroup T="int" @bind-Value="SelectedKcal">
-                            <MudRadio Value="1200">1200</MudRadio>
-                            <MudRadio Value="1500">1500</MudRadio>
-                            <MudRadio Value="1800">1800</MudRadio>
-                            <MudRadio Value="2000">2000</MudRadio>
-                            <MudRadio Value="2500">2500</MudRadio>
-                            <MudRadio Value="3000">3000</MudRadio>
-
+                            <MudRadio Value="1200" >1200</MudRadio>
+                            <MudRadio Value="1500" >1500</MudRadio>
+                            <MudRadio Value="1800" >1800</MudRadio>
+                            <MudRadio Value="2000" >2000</MudRadio>
+                            <MudRadio Value="2500" >2500</MudRadio>
+                            <MudRadio Value="3000" >3000</MudRadio>
+                    
                         </MudRadioGroup>
                     </MudForm>
-
+                    
                     <!-- Sekcja wyboru rodzaju diety -->
                     <MudText Typo="Typo.h6">Rodzaj:</MudText>
-                    <MudRadioGroup @bind-Value="modelFilter.SelectedCategorie">
+                    <MudRadioGroup @bind-Value="modelFilter.SelectedOption">
                         <MudStack>
                             @foreach (var categorie in @categories)
                             {
                                 <MudRadio Value="@categorie.id_rodzaj">@categorie.nazwa</MudRadio>
                             }
                         </MudStack>
-
+                    
                     </MudRadioGroup>
-
+                    
                     <!--Przycisk dodania nowej diety-->
-                    <div class="d-flex align-center">
-                        <MudButton Button OnClick="() => AddDietD(allDiet.Count + 1, modelAddDiet.DietName, Description, SelectedKcal, 1, modelFilter.SelectedCategorie)"
-                                   Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
-                            Zapisz nową dietę
-                        </MudButton>
-                    </div>
-
+                        <div class="d-flex align-center">
+                            <MudButton Button OnClick="() => AddDietD(allDiet.Count+ 1, modelAddDiet.DietName, Description, SelectedKcal, 1, modelFilter.SelectedOption)"
+                                       Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
+                                Zapisz nową dietę
+                            </MudButton>
+                        </div>
+                  
                 </MudCardContent>
             </MudCard>
         </MudItem>
@@ -79,21 +75,21 @@ public List<Dieta> allDiet;
 
 public class AddNewDietForm 
 {
-//Wymagania formularza 
+//Wymagania formularza required-wymagany
 [Required(ErrorMessage = "Należy wprowadzić nazwę diety.")]
 [StringLength(20, ErrorMessage = "Nazwa powinna być nie dłuższa niż 20 znaków.")]
 public string DietName { get; set; }
 
 }
+
 public string Description { get; set; }
 public int SelectedKcal{ get; set; }
-
-//Wyciąganie danych z bazy
 private List<Rodzaj> categories=new List<Rodzaj>();
+
 FilterForm modelFilter = new FilterForm();
 public class FilterForm
 {
-    public int SelectedCategorie{ get; set; }
+    public int SelectedOption { get; set; }
     
 }
 
@@ -102,7 +98,8 @@ protected override async Task OnInitializedAsync()
     await base.OnInitializedAsync();
     
     categories = (await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category"))!;
-    allDiet = (await Http.GetFromJsonAsync<List<Dieta>>("api/Diet"))!;
+    var allDietResponse = (await Http.GetFromJsonAsync <ServiceResponse<List<Dieta>>>("api/Diet"))!;
+    allDiet = allDietResponse.Data;
 }
 
 //Zapisywanie nowj diety w bazie
@@ -124,5 +121,45 @@ protected override async Task OnInitializedAsync()
             Snackbar.Add("Nie udało się dodać nowej diety do bazy danych",Severity.Error);
         }
     }
+
+   
+    // //Metoda sprawdzająca poprawnośc danych - czy nie są puste
+// private bool ModelIsValid()
+// { 
+//     return !string.IsNullOrEmpty(modelAddDiet.DietName) ;
+// }
+
+    // private async Task AddDietD()
+    // {
+    //     var response = await Http.PostAsJsonAsync("api/diety", newDiet); 
+    //
+    //     if (response.IsSuccessStatusCode)
+    //     {
+    //         //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+    //         Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu dodania nowej diety do bazy danych",Severity.Success);
+    //
+    //     }
+    //     else
+    //     {
+    //         Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu u dodania nowej diety do bazy danych",Severity.Error);
+    //     }
+    //     }
+
+// //Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
+// private void OnValidSubmit(EditContext context) //EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
+// { 
+//     if (ModelIsValid())
+// { 
+//     success = true; 
+//     // NavigationManager.NavigateTo($"/addDiet/addIngredientsToNewDiet?DietName={Uri.EscapeDataString(modelAddDiet.DietName)}&SelectedOption={Uri.EscapeDataString(modelAddDiet.SelectedOption)}");
+//     NavigationManager.NavigateTo($"/addDiet/addIngredientsToNewDiet?DietName={Uri.EscapeDataString(modelAddDiet.DietName)}");
+// }
+//     else
+// { 
+//     success = false;
+// }
+//     
+//     StateHasChanged();
+// }
 }
 

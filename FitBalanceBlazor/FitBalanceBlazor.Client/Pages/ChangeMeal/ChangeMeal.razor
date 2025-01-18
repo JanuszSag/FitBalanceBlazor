@@ -1,12 +1,10 @@
 @page "/changeMeal"
-using System.Net;
-using FitBalanceBlazor;
-using Microsoft.AspNetCore.Components.Web;
-using MudBlazor;
-using System.ComponentModel.DataAnnotations;
-using FitBalanceBlazor.Models;
+@using System.IdentityModel.Tokens.Jwt
+@using Blazored.LocalStorage
+@using ClassLibrary1
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
 
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana posilku</strong></MudText>
@@ -63,16 +61,36 @@ using FitBalanceBlazor.Models;
 </MudGrid>
 
 @code {
-    private Dieta currentDiet; 
-    private string selectedMeal; 
+    private Dieta currentDiet;
+    private Uzytkownik user;
+    private JwtSecurityToken jwt { get; set; } 
+    private List<Danie> dania=new List<Danie>();
+    private Danie selectedMeal;
+    public Dieta selectedDiet { get; set; }
+    private List<int> Meals = [];
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            /*var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");*/
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/3");
+            user = userResponse.Data;
+            
+            
+            var DietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"http://localhost:5131/api/Diet/{user.Przypisana_dieta.ToList()[0].id_dieta}");
+            selectedDiet = DietResponse.Data;
+            var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("http://localhost:5131/api/Meal");
+            dania = MealResponse.Data;
+            
+            
             // Trzeba zamieniac ID
-            currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/3");
-
+            var currentDietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>("api/Diet/3");
+            currentDiet = currentDietResponse.Data;
+            
             if (currentDiet == null)
             {
                 Console.WriteLine("Diet not found.");
@@ -81,6 +99,7 @@ using FitBalanceBlazor.Models;
             {
                 Console.WriteLine("No meals found for this diet.");
             }
+            StateHasChanged();
         }
         catch (Exception ex)
         {
