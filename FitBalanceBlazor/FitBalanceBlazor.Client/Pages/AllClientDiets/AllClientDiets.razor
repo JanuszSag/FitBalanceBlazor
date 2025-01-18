@@ -153,7 +153,8 @@
        private async Task dietsFilter()
        {
         
-           diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+           var dietyResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+           diety = dietyResponse.Data;
            if (!modelFilter.SelectedOption.Equals("wszystkieDiety"))
            {
                diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();

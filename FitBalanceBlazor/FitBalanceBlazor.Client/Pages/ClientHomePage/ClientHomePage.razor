@@ -1,8 +1,16 @@
 @page "/clientHomePage"
+@using System.IdentityModel.Tokens.Jwt
 @using System.Runtime.InteropServices
 @using System.Security.Claims
+@using Blazored.LocalStorage
+@using ClassLibrary1
+@using Microsoft.IdentityModel.JsonWebTokens
 @using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
 @inject HttpClient Http
+@inject ILocalStorageService LocalStorage
+
+@rendermode InteractiveWebAssembly
 
 <MudGrid>
     <!-- Górna część strony z obrazkiem powitalnym -->
@@ -40,7 +48,7 @@
                         <h6>Wszystkie diety</h6>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/allClientDiets-Client">Zobacz</MudButton>
+                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/allClientDiets">Zobacz</MudButton>
                     </MudCardActions>
                 </MudCard>
             </MudItem>
@@ -108,12 +116,26 @@
     [Parameter] public string name { get; set; } = "User";
     private Uzytkownik user;
     private int totalWater = 0;
+    private JwtSecurityToken jwt { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
-        // Otrzymanie danych o uzytkowniku
-        user = await Http.GetFromJsonAsync<Uzytkownik>($"api/user/{ClaimTypes.NameIdentifier}");
-        name = user.pseudonim ?? "User"; 
+        try
+        {
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
+            user = userResponse.Data;
+            name = user.pseudonim ?? "User";
+            StateHasChanged();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
     }
 
     private void AddWater()
@@ -133,4 +155,5 @@
     {
         public string pseudonim { get; set; }
     }
+    
 }
