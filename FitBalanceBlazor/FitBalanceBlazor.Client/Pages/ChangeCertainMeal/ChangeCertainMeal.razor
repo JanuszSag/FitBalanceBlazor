@@ -48,6 +48,7 @@
     private List<Danie> AvailableMeals = new(); 
     private string SelectedOption { get; set; } = string.Empty; 
     private string CurrentMeal { get; set; } = "Brak dania"; // teraz nie mozemy tego zmienic bo nie mamy uzytkownika
+    private int UserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

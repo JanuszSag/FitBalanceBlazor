@@ -21,10 +21,10 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(response);
     }
     
-    [HttpPut("id")]
-    public async Task<ActionResult<ServiceResponse<bool>>> UpdateUser(int id, [FromBody] Uzytkownik user)
+    [HttpPut]
+    public async Task<ActionResult<ServiceResponse<bool>>> UpdateUser([FromBody] Uzytkownik user)
     {
-        var response = await _userService.UpdateUserData(id, user);
+        var response = await _userService.UpdateUserData(user);
         
         if(!response.Success)
             return BadRequest(response);

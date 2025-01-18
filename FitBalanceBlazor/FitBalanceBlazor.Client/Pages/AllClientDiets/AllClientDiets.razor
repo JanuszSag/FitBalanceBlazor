@@ -1,5 +1,6 @@
 @page "/allClientDiets"
 @using System.ComponentModel.DataAnnotations 
+@using ClassLibrary1
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -50,7 +51,7 @@
                                 Zmień
                             </MudButton>
                             <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
-                                       OnClick="snackBarFun">Usuń
+                                       OnClick="() => DeleteDiet(dieta.id_dieta)">Usuń
                             </MudButton>
                         </div>
                     </MudStack>
@@ -125,10 +126,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        var dietResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+        diety = dietResponse.Data;
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-  
+        var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");
+        dania = MealResponse.Data;
+
     }
 
     // Metoda do przekazywania ID diety do strony zmiany
@@ -174,9 +177,8 @@
            StateHasChanged();
        }
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-    private void snackBarFun()
+    private void snackBarFun(bool isSuccess)
     {
-        bool isSuccess = true;
         if (isSuccess)
         {
             Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
@@ -209,4 +211,11 @@
     //         NavigationManager.NavigateTo("/AllClientDiets");
     //     }
     //}
+    private async void DeleteDiet(int id)
+    {
+        var result = await Http.DeleteAsync($"api/Diet/{id}");
+        
+        StateHasChanged();
+    }
+
 }

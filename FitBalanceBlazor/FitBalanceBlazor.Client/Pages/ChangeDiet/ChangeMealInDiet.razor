@@ -42,7 +42,7 @@
                 @* </MudSelect> *@
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               OnClick="snackBarFun">Zatwierdź</MudButton>
+                               OnClick="Submit">Zatwierdź</MudButton>
                 </div>
             </MudPaper>
         </MudStack>
@@ -63,7 +63,8 @@
 @code {
     // Nazwa diety ze strony AllGuestDiets
     [Parameter] public int DietId { get; set; }
-    private Dieta selectedDiet;
+    public Dieta selectedDiet { get; set; }
+    private List<int> Meals = [];
     
     private string SelectedOption;
 
@@ -98,12 +99,13 @@
         {
             // selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}");
             selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}");
-            if (selectedDiet == null)
+            if (selectedDiet is null)
             {
                 Console.WriteLine($"Dieta o ID {DietId} nie została znaleziona.");
             }
             // produkty = await Http.GetFromJsonAsync<List<Produkt>>("api/Product");
             dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+            Console.WriteLine(DietId);
         }
         catch (Exception ex)
         {
@@ -112,9 +114,8 @@
     }
     
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-    private void snackBarFun()
+    private void snackBarFun(bool isSuccess)
     {
-        bool isSuccess = true;
         if (isSuccess)
         {
             Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
@@ -124,6 +125,15 @@
             Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
         }
     }
-    
+
+
+    private async Task Submit()
+    {
+        Meals.Add(selectedMeal.id_danie);
+        var response = await Http.PutAsJsonAsync($"api/Diet/UpdateMeals/{DietId}",(Meals));
+        snackBarFun(response.IsSuccessStatusCode);
+        
+        NavigationManager.NavigateTo("/allClientDiets");
+    }
 
 }
