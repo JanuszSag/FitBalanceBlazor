@@ -1,8 +1,18 @@
 @page "/informationAboutPersonalData"
 @using System.ComponentModel.DataAnnotations
+@using System.Data
 @using ClassLibrary1
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@using System.IdentityModel.Tokens.Jwt
+@using System.Runtime.InteropServices
+@using System.Security.Claims
+@using Blazored.LocalStorage
+@using ClassLibrary1
+@using Microsoft.IdentityModel.JsonWebTokens
+@using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@inject ILocalStorageService LocalStorage
 
 <PageTitle>Information About Personal Data</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Zmiana danych osobowych</strong></MudText>
@@ -19,13 +29,12 @@
                     @* <MudText Typo="Typo.subtitle1">Adres mail:@uzytkownik.email</MudText>} *@
                     
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Informację o Tobie </strong></MudText>
-                    <MudText Typo="Typo.subtitle1">Pseudonim: @uzytkownicy!.pseudonim</MudText>
-                    <MudText Typo="Typo.subtitle1">Adres mail: @uzytkownicy!.email</MudText>
-                    <MudText Typo="Typo.subtitle1">Data urodzenia: @uzytkownicy!.data_urodzenia</MudText>
-                    <MudText Typo="Typo.subtitle1">Data urodzenia: @uzytkownicy!.data_urodzenia</MudText>
-                    <MudText Typo="Typo.subtitle1">Płeć: @uzytkownicy!.plec</MudText>
-                    <MudText Typo="Typo.subtitle1">Wzrost: @uzytkownicy!.wzrost</MudText>
-                    <MudText Typo="Typo.subtitle1">Waga: @uzytkownicy!.waga</MudText>
+                    <MudText Typo="Typo.subtitle1">Pseudonim: @name</MudText>
+                    <MudText Typo="Typo.subtitle1">Adres mail: @email</MudText>
+                    <MudText Typo="Typo.subtitle1">Data urodzenia: @birthDate</MudText>
+                    <MudText Typo="Typo.subtitle1">Płeć: @gender</MudText>
+                    <MudText Typo="Typo.subtitle1">Wzrost: @height</MudText>
+                    <MudText Typo="Typo.subtitle1">Waga: @weight</MudText>
 
 
                 </MudStack>
@@ -53,17 +62,41 @@
 </MudGrid>
 
 @code{
-    //Obsługa endpointów
-    private Uzytkownik? uzytkownicy= new Uzytkownik();
-    private const int UserId = 51;
+    [Parameter] public string name { get; set; } = "User";
+    private Uzytkownik user;
+    private JwtSecurityToken jwt { get; set; } 
 
+    [Parameter] public string email { get; set; }
+    [Parameter] public DateOnly? birthDate { get; set; }
+    [Parameter] public string gender { get; set; }
+    [Parameter] public int height { get; set; }
+    [Parameter] public int weight{ get; set; }
+    public int UserId;
+    
     protected override async Task OnInitializedAsync()
-    { 
-   
-            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{UserId}");//dodac api
-            if(userResponse!.Success)
-                uzytkownicy = userResponse.Data;
+    {
+        try
+        {
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
+            user = userResponse.Data;
+            name = user.pseudonim ?? "User";
+            email = user.email ?? String.Empty;
+            birthDate = user.data_urodzenia ?? null;
+            gender = user.plec ?? String.Empty;
+            height=user.wzrost ?? 0;
+            weight = user.waga ?? 0;
+            UserId = user.id_uzytkownik;
+            StateHasChanged();
 
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
     }
 
     private void changeData()
