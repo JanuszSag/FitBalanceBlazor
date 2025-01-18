@@ -48,7 +48,7 @@
                         <h6>Wszystkie diety</h6>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/allClientDiets-Client">Zobacz</MudButton>
+                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/allClientDiets">Zobacz</MudButton>
                     </MudCardActions>
                 </MudCard>
             </MudItem>
@@ -122,11 +122,9 @@
     {
         try
         {
-
             var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
             jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
             var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
-            /*string userId = jwt.Claims.FirstOrDefault(x => x.Value.Equals("ClaimTypes.NameIdentifier")).Value;*/
             var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
             user = userResponse.Data;
             name = user.pseudonim ?? "User";
