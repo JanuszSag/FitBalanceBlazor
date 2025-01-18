@@ -7,7 +7,8 @@
 <PageTitle>All guest diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Lista diet dla gości</strong></MudText>
 
-    @foreach (var dieta in diety)
+<!-- Sekcja ograniczonej listy diet-dla gościa-->
+@foreach (var dieta in diety)
     {
         <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
             <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
