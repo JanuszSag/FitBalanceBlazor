@@ -1,7 +1,11 @@
-@page "/informationAboutPersonalData/decisionWhatPersonalDataChange/{UserId:int}"
+@page "/informationAboutPersonalData/decisionWhatPersonalDataChange"
 @inject NavigationManager NavigationManager
 @using System.ComponentModel.DataAnnotations
+@using System.IdentityModel.Tokens.Jwt
 @inject HttpClient Http
+@using Blazored.LocalStorage
+@using ClassLibrary1
+@inject ILocalStorageService LocalStorage
 
 <PageTitle>Decision What Personal Data Change</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;">
@@ -15,7 +19,7 @@
                 <MudStack Spacing="5">
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Edytuj dane </strong></MudText>
 
-                    <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="Submit">
+                    <EditForm @ref="form" Model="this" OnValidSubmit="Submit">
                         <!-- Login -->
                         <MudTextField Label="Login" @bind-Value="Nickname" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
                                       For="@(() => Nickname)" />
@@ -56,7 +60,7 @@
                         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;">
                             Zatwierdź
                         </MudButton>
-                    </MudForm>
+                    </EditForm>
                 </MudStack>
             </MudCardContent>
         </MudCard>
@@ -70,21 +74,23 @@
 </MudGrid>
 
 @code {
-    private MudForm form;
+    private EditForm form;
     private bool isValid;
     
-    [Parameter] public int UserId { get; set; }
+     public int UserId { get; set; }
+     private Uzytkownik user;
+     private JwtSecurityToken jwt { get; set; } 
     
     [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
-    public string Nickname { get; set; } = string.Empty;
-
+    public string Nickname { get; set; } 
+    
     [EmailAddress(ErrorMessage = "Nieprawidłowy format e-mail.")]
-    public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } 
 
     [DataType(DataType.Date)]
     public DateTime? BirthDate { get; set; }
 
-    public string Gender { get; set; } = string.Empty;
+    public string Gender { get; set; } 
 
     [Range(50, 250, ErrorMessage = "Wzrost musi być między 50 a 250 cm.")]
     public int Height { get; set; }
@@ -93,15 +99,12 @@
     public int Weight { get; set; }
     
     [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
-    public string Password { get; set; } = string.Empty;
+    public string Password { get; set; }
 
   
     // Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
     private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
     {
-
-// NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
-
         StateHasChanged();
     }
     //Obsługa endpointów
@@ -111,7 +114,21 @@
     { 
         try
         { 
-            // uzytkownicy = await Http.GetFromJsonAsync<List<Uzytkownik>("api/");//dodac api
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
+            user = userResponse.Data;
+        
+            Nickname = user.pseudonim;
+            Email = user.email;
+            BirthDate = user.data_urodzenia.HasValue 
+                ? new DateTime(user.data_urodzenia.Value.Year, user.data_urodzenia.Value.Month, user.data_urodzenia.Value.Day) 
+                : (DateTime?)null;
+            Gender = user.plec;
+            Height = (int)user.wzrost;
+            Weight = (int)user.waga;
+            
         }
         catch (Exception ex)
         {
@@ -119,21 +136,66 @@
         }
     }
 
+    // private async void Submit()
+    // {
+    //     
+    //     var user = new Uzytkownik()
+    //     {
+    //         id_uzytkownik = UserId,
+    //         pseudonim = Nickname,
+    //         email = Email,
+    //         data_urodzenia = DateOnly.FromDateTime((DateTime)BirthDate!),
+    //         plec = Gender,
+    //         wzrost = Height,
+    //         waga = Weight
+    //     };
+    //     // await Http.PutAsJsonAsync("Api/user/", user);
+    //     //
+    //     // NavigationManager.NavigateTo("/informationAboutPersonalData");
+    //     
+    //     var response = await Http.PutAsJsonAsync("api/user",user);
+    //
+    //     if (response.IsSuccessStatusCode)
+    //     {
+    //         NavigationManager.NavigateTo("/informationAboutPersonalData");
+    //     }
+    // }
     private async void Submit()
     {
-        
-        var user = new Uzytkownik()
+        try
         {
-            id_uzytkownik = UserId,
-            pseudonim = Nickname,
-            email = Email,
-            data_urodzenia = DateOnly.FromDateTime((DateTime)BirthDate!),
-            plec = Gender,
-            wzrost = Height,
-            waga = Weight
-        };
-        await Http.PutAsJsonAsync("Api/user/", user);
-        
-        NavigationManager.NavigateTo("/informationAboutPersonalData");
+            // Pobranie bieżących danych użytkownika z bazy
+            var currentUser = await Http.GetFromJsonAsync<Uzytkownik>($"api/user/{UserId}");
+
+            // Aktualizacja tylko zmienionych pól
+            var updatedUser = new Uzytkownik
+            {
+                id_uzytkownik = UserId,
+                pseudonim = string.IsNullOrWhiteSpace(Nickname) ? currentUser.pseudonim : Nickname,
+                email = string.IsNullOrWhiteSpace(Email) ? currentUser.email : Email,
+                data_urodzenia = BirthDate.HasValue 
+                    ? DateOnly.FromDateTime(BirthDate.Value) 
+                    : currentUser.data_urodzenia,
+                plec = string.IsNullOrWhiteSpace(Gender) ? currentUser.plec : Gender,
+                wzrost = Height == 0 ? currentUser.wzrost : Height,
+                waga = Weight == 0 ? currentUser.waga : Weight,
+            };
+
+            var response = await Http.PutAsJsonAsync("api/user", updatedUser);
+
+            if (response.IsSuccessStatusCode)
+            {
+                NavigationManager.NavigateTo("/informationAboutPersonalData");
+            }
+            else
+            {
+                Console.WriteLine("Błąd podczas aktualizacji danych.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Błąd: {ex.Message}");
+        }
     }
+
 }
