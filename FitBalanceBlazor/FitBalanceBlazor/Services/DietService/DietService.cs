@@ -103,7 +103,7 @@ public class DietService: IDietService
     public async Task<ServiceResponse<Dieta>> GetDietAsync(int dietId)
     {
         var response = new ServiceResponse<Dieta>();
-        var result = await _context.Dieta.Include(d => d.Danie_id_danie)
+        var result = await _context.Dieta
                                          .Where(dieta => dieta.id_dieta == dietId)
                                          .Select(d => new Dieta
                                          {
@@ -223,6 +223,39 @@ public class DietService: IDietService
             response.Success = true;
             
             return response;
+
+    }
+
+    public async Task<ServiceResponse<bool>> UpdateMealsInUserDiet(int dietId, List<int> meals)
+    {
+        var response = new ServiceResponse<bool>();
+        
+        var diet = await _context.Przypisana_dieta
+            .Include(d => d.id_danie)
+            .ThenInclude(d => d.id_przypisana_dieta)
+            .FirstOrDefaultAsync(d => d.id_przypisana_dieta == dietId);
+
+        if (diet == null)
+        {
+            response.Success = false;
+            response.Message = "Diet not found";
+                
+            return response;
+        }
+
+        var bufor = diet.id_danie;
+        bufor.Clear();
+        foreach (var meal in meals)
+        {
+            bufor.Add(_context.Danie.Find(meal));
+        }
+        diet.id_danie = bufor;
+        await _context.SaveChangesAsync();
+
+        response.Data = true;
+        response.Success = true;
+            
+        return response;
 
     }
 }

@@ -14,7 +14,6 @@ public class UserService(MyDbContext context) : IUserService
         var response = new ServiceResponse<Uzytkownik>();
 
         var person = await context.Uzytkownik
-            .Include(u => u.Przypisana_dieta)
             .FirstAsync(u => u.id_uzytkownik==userId);
 
         if (person == null)
@@ -83,4 +82,54 @@ public class UserService(MyDbContext context) : IUserService
         return response;
     }
 
+    public async Task<ServiceResponse<Uzytkownik>> GetUserDataWithDiet(int userId)
+    {
+
+        var response = new ServiceResponse<Uzytkownik>();
+        
+        var person = await context.Uzytkownik
+            .Include(u => u.Przypisana_dieta)
+            .Where(user => user.id_uzytkownik==userId)
+            .Select(u => new Uzytkownik
+        {
+            id_uzytkownik = u.id_uzytkownik,
+            data_urodzenia = u.data_urodzenia,
+            plec = u.plec,
+            pseudonim = u.pseudonim,
+            waga = u.waga,
+            wzrost = u.wzrost,
+            email = u.email,
+            Przypisana_dieta = u.Przypisana_dieta.Select(d => new Przypisana_dieta
+            {
+                id_dieta = d.id_dieta,
+                id_przypisana_dieta = d.id_przypisana_dieta,
+                id_danie = d.id_danie.Select(danie => new Danie
+                {
+                    id_danie = danie.id_danie,
+                    nazwa = danie.nazwa,
+                }).ToList()
+            }).ToList()
+        }).FirstAsync();
+            
+        
+        if (person == null)
+        {
+            response.Success = false;
+            response.Message = "Cannot find user";
+        }
+        else
+        {
+            person.haslo_hashed = null;
+            person.haslo_salt = null;
+        
+            context.ChangeTracker.Clear();  
+            //context.ChangeTracker.Entries<Uzytkownik>().Where(e => e.Entity != null).ToList().ForEach(e => e.State = EntityState.Detached);
+        
+            response.Data = person;
+            response.Success = true;
+        }
+        return response;
+        
+
+    }
 }

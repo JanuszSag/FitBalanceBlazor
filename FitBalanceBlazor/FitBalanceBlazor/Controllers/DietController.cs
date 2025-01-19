@@ -80,6 +80,17 @@ namespace FitBalanceBlazor.Controllers;
             }
             return Ok("Zaktualizowano liste dan");
         }
+
+        [HttpPut]
+        [Route("UpdateMealsInDiet/{dietId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateListOfMealsInDiet(int dietId,
+            [FromBody] List<int> meals)
+        {
+            var response = _dietService.UpdateMealsInUserDiet(dietId, meals);
+            if(!response.Result.Success)
+                return BadRequest(response.Result.Message);
+            return Ok("Zaktualizowano liste dan");
+        }
     }
     
     

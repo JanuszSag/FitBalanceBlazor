@@ -40,4 +40,16 @@ public class UserController(IUserService userService) : ControllerBase
             return BadRequest(response);
         return Ok(response);
     }
+
+    [HttpGet("diet/{dietId}")]
+    public async Task<ActionResult<ServiceResponse<Uzytkownik>>> GetUserDietById(int dietId)
+    {
+        var response = await _userService.GetUserDataWithDiet(dietId);
+        if (!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+        {
+            
+        }
+    }
 }
