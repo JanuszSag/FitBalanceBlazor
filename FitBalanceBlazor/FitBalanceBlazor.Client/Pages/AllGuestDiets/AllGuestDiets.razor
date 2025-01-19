@@ -7,7 +7,8 @@
 <PageTitle>All guest diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Lista diet dla gości</strong></MudText>
 
-    @foreach (var dieta in diety)
+<!-- Sekcja ograniczonej listy diet-dla gościa-->
+@foreach (var dieta in diety)
     {
         <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
             <MudText Typo="Typo.h6" Style="text-transform: uppercase;"><strong>@dieta.nazwa</strong></MudText>
@@ -15,15 +16,17 @@
                 <MudText Typo="Typo.subtitle1">Opis: @dieta.opis </MudText>
                 <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @dieta.rodzaj)?.nazwa</MudText>
                 
-                    <MudText Typo="Typo.subtitle1">Dania:  @*Class="d-inline" *@
-                        @foreach (var danie in @dieta.Danie_id_danie)
-                        {
+                <MudText Typo="Typo.subtitle1">Dania:  @*Class="d-inline" *@
+                    @foreach (var danie in @dieta.Danie_id_danie)
+                    {
                         @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa.ToString().PadRight(60)
-                        }
-                    </MudText>
+                    }
+                </MudText>
                 
             </MudStack>
-
+            
+            <AuthorizeView Roles="Employee">
+                <Authorized>
             <MudStack Row="true" Justify="Justify.SpaceAround">
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled"
@@ -34,9 +37,12 @@
                     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
                                OnClick="snackBarFun">Usuń
                     </MudButton>
-                    <!--JAk to zrobić?-->
                 </div>
             </MudStack>
+                </Authorized>
+            </AuthorizeView>
+
+            
         </MudPaper>
     }
 

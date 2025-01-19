@@ -16,9 +16,10 @@ public class DietService: IDietService
     /// Method <c>GetAllDietsAsync</c> return list of all diets stored in database
     /// </summary>
     /// <returns>List of diets</returns>
-    public async Task<List<Dieta>> GetAllDietsAsync()
+    public async Task<ServiceResponse<List<Dieta>>> GetAllDietsAsync()
     {
-        var result = await _context.Dieta.Include(d => d.Danie_id_danie)
+        var response = new ServiceResponse<List<Dieta>>();
+        var diets = await _context.Dieta.Include(d => d.Danie_id_danie)
             .Select(d => new Dieta
             {
                 id_dieta = d.id_dieta,
@@ -35,8 +36,14 @@ public class DietService: IDietService
                 Danie_id_danie = d.Danie_id_danie,
                 id_produkt = d.id_produkt
             }).ToListAsync();
-
-        return result;
+        if (diets is null)
+        {
+            response.Success = false;
+            response.Message = "Cannot find any diets";
+        }
+        response.Data = diets;
+        response.Success = true;
+        return response;
     }
 
     /// <summary>
@@ -45,8 +52,9 @@ public class DietService: IDietService
     /// <param name="categoryId">Id of category</param>
     /// <returns>List of diets with specific category</returns>
 
-    public async Task<List<Dieta>> GetAllDietsByIdAsync(List<int> dietId)
+    public async Task<ServiceResponse<List<Dieta>>> GetAllDietsByIdAsync(List<int> dietId)
     {
+        var response = new ServiceResponse<List<Dieta>>();
         var result = await _context.Dieta.Include(d => d.Danie_id_danie)
                                               .Select(d => new Dieta
                                               {
@@ -58,13 +66,32 @@ public class DietService: IDietService
                                                   Danie_id_danie = d.Danie_id_danie
                                               }).Where(d => dietId.Contains(d.id_dieta))
                                               .ToListAsync();
+        if (result.Count == 0)
+        {
+            response.Success = false;
+            response.Message = "Failed to get diets";
+            return response;
+        }
+        response.Data = result;
+        response.Success = true;
+        return response;
         
-        return result;
     }
     
-    public async Task<List<Dieta>> GetAllDietsByCategoryIdAsync(int categoryId)
+    public async Task<ServiceResponse<List<Dieta>>> GetAllDietsByCategoryIdAsync(int categoryId)
     {
-        return await _context.Dieta.Where(d => d.rodzaj == categoryId).ToListAsync();
+        var response = new ServiceResponse<List<Dieta>>();
+        var result = await _context.Dieta.Where(d => d.rodzaj == categoryId).ToListAsync();
+
+        if (result.Count == 0)
+        {
+            response.Success = false;
+            response.Message = "Failed to get diets";
+            return response;
+        }
+        response.Data = result;
+        response.Success = true;
+        return response;
     }
     
     
@@ -73,9 +100,10 @@ public class DietService: IDietService
     /// </summary>
     /// <param name="dietId">id of diet stored in database</param>
     /// <returns>diet object</returns>
-    public async Task<Dieta?> GetDietAsync(int dietId)
+    public async Task<ServiceResponse<Dieta>> GetDietAsync(int dietId)
     {
-        var result = await _context.Dieta.Include(d => d.Danie_id_danie)
+        var response = new ServiceResponse<Dieta>();
+        var result = await _context.Dieta
                                          .Where(dieta => dieta.id_dieta == dietId)
                                          .Select(d => new Dieta
                                          {
@@ -90,29 +118,36 @@ public class DietService: IDietService
                                              }).ToList()
                                          }).FirstAsync();
 
-        
-        return result;
+        if (result == null)
+        {
+            response.Success = false;
+            response.Message = "Failed to get diet";
+            return response;
+        }
+        response.Data = result;
+        response.Success = true;
+        return response;
     }
 
     /// <summary>
     /// method <c>RemoveDietAsync</c> removes diet from database based on id parameter
     /// </summary>
     /// <param name="dietId">id of diet to remove</param>
-    public async void RemoveDietAsync(int dietId)
+    public async Task<ServiceResponse<bool>> RemoveDietAsync(int dietId)
     {
-        try
-        {
+        var response = new ServiceResponse<bool>();
+
             var dieta = await _context.Dieta.FindAsync(dietId);
             
-            _context.Dieta.Attach(await _context.Dieta.SingleAsync(d => d.id_dieta == dietId));
-            _context.Dieta.Remove(await _context.Dieta.SingleAsync(d => d.id_dieta == dietId));
+            _context.Dieta.Remove(await _context.Dieta.FindAsync(dietId));
             
             await _context.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+            
+            response.Success = true;
+            response.Message = "Diet has been removed";
+            response.Data = true;
+            return response;
+
     }
 
     /// <summary>
@@ -124,10 +159,16 @@ public class DietService: IDietService
     /// <param name="kalorycznosc">Calorie</param>
     /// <param name="autor">Author</param>
     /// <param name="rodzaj">Category</param>
-    public void AddDiet(DietaDTO dieta)
+    public ServiceResponse<bool> AddDiet(DietaDTO dieta)
     {
+        var response = new ServiceResponse<bool>();
         var max =  _context.Dieta.Select(d => d.id_dieta).Max();
-        
+        if (max == 0)
+        {
+            response.Success = false;
+            response.Message = "Cannot find diet";
+            return response;
+        }
         try{
              _context.Dieta.Add(new Dieta
              {
@@ -140,10 +181,16 @@ public class DietService: IDietService
                 rodzaj = dieta.Rodzaj
              });
             _context.SaveChangesAsync();
+            
+            response.Success = true;
+            response.Message = "Diet has been created";
+            return response;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            response.Success = false;
+            response.Message = ex.Message;
+            return response;
         }
     }
 
@@ -152,6 +199,7 @@ public class DietService: IDietService
         var response = new ServiceResponse<bool>();
         
             var diet = await _context.Dieta
+                .Include(d => d.Danie_id_danie)
                 .FirstOrDefaultAsync(d => d.id_dieta == id);
 
             if (diet == null)
@@ -161,19 +209,53 @@ public class DietService: IDietService
                 
                 return response;
             }
-            diet.Danie_id_danie.Clear();
-            diet.Danie_id_danie = null;
+
+            var bufor = diet.Danie_id_danie;
+            bufor.Clear();
             foreach (var meal in meals)
             {
-                diet.Danie_id_danie.Add(_context.Danie.Find(meal));
+                bufor.Add(_context.Danie.Find(meal));
             }
-            
+            diet.Danie_id_danie = bufor;
             await _context.SaveChangesAsync();
 
             response.Data = true;
             response.Success = true;
             
             return response;
+
+    }
+
+    public async Task<ServiceResponse<bool>> UpdateMealsInUserDiet(int dietId, List<int> meals)
+    {
+        var response = new ServiceResponse<bool>();
+        
+        var diet = await _context.Przypisana_dieta
+            .Include(d => d.id_danie)
+            .ThenInclude(d => d.id_przypisana_dieta)
+            .FirstOrDefaultAsync(d => d.id_przypisana_dieta == dietId);
+
+        if (diet == null)
+        {
+            response.Success = false;
+            response.Message = "Diet not found";
+                
+            return response;
+        }
+
+        var bufor = diet.id_danie;
+        bufor.Clear();
+        foreach (var meal in meals)
+        {
+            bufor.Add(_context.Danie.Find(meal));
+        }
+        diet.id_danie = bufor;
+        await _context.SaveChangesAsync();
+
+        response.Data = true;
+        response.Success = true;
+            
+        return response;
 
     }
 }

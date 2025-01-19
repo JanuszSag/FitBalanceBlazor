@@ -1,4 +1,6 @@
+using System.Net;
 using System.Text;
+using Blazored.LocalStorage;
 using MudBlazor.Services;
 using FitBalanceBlazor.Client.Pages;
 using FitBalanceBlazor.Components;
@@ -31,6 +33,8 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 builder.Services.AddScoped<IDietService,DietService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
@@ -40,6 +44,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -56,10 +61,13 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value))
         };
     });
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+builder.Services.AddAuthorization();
+
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5131/") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5131/") });
 
 var app = builder.Build();
 
@@ -77,11 +85,15 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
+    .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies(typeof(FitBalanceBlazor.Client._Imports).Assembly);
 
 app.MapControllers();

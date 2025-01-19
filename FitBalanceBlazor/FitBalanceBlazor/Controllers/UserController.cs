@@ -21,10 +21,10 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(response);
     }
     
-    [HttpPut("id")]
-    public async Task<ActionResult<ServiceResponse<bool>>> UpdateUser(int id, [FromBody] Uzytkownik user)
+    [HttpPut]
+    public async Task<ActionResult<ServiceResponse<bool>>> UpdateUser([FromBody] Uzytkownik user)
     {
-        var response = await _userService.UpdateUserData(id, user);
+        var response = await _userService.UpdateUserData(user);
         
         if(!response.Success)
             return BadRequest(response);
@@ -39,5 +39,17 @@ public class UserController(IUserService userService) : ControllerBase
         if(!response.Success)
             return BadRequest(response);
         return Ok(response);
+    }
+
+    [HttpGet("diet/{dietId}")]
+    public async Task<ActionResult<ServiceResponse<Uzytkownik>>> GetUserDietById(int dietId)
+    {
+        var response = await _userService.GetUserDataWithDiet(dietId);
+        if (!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+        {
+            
+        }
     }
 }

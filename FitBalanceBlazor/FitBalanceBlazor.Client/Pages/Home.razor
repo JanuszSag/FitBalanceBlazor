@@ -78,8 +78,8 @@
                 <MudItem xs="8">
                     <MudGrid>
                         <MudItem xs="6">
-                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
-                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesMyDiet.png" Alt="MyDietImage"  Class="rounded-lg"/>
+                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;height: 44vh">
+                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesMyDietv2.png" Alt="MyDietImage"  Class="rounded-lg"/>
                             </MudPaper>
                         </MudItem>
 
@@ -90,14 +90,14 @@
                         </MudItem>
                         
                         <MudItem xs="6">
-                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 41vh">
-                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesRaport.png" Alt="ReportImage"  Class="rounded-lg"/>
+                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 44vh">
+                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesRaportv2.png" Alt="ReportImage"  Class="rounded-lg"/>
                             </MudPaper>
                         </MudItem>
                         
                         <MudItem xs="6">
-                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 41vh">
-                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesWater.png" Alt="WaterImage"  Class="rounded-lg" />
+                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 44vh">
+                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesWaterv2.png" Alt="WaterImage"  Class="rounded-lg" />
                             </MudPaper>
                         </MudItem>
                     </MudGrid>
@@ -110,7 +110,7 @@
     <!--Sekcja wyboru programu-->
     <div id="sectionProgram">
         <MudStack>
-            <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wybierz swoj program</strong></MudText>
+            <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Programy</strong></MudText>
             <MudStack Spacing="3" Justify="Justify.SpaceAround">
 
                 <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
@@ -189,9 +189,9 @@
             @foreach (var opinia in opinie)
             {
                 <MudPaper Class="pa-10 my-4" Style="background:rgb(223,243,156);border-radius: 25px;margin-left: 30px; margin-right: 30px;">
-                    <MudText>Autor: @uzytkownicy.FirstOrDefault(u=>u.id_uzytkownik==opinia.id_uzytkownik)?.pseudonim</MudText> 
-                    <MudRating ReadOnly="true" SelectedValue="@opinia.ocena.Value" Size="Size.Medium"/> 
-                    <MudText>Opis: @opinia.zawartosc</MudText>
+                    <MudText Align="Align.Left" Typo="Typo.h5">Autor: @uzytkownicy.FirstOrDefault(u=>u.id_uzytkownik==opinia.id_uzytkownik)?.pseudonim</MudText> 
+                    <MudRating ReadOnly="true" SelectedValue="@opinia.ocena.Value" Size="Size.Medium"/>
+                    <MudText Align="Align.Left" Typo="Typo.h5">Opis: @opinia.zawartosc</MudText>
                 </MudPaper>
             }
         </MudStack>
@@ -209,13 +209,13 @@
                 <MudStack Spacing="3">
 
                     <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText > @((MarkupString)faq1.Replace(Environment.NewLine, "<br/>")) </MudText>
+                        <MudText Align="Align.Left" Typo="Typo.h5"> @((MarkupString)faq1.Replace(Environment.NewLine, "<br/>")) </MudText>
                     </MudPaper>
                     <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText > @((MarkupString)faq2.Replace(Environment.NewLine, "<br/>")) </MudText>
+                        <MudText Align="Align.Left" Typo="Typo.h5"> @((MarkupString)faq2.Replace(Environment.NewLine, "<br/>")) </MudText>
                     </MudPaper>
                     <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText > @((MarkupString)faq3.Replace(Environment.NewLine, "<br/>")) </MudText>
+                        <MudText Align="Align.Left" Typo="Typo.h5" > @((MarkupString)faq3.Replace(Environment.NewLine, "<br/>")) </MudText>
                     </MudPaper>
                 </MudStack>
 
@@ -226,16 +226,19 @@
         <MudStack>
             <MudPaper Class="pa-10" Style="margin-left: 30px; margin-right: 30px;">
                 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
-                <MudText > @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
-                <MudText Typo="Typo.h6">E-mail:</MudText>
-                <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined"
-                              For="@(() => email)"Immediate="true"Error="@(!IsCorectEmail(email))"ErrorText="Nieprawidłowy adres email"></MudTextField>
-                <MudText Typo="Typo.h6">Treść wiadomości:</MudText>
-                <MudTextField ShrinkLabel @bind-Value="message" Label="Treść wiadomości" Variant="Variant.Outlined"Error="@string.IsNullOrEmpty(message)"ErrorText="Wpisz treść mail"></MudTextField>
-                <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               @onclick="SnackBarEmail">Wyślij</MudButton>
-                </div>
+                <MudText Align="Align.Center" Typo="Typo.h5"> @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
+                <MudText Align="Align.Center" Typo="Typo.h5">Nasz adres email:<strong> FitBalance@mail.com</strong></MudText>
+                
+                
+                @* <MudText Typo="Typo.h6">E-mail:</MudText> *@
+                @* <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined" *@
+                @*               For="@(() => email)"Immediate="true"Error="@(!IsCorectEmail(email))"ErrorText="Nieprawidłowy adres email"></MudTextField> *@
+                @* <MudText Typo="Typo.h6">Treść wiadomości:</MudText> *@
+                @* <MudTextField ShrinkLabel @bind-Value="message" Label="Treść wiadomości" Variant="Variant.Outlined"Error="@string.IsNullOrEmpty(message)"ErrorText="Wpisz treść mail"></MudTextField> *@
+                @* <div class="d-flex align-center"> *@
+                @*     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;" *@
+                @*                @onclick="SnackBarEmail">Wyślij</MudButton> *@
+                @* </div> *@
             </MudPaper>
         </MudStack>
     </div>
@@ -292,14 +295,14 @@ public string message { get; set; }
     }
 
 //snackbar-wyswietla krotkie i tymczasowe wiadomosci
-    void SnackBarEmail()
-    {
-        if(IsCorectEmail(email)& !string.IsNullOrEmpty(message)){
-            Snackbar.Add("Wysłano pomyslnie maila!", Severity.Success);
-        }
-        else
-        {
-            Snackbar.Add("Należy wprowadzic poprawny mail adres i treść wiadomości", Severity.Error); 
-        }
-    }
+    // void SnackBarEmail()
+    // {
+    //     if(IsCorectEmail(email)& !string.IsNullOrEmpty(message)){
+    //         Snackbar.Add("Wysłano pomyslnie maila!", Severity.Success);
+    //     }
+    //     else
+    //     {
+    //         Snackbar.Add("Należy wprowadzic poprawny mail adres i treść wiadomości", Severity.Error); 
+    //     }
+    // }
 }

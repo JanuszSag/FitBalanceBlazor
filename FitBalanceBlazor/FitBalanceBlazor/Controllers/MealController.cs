@@ -17,13 +17,25 @@ public class MealController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<Danie>>> GetMeals()
     {
-        return await _mealService.GetAllMealsAsync();
+        var response = await _mealService.GetAllMealsAsync();
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Danie>> GetMeal(int id)
     {
         return await _mealService.GetMealByIdAsync(id);
+    }
+
+    [HttpGet("assigned/{id}")]
+    public async Task<ActionResult<Przypisana_dieta>> GetAssignedMeals(int id)
+    {
+        var response = await _mealService.GetMealsByUserIdAsync(id);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
     
 }

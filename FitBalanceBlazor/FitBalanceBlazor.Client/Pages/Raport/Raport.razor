@@ -2,7 +2,11 @@
 @using System.Net
 @using System.Net.Http.Json
 @using MudBlazor
+@using System.IdentityModel.Tokens.Jwt
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
 @inject HttpClient Http
+
 
 <MudGrid Class="pa-4">
     <!-- Naglowek -->
@@ -35,25 +39,37 @@
 </MudGrid>
 
 @code {
-    [Parameter] public int UserId { get; set; }
+   // [Parameter] public int UserId { get; set; } = 1;
 
     private List<UserWeight> Weights;
+    private JwtSecurityToken jwt { get; set; }
+    private string UserIdFromToken { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Pobieranie danych z API
-            var response = await Http.GetFromJsonAsync<WeightResponse>($"api/Report/Weight/2");
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            UserIdFromToken = claim?.Value;
 
-            if (response?.Data != null)
+            if (!string.IsNullOrEmpty(UserIdFromToken))
             {
-                // Przekształcanie danych
-                Weights = response.Data.Select(w => new UserWeight
+                var response = await Http.GetFromJsonAsync<WeightResponse>($"api/Report/Weight/{UserIdFromToken}");
+
+                if (response?.Data != null)
                 {
-                    Date = DateTime.Parse(w.Data),
-                    Weight = w.Waga
-                }).ToList();
+                    Weights = response.Data.Select(w => new UserWeight
+                    {
+                        Date = DateTime.Parse(w.Data),
+                        Weight = w.Waga
+                    }).ToList();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Nie udało się pobrać ID użytkownika z tokena.");
             }
         }
         catch (Exception ex)

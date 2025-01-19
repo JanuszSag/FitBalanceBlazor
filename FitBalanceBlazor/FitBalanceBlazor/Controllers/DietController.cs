@@ -18,44 +18,55 @@ namespace FitBalanceBlazor.Controllers;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Dieta>>> GetDiets()
+        public async Task<ActionResult<ServiceResponse<List<Dieta>>>> GetDiets()
         {
-            var result = await _dietService.GetAllDietsAsync();
-            return Ok(result);
+            var response = await _dietService.GetAllDietsAsync();
+            return Ok(response);
         }
 
         [HttpPost("id")]
-        public async Task<ActionResult<List<Dieta>>> GetDietById(List<int> id)
+        public async Task<ActionResult<ServiceResponse<List<Dieta>>>> GetDietById(List<int> id)
         {
             var result = await _dietService.GetAllDietsByIdAsync(id);
+            if(!result.Success)
+                return BadRequest(result);
             return Ok(result);
         }
         
         [HttpGet("Category/{id}")]
-        public async Task<ActionResult<List<Dieta>>> GetDietsByCategory(int id)
+        public async Task<ActionResult<ServiceResponse<List<Dieta>>>> GetDietsByCategory(int id)
         {
-            return await _dietService.GetAllDietsByCategoryIdAsync(id);
+            var result = await _dietService.GetAllDietsByCategoryIdAsync(id);
+            if(!result.Success)
+                return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpGet("{dietId}")]
-        public async Task<ActionResult<Dieta>> GetDieta(int dietId)
+        public async Task<ActionResult<ServiceResponse<Dieta>>> GetDieta(int dietId)
         {
             var result = await _dietService.GetDietAsync(dietId);
+            if(!result.Success)
+                return BadRequest(result);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteDiet(int id)
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteDiet(int id)
         {
-            _dietService.RemoveDietAsync(id);
-            return Ok();
+            var result = _dietService.RemoveDietAsync(id);
+            if(!result.Result.Success)
+                return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<ActionResult> AddDiet(DietaDTO dieta)
         {
-            _dietService.AddDiet(dieta);
-            return Ok();
+            var result = _dietService.AddDiet(dieta);
+            if(!result.Success)
+                return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpPut]
@@ -67,6 +78,17 @@ namespace FitBalanceBlazor.Controllers;
             {
                 return BadRequest(response.Result.Message);
             }
+            return Ok("Zaktualizowano liste dan");
+        }
+
+        [HttpPut]
+        [Route("UpdateMealsInDiet/{dietId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateListOfMealsInDiet(int dietId,
+            [FromBody] List<int> meals)
+        {
+            var response = _dietService.UpdateMealsInUserDiet(dietId, meals);
+            if(!response.Result.Success)
+                return BadRequest(response.Result.Message);
             return Ok("Zaktualizowano liste dan");
         }
     }

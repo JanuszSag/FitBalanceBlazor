@@ -1,5 +1,6 @@
 @page "/allClientDiets"
 @using System.ComponentModel.DataAnnotations 
+@using ClassLibrary1
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -12,17 +13,18 @@
 <!-- Sekcja elementów listy diet -->
 <MudGrid>
     <MudItem xs="9">
+        <!-- Sekcja widoczna tylko dla pracownika -dodanie nowej diety-->
         <AuthorizeView Roles="Employee">
             <Authorized>
-            <div align="center">
                 <MudButton Variant="Variant.Filled"
                            Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
                            Href="/addDiet">
                     Dodaj dietę
                 </MudButton>
-            </div>
             </Authorized>
         </AuthorizeView>
+
+        <!-- Sekcja listy wszytskich diet-->
         @foreach (var dieta in diety)
         {
             <MudPaper Class="pa-3 my-4" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
@@ -40,20 +42,21 @@
                     </MudText>
                 </MudStack>
 
+                <!-- Sekcja widoczna tylko dla pracownika -modyfikacja lub usuniecie diety-->
                 <AuthorizeView Roles="Employee">
                     <Authorized>
-                    <MudStack Row="true" Justify="Justify.SpaceAround">
-                        <div class="d-flex align-center">
-                            <MudButton Variant="Variant.Filled"
-                                       Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
-                                       OnClick="() => onChangeDiet(dieta.id_dieta)">
-                                Zmień
-                            </MudButton>
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
-                                       OnClick="snackBarFun">Usuń
-                            </MudButton>
-                        </div>
-                    </MudStack>
+                        <MudStack Row="true" Justify="Justify.SpaceAround">
+                            <div class="d-flex align-center">
+                                <MudButton Variant="Variant.Filled"
+                                           Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
+                                           OnClick="() => onChangeDiet(dieta.id_dieta)">
+                                    Zmień
+                                </MudButton>
+                                <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
+                                           OnClick="() => DeleteDiet(dieta.id_dieta)">Usuń
+                                </MudButton>
+                            </div>
+                        </MudStack>
                     </Authorized>
                 </AuthorizeView>
             </MudPaper>
@@ -86,8 +89,7 @@
                     Pokaż wyniki
                 </MudButton>
                 </div>
-
-
+                    <!--filtr kaloryczności-->
                     <MudText Typo="Typo.h6">Kaloryczność:</MudText>
                     <MudRadioGroup @bind-Value="modelFilter.SelectedKcal">
                         <MudStack>
@@ -125,13 +127,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        var dietResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+        diety = dietResponse.Data;
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-  
+        var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");
+        dania = MealResponse.Data;
+
     }
 
-    // Metoda do przekazywania ID diety do strony zmiany
+    // Metoda do przekazywania ID diety do strony zmiany diety o danym id
     private void onChangeDiet(int id) 
     {
         NavigationManager.NavigateTo($"/changeDiet/{id}");
@@ -146,11 +150,12 @@
         public int SelectedKcal { get; set; }
 
     }
-       //obsługa filtrów
+       //Obsługa filtrów
        private async Task dietsFilter()
        {
         
-           diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+           var dietyResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+           diety = dietyResponse.Data;
            if (!modelFilter.SelectedOption.Equals("wszystkieDiety"))
            {
                diety = diety.Where(d => rodzaje.Any(r => r.id_rodzaj == d.rodzaj && r.nazwa == modelFilter.SelectedOption)).ToList();
@@ -174,9 +179,8 @@
            StateHasChanged();
        }
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-    private void snackBarFun()
+    private void snackBarFun(bool isSuccess)
     {
-        bool isSuccess = true;
         if (isSuccess)
         {
             Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
@@ -186,27 +190,12 @@
             Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
         }
     }
-    //
-    // private async Task ShowDialog()
-    // {
-    //     
-    //     var parameters = new DialogParameters
-    //     {
-    //     };
-    //
-    //     var options = new DialogOptions
-    //     {
-    //         CloseButton = false,
-    //         MaxWidth = MaxWidth.Small,
-    //         FullWidth = true
-    //     };
-    //
-    //     var dialog = DialogService.Show<AllClientDietsDialog>("Usunięcie diety", parameters, options);
-    //     var result = await dialog.Result;
-    //
-    //     if (!result.Canceled) 
-    //     {
-    //         NavigationManager.NavigateTo("/AllClientDiets");
-    //     }
-    //}
+ 
+    private async void DeleteDiet(int id)
+    {
+        var result = await Http.DeleteAsync($"api/Diet/{id}");
+        
+        StateHasChanged();
+    }
+
 }
