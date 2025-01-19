@@ -7,17 +7,13 @@
 @inject ILocalStorageService LocalStorage
 @inject HttpClient Http
 
-
 <MudGrid Class="pa-4">
-    <!-- Naglowek -->
-    <MudItem xs="12" Class="text-center">
+    <!-- Lewa sekcja waga -->
+    <MudItem xs="6">
         <MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4">
             Miesięczny raport zmiany wagi
         </MudText>
-    </MudItem>
 
-    <!-- Tabela danych -->
-    <MudItem xs="12" Class="mt-4">
         @if (Weights != null)
         {
             <MudTable Items="Weights" Elevation="2">
@@ -36,12 +32,37 @@
             <MudProgressCircular Indeterminate="true" Class="m-auto" />
         }
     </MudItem>
+
+    <!-- Prawa sekcja - woda -->
+    <MudItem xs="6">
+        <MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4">
+            Miesięczny raport wypitej wody
+        </MudText>
+
+        @if (WaterLogs != null)
+        {
+            <MudTable Items="WaterLogs" Elevation="2">
+                <HeaderContent>
+                    <MudTh>Data</MudTh>
+                    <MudTh>Ilość (ml)</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Date.ToShortDateString()</MudTd>
+                    <MudTd>@context.Amount</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+        else
+        {
+            <MudProgressCircular Indeterminate="true" Class="m-auto" />
+        }
+    </MudItem>
 </MudGrid>
 
 @code {
-   // [Parameter] public int UserId { get; set; } = 1;
-
     private List<UserWeight> Weights;
+    private List<WaterLog> WaterLogs;
+
     private JwtSecurityToken jwt { get; set; }
     private string UserIdFromToken { get; set; }
 
@@ -51,19 +72,31 @@
         {
             var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
             jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+
             var claim = jwt.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
             UserIdFromToken = claim?.Value;
 
             if (!string.IsNullOrEmpty(UserIdFromToken))
             {
-                var response = await Http.GetFromJsonAsync<WeightResponse>($"api/Report/Weight/{UserIdFromToken}");
-
-                if (response?.Data != null)
+                // pobieranie danych o wadze
+                var weightResponse = await Http.GetFromJsonAsync<WeightResponse>($"api/Report/Weight/{UserIdFromToken}");
+                if (weightResponse?.Data != null)
                 {
-                    Weights = response.Data.Select(w => new UserWeight
+                    Weights = weightResponse.Data.Select(w => new UserWeight
                     {
-                        Date = DateTime.Parse(w.Data),
-                        Weight = w.Waga
+                        Date = DateTime.Parse(w.data),
+                        Weight = w.waga
+                    }).ToList();
+                }
+
+                // pobieranie danych o wadze
+                var waterResponse = await Http.GetFromJsonAsync<WaterResponse>($"api/Report/Water/{UserIdFromToken}");
+                if (waterResponse?.Data != null)
+                {
+                    WaterLogs = waterResponse.Data.Select(w => new WaterLog
+                    {
+                        Date = DateTime.Parse(w.data),
+                        Amount = w.ilosc
                     }).ToList();
                 }
             }
@@ -87,13 +120,32 @@
 
     private class ApiWeight
     {
-        public string Data { get; set; }
-        public double Waga { get; set; }
+        public string data { get; set; }
+        public double waga { get; set; }
     }
 
     private class UserWeight
     {
         public DateTime Date { get; set; }
         public double Weight { get; set; }
+    }
+
+    private class WaterResponse
+    {
+        public List<ApiWater> Data { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
+
+    private class ApiWater
+    {
+        public string data { get; set; }
+        public int ilosc { get; set; } 
+    }
+
+    private class WaterLog
+    {
+        public DateTime Date { get; set; }
+        public int Amount { get; set; }
     }
 }
