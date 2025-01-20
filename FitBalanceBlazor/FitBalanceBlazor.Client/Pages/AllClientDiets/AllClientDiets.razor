@@ -1,10 +1,14 @@
 @page "/allClientDiets"
 @using System.ComponentModel.DataAnnotations 
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+@using Blazored.LocalStorage
 @using ClassLibrary1
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 @* @inject IDialogService DialogService *@
+@inject ILocalStorageService LocalStorage
 
 <PageTitle>All clients diets</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wszystkie diety</strong></MudText>
@@ -47,6 +51,11 @@
                     <Authorized>
                         <MudStack Row="true" Justify="Justify.SpaceAround">
                             <div class="d-flex align-center">
+                                <MudButton Variant="Variant.Filled"
+                                           Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
+                                           OnClick="() => AssignDiet(dieta.id_dieta)">
+                                    Przypisz diete
+                                </MudButton>
                                 <MudButton Variant="Variant.Filled"
                                            Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
                                            OnClick="() => onChangeDiet(dieta.id_dieta)">
@@ -123,10 +132,19 @@
     private List<Dieta> diety=new List<Dieta>();
     private List<Rodzaj> rodzaje=new List<Rodzaj>();
     private List<Danie> dania=new List<Danie>();
+    private Uzytkownik user;
+    private JwtSecurityToken jwt { get; set; } 
     
 
     protected override async Task OnInitializedAsync()
     {
+        var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+        jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+        var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+        var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/diet/{claim.Value}"); //zmienić na claim.id
+        user = userResponse.Data;
+        
+        
         var dietResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
         diety = dietResponse.Data;
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
@@ -196,6 +214,11 @@
         var result = await Http.DeleteAsync($"api/Diet/{id}");
         
         StateHasChanged();
+    }
+
+    private async void AssignDiet(int dietId)
+    {
+        var assignResponse = await Http.PutAsJsonAsync($"api/user/AssignDiet/{user.id_uzytkownik}", dietId);
     }
 
 }

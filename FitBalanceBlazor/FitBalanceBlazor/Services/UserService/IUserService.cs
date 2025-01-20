@@ -8,4 +8,5 @@ public interface IUserService
     public Task<ServiceResponse<bool>> UpdateUserData(Uzytkownik uzytkownik);
     public Task<ServiceResponse<List<Uzytkownik>>> SearchListUserData();
     public Task<ServiceResponse<Uzytkownik>> GetUserDataWithDiet(int userId);
+    public Task<ServiceResponse<bool>> AssignDiet(int userId, int dietId);
 }

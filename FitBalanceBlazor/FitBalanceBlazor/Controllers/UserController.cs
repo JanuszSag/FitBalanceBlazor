@@ -48,8 +48,14 @@ public class UserController(IUserService userService) : ControllerBase
         if (!response.Success)
             return BadRequest(response);
         return Ok(response);
-        {
-            
-        }
+    }
+
+    [HttpPut("AssignDiet/{userId}")]
+    public async Task<ActionResult<ServiceResponse<bool>>> AssignDietToUser(int userId, [FromBody] int dietId)
+    {
+        var reponse = await _userService.AssignDiet(userId, dietId);
+        if(!reponse.Success)
+            return BadRequest(reponse);
+        return Ok(reponse);
     }
 }
