@@ -222,25 +222,11 @@
             </MudPaper>
 
         </MudStack>
-
-        <MudStack>
-            <MudPaper Class="pa-10" Style="margin-left: 30px; margin-right: 30px;">
+    </div>
+    <div id="sectionContact">
                 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
                 <MudText Align="Align.Center" Typo="Typo.h5"> @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
                 <MudText Align="Align.Center" Typo="Typo.h5">Nasz adres email:<strong> FitBalance@mail.com</strong></MudText>
-                
-                
-                @* <MudText Typo="Typo.h6">E-mail:</MudText> *@
-                @* <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined" *@
-                @*               For="@(() => email)"Immediate="true"Error="@(!IsCorectEmail(email))"ErrorText="Nieprawidłowy adres email"></MudTextField> *@
-                @* <MudText Typo="Typo.h6">Treść wiadomości:</MudText> *@
-                @* <MudTextField ShrinkLabel @bind-Value="message" Label="Treść wiadomości" Variant="Variant.Outlined"Error="@string.IsNullOrEmpty(message)"ErrorText="Wpisz treść mail"></MudTextField> *@
-                @* <div class="d-flex align-center"> *@
-                @*     <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;" *@
-                @*                @onclick="SnackBarEmail">Wyślij</MudButton> *@
-                @* </div> *@
-            </MudPaper>
-        </MudStack>
     </div>
 
 </MudStack>
