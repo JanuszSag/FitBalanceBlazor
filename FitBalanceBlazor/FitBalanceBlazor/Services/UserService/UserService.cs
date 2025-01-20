@@ -132,4 +132,68 @@ public class UserService(MyDbContext context) : IUserService
         
 
     }
+
+    public async Task<ServiceResponse<bool>> AssignDiet(int userId, int dietId)
+    {
+        var response = new ServiceResponse<bool>();
+        try
+        {
+            var user = await context.Uzytkownik.FindAsync(userId);
+            var diet = await context.Dieta.Include(d => d.Danie_id_danie).FirstOrDefaultAsync(d => d.id_dieta == dietId);
+            var assignDiets = await context.Przypisana_dieta.ToListAsync();
+            
+            var meals = diet.Danie_id_danie;
+            
+            var bufor = user.Przypisana_dieta;
+            
+            
+            /*bufor.Clear();
+            bufor = [new Przypisana_dieta()
+            {
+                id_przypisana_dieta = assignDiets.Count+1,
+                id_dieta = dietId,
+                id_uzytkownik = userId,
+                id_program = 2,
+                id_dietaNavigation = diet,
+                id_programNavigation = await context.Programy.FindAsync(2 ),
+                id_uzytkownikNavigation = user,
+                id_danie = meals
+            }];
+            user.Przypisana_dieta = bufor;*/
+            /*var test = new Przypisana_dieta()
+            {
+                id_dieta = dietId,
+                id_uzytkownik = userId,
+                id_program = 2,
+                id_danie = meals
+            };*/
+
+            user.Przypisana_dieta = [];
+            user.Przypisana_dieta.Add(new Przypisana_dieta()
+            {
+                id_dieta = dietId,
+                id_danie = meals,
+                id_dietaNavigation = diet,
+                id_programNavigation = await context.Programy.FindAsync(2),
+                id_uzytkownikNavigation = user,
+                id_przypisana_dieta = assignDiets.Count+1
+            });
+
+            /*
+            await context.Przypisana_dieta.AddAsync(test);*/
+            
+            await context.SaveChangesAsync();
+            
+            
+            response.Data = true;
+            response.Success = true;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Success = false;
+            response.Message = ex.Message;
+            return response;
+        }
+    }
 }

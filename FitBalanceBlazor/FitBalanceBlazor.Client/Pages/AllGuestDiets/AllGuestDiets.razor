@@ -1,6 +1,7 @@
 @page "/allGuestDiets"
 @inject NavigationManager NavigationManager
 @using System.ComponentModel.DataAnnotations
+@using ClassLibrary1
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
@@ -53,11 +54,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var wszytskieDiety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
+        var wszytskieDietyResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+        var wszytskieDiety = wszytskieDietyResponse.Data;
         //Wyswietla tylko pierwsze diety z wszytskich rodzajów - co 6 dlatego Index%6==0 i ogranicza liczbę wyświtlanych diet Take(ograniczenie)
         diety = wszytskieDiety.Where((Item,Index)=>Index%6==0).Take(3).ToList();
-        rodzaje= await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
-        dania= await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
+        rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
+        var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");
+        dania = MealResponse.Data;
     }
     // Metoda do przekazywania ID diety do strony zmiany
     private void onChangeDiet(int id) 
