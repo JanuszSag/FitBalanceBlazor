@@ -182,19 +182,22 @@
        }
        private async Task dietsFilterKcal()
        {
-           if (!modelFilter.SelectedKcal.Equals("wszystkieKcal"))
+           try
            {
-
-               diety = await Http.GetFromJsonAsync<List<Dieta>>("api/Diet");
-           }
-
-           if (modelFilter.SelectedKcal > 0)
+               var dietResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+               diety = dietResponse.Data;
+               if (modelFilter.SelectedKcal > 0)
                {
                    // Filtrowanie dokładnie po wybranej kaloryczności
                    diety = diety.Where(d => d.kalorycznosc == modelFilter.SelectedKcal).ToList();
                }
-           
-           StateHasChanged();
+
+               StateHasChanged();
+           }
+           catch (Exception e)
+           {
+               Console.WriteLine(e);
+           }
        }
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
     private void snackBarFun(bool isSuccess)
