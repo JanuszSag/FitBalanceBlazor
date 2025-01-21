@@ -49,7 +49,7 @@
             var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
             jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
             var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
-            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/diet/3"); //zmienić na claim.id
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/diet/{claim.Value}"); //zmienić na claim.id
             user = userResponse.Data;
 
             // zmienic tu zeby byla informacja o poprawnej diecie przypisanej uzytkownikowi
