@@ -158,7 +158,8 @@ public class UserService(MyDbContext context) : IUserService
         {
             var user = await context.Uzytkownik.Where(u => u.id_uzytkownik==userId).Select(u => new Uzytkownik
             {
-                id_uzytkownik = u.id_uzytkownik
+                id_uzytkownik = u.id_uzytkownik,
+                Przypisana_dieta = u.Przypisana_dieta
             }).SingleAsync();
             var diet = await context.Dieta.Include(d => d.Danie_id_danie).Where(d => d.id_dieta == dietId).Select(d => new Dieta
             {
@@ -177,9 +178,16 @@ public class UserService(MyDbContext context) : IUserService
             /*
             await context.Przypisana_dieta.AddAsync(test);*/
             
+            
+            user.Przypisana_dieta.Clear();
+            user.Przypisana_dieta.Add(bufor);
+            
             await context.Przypisana_dieta.AddAsync(bufor);
             
             context.ChangeTracker.DetectChanges();
+            context.Uzytkownik.Find(userId).Przypisana_dieta.Clear();
+            context.Uzytkownik.Find(userId).Przypisana_dieta.Add(bufor);
+            
             await context.SaveChangesAsync();
             
             
