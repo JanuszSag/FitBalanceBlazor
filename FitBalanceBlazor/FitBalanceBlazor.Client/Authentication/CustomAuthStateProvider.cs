@@ -51,5 +51,13 @@ namespace FitBalanceBlazor
             var claims = jwtToken.Claims;
             return new ClaimsIdentity(claims,"jwt");
         }
+
+        public async Task MarkUserAsLoggedOut()
+        {
+            await _localStorage.RemoveItemAsync("authToken");
+            var identity = new ClaimsIdentity();
+            var user = new ClaimsPrincipal(identity);
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+        }
     }
 }
