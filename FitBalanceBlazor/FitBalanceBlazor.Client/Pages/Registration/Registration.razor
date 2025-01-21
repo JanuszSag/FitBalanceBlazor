@@ -72,32 +72,32 @@
 
     
 
-        [Required(ErrorMessage = "Pole login jest wymagane.")]
-        [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
+        [Required(ErrorMessage = "Pole login jest wymagane.")]//dziala
+        [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]//dziala
         public string Login { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Pole e-mail jest wymagane.")]
-        [EmailAddress(ErrorMessage = "Nieprawidłowy format e-mail.")]
+        [Required(ErrorMessage = "Pole e-mail jest wymagane.")]//dziala
+        [EmailAddress(ErrorMessage = "Nieprawidłowy format e-mail.")]//dziala
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Data urodzenia jest wymagana.")]
+        [Required(ErrorMessage = "Data urodzenia jest wymagana.")]//dziala
         [DataType(DataType.DateTime)]
         public DateTime? BirthDate { get; set; }
 
-        [Required(ErrorMessage = "Pole płeć jest wymagane.")]
+        [Required(ErrorMessage = "Pole płeć jest wymagane.")]//dziala
         public string Gender { get; set; } = string.Empty;
 
-        [Range(50, 250, ErrorMessage = "Wzrost musi być między 50 a 250 cm.")]
+        [Range(50, 250, ErrorMessage = "Wzrost musi być między 50 a 250 cm.")]//dziala
         public int Height { get; set; }
 
-        [Range(10, 300, ErrorMessage = "Waga musi być między 10 a 300 kg.")]
+        [Range(10, 300, ErrorMessage = "Waga musi być między 10 a 300 kg.")]//dziala
         public int Weight { get; set; }
 
-        [Required(ErrorMessage = "Pole hasło jest wymagane.")]
-        [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
+        [Required(ErrorMessage = "Pole hasło jest wymagane.")]//dziala
+        [StringLength(20, ErrorMessage = "Haslo może mieć maksymalnie 20 znaków.")]//nie dziala
         public string Password { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Musisz zaakceptować regulamin.")]
+        [Required(ErrorMessage = "Musisz zaakceptować regulamin.")]//dziala
         public bool AcceptTerms { get; set; }
 
         private async void Register()
