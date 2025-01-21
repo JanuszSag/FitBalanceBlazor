@@ -1,5 +1,6 @@
 @page "/registration"
 @using System.ComponentModel.DataAnnotations
+@using System.Net
 @using ClassLibrary1
 
 @inject NavigationManager NavigationManager
@@ -11,7 +12,7 @@
 
     <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="HandleValidSubmit">
         <!-- Login -->
-        <MudTextField Label="Login*" @bind-Value="Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+        <MudTextField Label="Pseudonim*" @bind-Value="Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
                       For="@(() => userRegistration.Username)" />
 
         <!-- Email -->
@@ -117,7 +118,7 @@
 
             var response = await Http.PostAsJsonAsync("api/auth/register",userRegistration);
 
-            if (response.IsSuccessStatusCode)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 NavigationManager.NavigateTo("http://localhost:5131/Login");
             }

@@ -23,72 +23,44 @@
                 <MudNavLink Href="/#sectionQ&A" Style="text-transform: uppercase;color: black;">Q&A</MudNavLink>
                 <MudNavLink Href="/#sectionContact" Style="text-transform: uppercase;color: black;">kontakt</MudNavLink>
                 <MudNavLink Href="/caloryCount" Style="text-transform: uppercase;color: black;">kalkulator kalorii</MudNavLink>
-                <AuthorizeView>
-                    <Authorized>
-                        <MudNavLink Href="/logout" Style="text-transform: uppercase;color: black;">Wyloguj</MudNavLink>
-                        <MudMenu Label="Moje konto" Dense="true">
-                            <MudMenuItem>
-                                <MudNavLink Href="/myDiet">Moja dieta</MudNavLink>
-                            </MudMenuItem>
-                            <MudMenuItem>
-                                <MudNavLink Href="/clientHomePage">Uzupełnij ilość wypitej wody</MudNavLink>
-                            </MudMenuItem>
-                            <MudMenuItem>
-                                <MudNavLink Href="/allClientDiets">Diety</MudNavLink>
-                            </MudMenuItem>
-                            <MudMenuItem>
-                                <MudNavLink Href="/raport">Raport zmian</MudNavLink>
-                            </MudMenuItem>
-                            <MudMenuItem>
-                                <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
-                            </MudMenuItem>
 
-                            <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
-
-                            
-                        </MudMenu>
-                    </Authorized>    
-                    <NotAuthorized>
-                        <MudNavLink Href="/login" Style="text-transform: uppercase;color: black;">logowanie</MudNavLink>
-                    </NotAuthorized>
-                </AuthorizeView>
+            <!--dostepne po zalogowaniu do systemu -->
+            <AuthorizeView>
+                <Authorized>
+                    <MudNavLink Href="/logout" Style="text-transform: uppercase;color: black;">Wyloguj</MudNavLink>
+                    <MudMenu Label="Moje konto" Dense="true">
+                        <MudMenuItem>
+                            <MudNavLink Href="/clientHomePage">Moje konto</MudNavLink>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudNavLink Href="/myDiet">Moja dieta</MudNavLink>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudNavLink Href="/clientHomePage">Uzupełnij ilość wypitej wody</MudNavLink>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudNavLink Href="/allClientDiets">Diety</MudNavLink>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudNavLink Href="/raport">Raport zmian</MudNavLink>
+                        </MudMenuItem>
+                        <MudMenuItem>
+                            <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
+                        </MudMenuItem>
+                    </MudMenu>
+                </Authorized>    
+                <NotAuthorized>
+                    <MudNavLink Href="/login" Style="text-transform: uppercase;color: black;">logowanie</MudNavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+            
+            <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
             <AuthorizeView Roles="Employee">
                 <Authorized>
-                        <MudNavLink Href="/employee">Panel pracownika</MudNavLink>
+                        <MudNavLink Href="/employee" Style="text-transform: uppercase;color: black;">Panel pracownika</MudNavLink>
                 </Authorized>
             </AuthorizeView>
-
-                <!--dostepne po zalogowaniu do systemu -->
-                @*<MudMenu Label="Moje konto" Dense="true">
-                    <MudMenuItem>
-                        <MudNavLink Href="/clientHomePage">Moje konto</MudNavLink>
-                    </MudMenuItem>
-                    <MudMenuItem>
-                        <MudNavLink Href="/myDiet">Moja dieta</MudNavLink>
-                    </MudMenuItem>
-                    <MudMenuItem>
-                        <MudNavLink Href="/clientHomePage">Uzupełnij ilość wypitej wody</MudNavLink>
-                    </MudMenuItem>
-                    <MudMenuItem>
-                        <MudNavLink Href="/allClientDiets">Diety</MudNavLink>
-                    </MudMenuItem>
-                    <MudMenuItem>
-                        <MudNavLink Href="/raport">Raport zmian</MudNavLink>
-                    </MudMenuItem>
-                    <MudMenuItem>
-                        <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
-                    </MudMenuItem>
-
-                    <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
-                    <AuthorizeView Roles="Employee">
-                        <Authorized>
-                            <MudMenuItem>
-                                <MudNavLink Href="/employee">Panel pracownika</MudNavLink>
-                            </MudMenuItem>
-                        </Authorized>
-                    </AuthorizeView>
-                </MudMenu>*@
-                
+            
                 <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
             </MudStack>
     </MudAppBar>
