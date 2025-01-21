@@ -1,11 +1,14 @@
 @page "/raport"
+@using System.IdentityModel.Tokens.Jwt
 @using System.Net
 @using System.Net.Http.Json
-@using MudBlazor
-@using System.IdentityModel.Tokens.Jwt
 @using Blazored.LocalStorage
+@using ClassLibrary1
+@using MudBlazor
+
 @inject ILocalStorageService LocalStorage
 @inject HttpClient Http
+
 
 <MudGrid Class="pa-4">
     <!-- Lewa sekcja waga -->
@@ -22,8 +25,8 @@
                     <MudTh>Waga</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd>@context.Date.ToShortDateString()</MudTd>
-                    <MudTd>@context.Weight kg</MudTd>
+                    <MudTd>@context.data.Value.ToShortDateString()</MudTd>
+                    <MudTd>@context.waga kg</MudTd>
                 </RowTemplate>
             </MudTable>
         }
@@ -47,8 +50,8 @@
                     <MudTh>Ilość (ml)</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd>@context.Date.ToShortDateString()</MudTd>
-                    <MudTd>@context.Amount</MudTd>
+                    <MudTd>@context.data.Value.ToShortDateString()</MudTd>
+                    <MudTd>@context.ilosc</MudTd>
                 </RowTemplate>
             </MudTable>
         }
@@ -60,92 +63,35 @@
 </MudGrid>
 
 @code {
-    private List<UserWeight> Weights;
-    private List<WaterLog> WaterLogs;
+    [Parameter] public int UserId { get; set; } = 2;
 
-    private JwtSecurityToken jwt { get; set; }
-    private string UserIdFromToken { get; set; }
+    private List<Pomiar_wagi> Weights;
+    private List<Wypita_woda> WaterLogs;
+    private Uzytkownik user { get; set; }
+    private JwtSecurityToken jwt { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            // Pobieranie danych z API
             var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
             jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/diet/{claim.Value}"); //zmienić na claim.id
+            user = userResponse.Data;
 
-            var claim = jwt.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
-            UserIdFromToken = claim?.Value;
+            var RaportResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Pomiar_wagi>>>($"api/Report/Weight/{user.id_uzytkownik}");
+            Weights = RaportResponse.Data;
 
-            if (!string.IsNullOrEmpty(UserIdFromToken))
-            {
-                // pobieranie danych o wadze
-                var weightResponse = await Http.GetFromJsonAsync<WeightResponse>($"api/Report/Weight/{UserIdFromToken}");
-                if (weightResponse?.Data != null)
-                {
-                    Weights = weightResponse.Data.Select(w => new UserWeight
-                    {
-                        Date = DateTime.Parse(w.data),
-                        Weight = w.waga
-                    }).ToList();
-                }
+            var WaterResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Wypita_woda>>>($"api/Report/Water/{user.id_uzytkownik}");
+            WaterLogs = WaterResponse.Data;
 
-                // pobieranie danych o wadze
-                var waterResponse = await Http.GetFromJsonAsync<WaterResponse>($"api/Report/Water/{UserIdFromToken}");
-                if (waterResponse?.Data != null)
-                {
-                    WaterLogs = waterResponse.Data.Select(w => new WaterLog
-                    {
-                        Date = DateTime.Parse(w.data),
-                        Amount = w.ilosc
-                    }).ToList();
-                }
-            }
-            else
-            {
-                Console.WriteLine("Nie udało się pobrać ID użytkownika z tokena.");
-            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Błąd podczas ładowania danych: {ex.Message}");
         }
     }
-
-    private class WeightResponse
-    {
-        public List<ApiWeight> Data { get; set; }
-        public bool Success { get; set; }
-        public string Message { get; set; }
-    }
-
-    private class ApiWeight
-    {
-        public string data { get; set; }
-        public double waga { get; set; }
-    }
-
-    private class UserWeight
-    {
-        public DateTime Date { get; set; }
-        public double Weight { get; set; }
-    }
-
-    private class WaterResponse
-    {
-        public List<ApiWater> Data { get; set; }
-        public bool Success { get; set; }
-        public string Message { get; set; }
-    }
-
-    private class ApiWater
-    {
-        public string data { get; set; }
-        public int ilosc { get; set; } 
-    }
-
-    private class WaterLog
-    {
-        public DateTime Date { get; set; }
-        public int Amount { get; set; }
-    }
+    
 }
