@@ -9,6 +9,7 @@ using FitBalanceBlazor.Services;
 using FitBalanceBlazor.Services.AuthService;
 using FitBalanceBlazor.Services.CategoryService;
 using FitBalanceBlazor.Services.DietService;
+using FitBalanceBlazor.Services.EmployeeService;
 using FitBalanceBlazor.Services.MealService;
 using FitBalanceBlazor.Services.ProductService;
 using FitBalanceBlazor.Services.ProgramService;
@@ -44,6 +45,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAuthentication(options =>
@@ -68,6 +70,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5131/") });
+builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
 

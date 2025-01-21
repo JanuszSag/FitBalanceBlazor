@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode"/>
 <MudPopoverProvider/>
@@ -21,10 +23,43 @@
                 <MudNavLink Href="/#sectionQ&A" Style="text-transform: uppercase;color: black;">Q&A</MudNavLink>
                 <MudNavLink Href="/#sectionQ&A" Style="text-transform: uppercase;color: black;">kontakt</MudNavLink>
                 <MudNavLink Href="/caloryCount" Style="text-transform: uppercase;color: black;">kalkulator kalorii</MudNavLink>
-                <MudNavLink Href="/login" Style="text-transform: uppercase;color: black;">logowanie</MudNavLink>
+                <AuthorizeView>
+                    <Authorized>
+                        <MudNavLink Href="/logout" Style="text-transform: uppercase;color: black;">Wyloguj</MudNavLink>
+                        <MudMenu Label="Moje konto" Dense="true">
+                            <MudMenuItem>
+                                <MudNavLink Href="/myDiet">Moja dieta</MudNavLink>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudNavLink Href="/clientHomePage">Uzupełnij ilość wypitej wody</MudNavLink>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudNavLink Href="/allClientDiets">Diety</MudNavLink>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudNavLink Href="/raport">Raport zmian</MudNavLink>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
+                            </MudMenuItem>
+
+                            <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
+
+                            
+                        </MudMenu>
+                    </Authorized>    
+                    <NotAuthorized>
+                        <MudNavLink Href="/login" Style="text-transform: uppercase;color: black;">logowanie</MudNavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            <AuthorizeView Roles="Employee">
+                <Authorized>
+                        <MudNavLink Href="/employee">Panel pracownika</MudNavLink>
+                </Authorized>
+            </AuthorizeView>
 
                 <!--dostepne po zalogowaniu do systemu -->
-                <MudMenu Label="Moje konto" Dense="true">
+                @*<MudMenu Label="Moje konto" Dense="true">
                     <MudMenuItem>
                         <MudNavLink Href="/myDiet">Moja dieta</MudNavLink>
                     </MudMenuItem>
@@ -49,7 +84,7 @@
                             </MudMenuItem>
                         </Authorized>
                     </AuthorizeView>
-                </MudMenu>
+                </MudMenu>*@
                 
                 <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
             </MudStack>

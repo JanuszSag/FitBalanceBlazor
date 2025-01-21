@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.Components.Authorization
 @inject ISnackbar Snackbar
 
 @using System.ComponentModel.DataAnnotations
@@ -172,10 +173,20 @@
                     <!-- Sekcja wyboru dania do zmieny -->
                     <MudPaper Class="pa-3" Style="background:rgb(223,243,156);border-radius: 20px;">
                         <MudText Align="Align.Left" Typo="Typo.h4"><strong> Lista diet tylko dla zalogowanych użytkowników</strong></MudText>
-                        <div class="d-flex align-center">
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                                       Href="/login">Zaloguj się</MudButton>
-                        </div>
+                        <AuthorizeView>
+                            <Authorized>
+                                <div class="d-flex align-center">
+                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                               Href="/AllClientDiets">Zobacz</MudButton>
+                                </div>
+                            </Authorized>
+                            <NotAuthorized>
+                                <div class="d-flex align-center">
+                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                               Href="/login">Zaloguj się</MudButton>
+                                </div>
+                            </NotAuthorized>
+                        </AuthorizeView>
                     </MudPaper>
                 </MudStack>
             </MudItem>
