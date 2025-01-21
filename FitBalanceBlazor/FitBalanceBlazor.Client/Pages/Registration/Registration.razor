@@ -1,5 +1,6 @@
 @page "/registration"
 @using System.ComponentModel.DataAnnotations
+@using System.Net
 @using ClassLibrary1
 
 @inject NavigationManager NavigationManager
@@ -117,7 +118,7 @@
 
             var response = await Http.PostAsJsonAsync("api/auth/register",userRegistration);
 
-            if (response.IsSuccessStatusCode)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 NavigationManager.NavigateTo("http://localhost:5131/Login");
             }
