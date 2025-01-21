@@ -2,9 +2,11 @@
 @using System.IdentityModel.Tokens.Jwt
 @using Blazored.LocalStorage
 @using ClassLibrary1
+@using FitBalanceBlazor.Client.Pages.ChangeMeal
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ILocalStorageService LocalStorage
+@inject IDialogService DialogService
 
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana posilku</strong></MudText>
@@ -33,7 +35,7 @@
                 <div class="d-flex align-center">
                     <MudButton Variant="Variant.Filled"
                                Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               OnClick="Submit">
+                               OnClick="ShowDialog">
                         Zatwierdź
                     </MudButton>
 
@@ -53,14 +55,16 @@
 @code {
     private Dieta currentDiet;
     private Uzytkownik user;
-    private JwtSecurityToken jwt { get; set; } 
-    private List<Danie> dania=new List<Danie>();
+    private JwtSecurityToken jwt { get; set; }
+    private List<Danie> dania = new List<Danie>();
     private List<Danie> selectedMeal;
     public Dieta selectedDiet { get; set; }
     private string value = "Brak przypisanych dań";
     private IEnumerable<string> options { get; set; } = new HashSet<string>();
     private List<int> mealsId { get; set; } = new List<int>();
     private List<Danie> currentMeals { get; set; } = new List<Danie>();
+    private string SelectedOption { get; set; } = string.Empty;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,20 +76,20 @@
             /*var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");*/
             var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/diet/{claim.Value}"); //zmienić na claim.id
             user = userResponse.Data;
-            
-            
+
+
             var DietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"http://localhost:5131/api/Diet/{user.Przypisana_dieta.ToList()[0].id_dieta}");
             selectedDiet = DietResponse.Data;
             var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("http://localhost:5131/api/Meal");
             dania = MealResponse.Data;
             var currentMealResponse = await Http.GetFromJsonAsync<ServiceResponse<Przypisana_dieta>>($"api/Meal/assigned/{user.id_uzytkownik}");
             currentMeals = currentMealResponse.Data.id_danie as List<Danie>;
-            
-            
+
+
             // Trzeba zamieniac ID
             var currentDietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"api/Diet/{selectedDiet.id_dieta}");
             currentDiet = currentDietResponse.Data;
-            
+
             if (currentDiet == null)
             {
                 Console.WriteLine("Diet not found.");
@@ -94,14 +98,14 @@
             {
                 Console.WriteLine("No meals found for this diet.");
             }
-            
+
             foreach (var d in currentMeals)
             {
 
-                options = options.Concat(new HashSet<string>(){d.nazwa});
-                
+                options = options.Concat(new HashSet<string>() { d.nazwa });
+
             }
-            
+
             StateHasChanged();
         }
         catch (Exception ex)
@@ -111,7 +115,7 @@
     }
 
 
-    private async void Submit()
+    private async Task Submit()
     {
         try
         {
@@ -120,6 +124,7 @@
                 Console.WriteLine(o);
                 mealsId.Add(dania.Find(d => d.nazwa.Equals(o)).id_danie);
             }
+
             await Http.PutAsJsonAsync($"api/Diet/UpdateMealsInDiet/{user.Przypisana_dieta.ToList()[0].id_przypisana_dieta}", (mealsId));
             mealsId.Clear();
         }
@@ -127,7 +132,39 @@
         {
             Console.WriteLine(e);
         }
-        
+
+    }
+
+    private async Task ShowDialog()
+    {
+        if (string.IsNullOrEmpty(SelectedOption))
+        {
+            Console.WriteLine("Nie wybrano żadnego dania.");
+            return;
+        }
+
+        await Submit();
+
+        var parameters = new DialogParameters
+        {
+            ["SelectedOption"] = SelectedOption
+        };
+
+        var options = new DialogOptions
+        {
+            CloseButton = false,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = DialogService.Show<ChangeMealDialog>("Zmiana Dania", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Console.WriteLine($"Dialog confirmed: {SelectedOption}");
+            NavigationManager.NavigateTo("/myDiet");
+        }
     }
 
 }
