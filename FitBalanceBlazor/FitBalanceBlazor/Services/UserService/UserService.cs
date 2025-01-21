@@ -14,6 +14,24 @@ public class UserService(MyDbContext context) : IUserService
         var response = new ServiceResponse<Uzytkownik>();
 
         var person = await context.Uzytkownik
+            .Include(u => u.Wypita_woda)
+            .Select(u => new Uzytkownik
+            {
+                id_uzytkownik = u.id_uzytkownik,
+                data_urodzenia = u.data_urodzenia,
+                pseudonim = u.pseudonim,
+                waga = u.waga,
+                wzrost = u.wzrost,
+                Wypita_woda = u.Wypita_woda,
+                zapotrzebowanie_kaloryczne = u.zapotrzebowanie_kaloryczne,
+                Raport = u.Raport,
+                email = u.email,
+                Opinia = u.Opinia,
+                plec = u.plec,
+                Pomiar_wagi = u.Pomiar_wagi,
+                Pracownik = u.Pracownik,
+                Przypisana_dieta = u.Przypisana_dieta
+            })
             .FirstAsync(u => u.id_uzytkownik==userId);
 
         if (person == null)
