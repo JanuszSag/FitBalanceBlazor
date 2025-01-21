@@ -16,7 +16,7 @@
         <MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4">
             Miesięczny raport zmiany wagi
         </MudText>
-
+        <MudPaper Class="pa-3 mt-2" Style="background:rgb(223,243,156);border-radius: 20px;">
         @if (Weights != null)
         {
             <MudTable Items="Weights" Elevation="2">
@@ -34,14 +34,16 @@
         {
             <MudProgressCircular Indeterminate="true" Class="m-auto" />
         }
+        </MudPaper>
     </MudItem>
+   
 
     <!-- Prawa sekcja - woda -->
     <MudItem xs="6">
         <MudText Typo="Typo.h4" Align="Align.Center" Class="mt-4">
             Miesięczny raport wypitej wody
         </MudText>
-
+        <MudPaper Class="pa-3 mt-2" Style="background:rgb(223,243,156);border-radius: 20px;">
         @if (WaterLogs != null)
         {
             <MudTable Items="WaterLogs" Elevation="2">
@@ -59,6 +61,7 @@
         {
             <MudProgressCircular Indeterminate="true" Class="m-auto" />
         }
+        </MudPaper>
     </MudItem>
 </MudGrid>
 
