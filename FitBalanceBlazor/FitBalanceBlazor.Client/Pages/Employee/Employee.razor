@@ -70,7 +70,6 @@
   </Authorized>
 </AuthorizeView>
 @code {
-  
   private Uzytkownik user { get; set; }
   private Pracownik employee { get; set; }
   private string imie { get; set; }
@@ -90,6 +89,7 @@
       var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
       var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
       user = userResponse.Data;
+
       var employeeResponse = await Http.GetFromJsonAsync<ServiceResponse<Pracownik>>($"api/Employee/{claim.Value}");
       employee = employeeResponse.Data;
       imie = employee.imie ?? "Firstname";
