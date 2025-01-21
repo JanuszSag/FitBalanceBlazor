@@ -76,7 +76,7 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
         await context.SaveChangesAsync();
         
         response.Data = user.id_uzytkownik;
-        response.Message = "User created";
+        response.Success = true;
         
         return response;
     }
