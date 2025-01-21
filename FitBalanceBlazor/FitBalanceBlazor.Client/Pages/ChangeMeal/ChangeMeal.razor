@@ -25,7 +25,7 @@
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
                 <MudText Typo="Typo.h6">Dostępne dania</MudText>
                 <MudForm>
-                    <MudSelect T="string" Label="Dania" @bind-Value="SelectedOption">
+                    <MudSelect T="string" Label="Dania" MultiSelection @bind-Value="value" @bind-SelectedValues="options">
                         @foreach (var meal in dania)
                         {
                             <MudSelectItem T="string" Value="@meal.nazwa">@meal.nazwa</MudSelectItem>
@@ -137,7 +137,7 @@
 
     private async Task ShowDialog()
     {
-        if (string.IsNullOrEmpty(SelectedOption))
+        if (string.IsNullOrWhiteSpace(value))
         {
             Console.WriteLine("Nie wybrano żadnego dania.");
             return;

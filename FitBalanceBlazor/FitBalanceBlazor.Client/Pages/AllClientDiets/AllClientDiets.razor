@@ -218,6 +218,7 @@
     private async void AssignDiet(int dietId)
     {
         var assignResponse = await Http.PutAsJsonAsync($"api/user/AssignDiet/{user.id_uzytkownik}", dietId);
+        NavigationManager.NavigateTo("/myDiet");
     }
 
 }
