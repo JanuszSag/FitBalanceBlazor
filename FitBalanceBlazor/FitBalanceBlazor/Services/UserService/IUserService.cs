@@ -9,4 +9,5 @@ public interface IUserService
     public Task<ServiceResponse<List<Uzytkownik>>> SearchListUserData();
     public Task<ServiceResponse<Uzytkownik>> GetUserDataWithDiet(int userId);
     public Task<ServiceResponse<bool>> AssignDiet(int userId, int dietId);
+    public Task<ServiceResponse<bool>> AssignWater(int userId, int water);
 }
