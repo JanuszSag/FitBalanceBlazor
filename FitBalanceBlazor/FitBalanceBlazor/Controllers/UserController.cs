@@ -58,4 +58,13 @@ public class UserController(IUserService userService) : ControllerBase
             return BadRequest(reponse);
         return Ok(reponse);
     }
+
+    [HttpPut("assignWater/{userId}")]
+    public async Task<ActionResult<ServiceResponse<bool>>> AssignWaterToUser(int userId, [FromBody] int water)
+    {
+        var response = await _userService.AssignWater(userId, water);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+    }
 }
