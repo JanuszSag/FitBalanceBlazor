@@ -5,6 +5,7 @@
 
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@inject ISnackbar Snackbar
 
 
 <MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background:rgb(223,243,156); border-radius: 20px;">
@@ -121,6 +122,10 @@
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 NavigationManager.NavigateTo("http://localhost:5131/Login");
+            }
+            else
+            {
+                Snackbar.Add("Rejestracja nie powiodła się, spróbuj ponownie!",Severity.Error);
             }
             
         }
