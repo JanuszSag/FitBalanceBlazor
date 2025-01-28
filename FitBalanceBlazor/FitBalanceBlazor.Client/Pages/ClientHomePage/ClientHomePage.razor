@@ -137,7 +137,7 @@
                 user = userResponse.Data;
                 name = user.pseudonim ?? "User";
                 if(user.Wypita_woda.Count>0)
-                    totalWater = user.Wypita_woda.FirstOrDefault().ilosc ?? 0;
+                    totalWater = user.Wypita_woda.LastOrDefault().ilosc ?? 0;
                 StateHasChanged();
             }catch(Exception e)
             {
@@ -151,16 +151,18 @@
         
     }
 
-    private void AddWater()
+    private async void AddWater()
     {
-        totalWater += 250; 
+        totalWater += 250;
+        await Http.PutAsJsonAsync($"api/user/assignWater/{user.id_uzytkownik}", totalWater);
     }
 
-    private void RemoveWater()
+    private async void RemoveWater()
     {
         if (totalWater >= 250)
         {
-           totalWater -= 250; 
+            totalWater -= 250; 
+            await Http.PutAsJsonAsync($"api/user/assignWater/{user.id_uzytkownik}", totalWater);
         }
     }
     
