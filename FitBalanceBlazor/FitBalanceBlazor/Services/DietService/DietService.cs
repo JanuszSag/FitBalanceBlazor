@@ -137,7 +137,9 @@ public class DietService: IDietService
     {
         var response = new ServiceResponse<bool>();
 
-            var dieta = await _context.Dieta.FindAsync(dietId);
+            var dieta = await _context.Dieta.Include(d => d.Danie_id_danie).FirstOrDefaultAsync(d => d.id_dieta==dietId);
+            
+            dieta.Danie_id_danie.Clear();
             
             _context.Dieta.Remove(await _context.Dieta.FindAsync(dietId));
             
@@ -159,7 +161,7 @@ public class DietService: IDietService
     /// <param name="kalorycznosc">Calorie</param>
     /// <param name="autor">Author</param>
     /// <param name="rodzaj">Category</param>
-    public ServiceResponse<bool> AddDiet(DietaDTO dieta)
+    public async Task<ServiceResponse<bool>> AddDiet(DietaDTO dieta)
     {
         var response = new ServiceResponse<bool>();
         var max =  _context.Dieta.Select(d => d.id_dieta).Max();
@@ -180,7 +182,7 @@ public class DietService: IDietService
                 autor = dieta.Autor,
                 rodzaj = dieta.Rodzaj
              });
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             
             response.Success = true;
             response.Message = "Diet has been created";

@@ -49,7 +49,7 @@
 
                     <!--Przycisk dodania nowej diety-->
                     <div class="d-flex align-center">
-                        <MudButton Button OnClick="() => AddDietD(allDiet.Count + 1, modelAddDiet.DietName, Description, SelectedKcal, 1, modelFilter.SelectedOption)"
+                        <MudButton Button OnClick="() => AddDietD(maxId, modelAddDiet.DietName, Description, SelectedKcal, 1, modelFilter.SelectedOption)"
                                    Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
                             Zapisz nową dietę
                         </MudButton>
@@ -75,6 +75,7 @@
 AddNewDietForm modelAddDiet = new AddNewDietForm();
 bool success;
 public List<Dieta> allDiet;
+int maxId { get; set; }
 
 
 public class AddNewDietForm 
@@ -106,6 +107,7 @@ protected override async Task OnInitializedAsync()
     categories = (await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category"))!;
     var allDietResponse = (await Http.GetFromJsonAsync <ServiceResponse<List<Dieta>>>("api/Diet"))!;
     allDiet = allDietResponse.Data;
+    maxId = allDiet.Max(d => d.id_dieta)+1;
 }
 
 //Zapisywanie nowej diety w bazie
@@ -113,8 +115,28 @@ protected override async Task OnInitializedAsync()
 
     private async Task AddDietD(int id,string? nameDiet, string? description,int kcal, int author, int category)
     {
-        try
+        if (nameDiet is null)
         {
+            Snackbar.Add("Pole \"nazwa diety\" jest puste",Severity.Error);
+            return;
+        }
+        if (description is null)
+        {
+            Snackbar.Add("Pole \"opis\" jest puste",Severity.Error);
+            return;
+        }
+        if (kcal == 0)
+        {
+            Snackbar.Add("Nie zaznaczono kaloryczności diety",Severity.Error);
+            return;
+        }
+        if (category == 0)
+        {
+            Snackbar.Add("Nie wybrano kategorii diety",Severity.Error);
+            return;
+        }
+        try
+        {   
             newDiet = new DietaDTO(id, nameDiet, description, kcal, author, category);
             var response = await Http.PostAsJsonAsync("api/Diet", newDiet);
             //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji

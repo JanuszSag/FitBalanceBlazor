@@ -45,7 +45,12 @@
                         <MudText Typo="Typo.subtitle1" Class="d-inline">Dania:
                             @foreach (var danie in @dieta.Danie_id_danie)
                             {
-                                @dieta.Danie_id_danie.FirstOrDefault(d => d.id_danie == danie.id_danie)?.nazwa.ToString().PadRight(60)
+                                var str = dieta.Danie_id_danie.FirstOrDefault(d => d.id_danie == danie.id_danie)?.nazwa.ToString();
+                                @str
+                                if (danie != @dieta.Danie_id_danie.Last())
+                                {
+                                    @(", ")
+                                }
                             }
                         </MudText>
                     </MudStack>
@@ -196,23 +201,17 @@
            }
        }
     //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-    private void snackBarFun(bool isSuccess)
-    {
-        if (isSuccess)
-        {
-            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
-        }
-        else
-        {
-            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
-        }
-    }
  
     private async void DeleteDiet(int id)
     {
         var result = await Http.DeleteAsync($"api/Diet/{id}");
+
+        Snackbar.Add("Usunięto diete", Severity.Success);
         
-        StateHasChanged();
+        var dietResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
+        diety = dietResponse.Data;
+        
+        await InvokeAsync(StateHasChanged);
     }
 
     private async void AssignDiet(int dietId)
