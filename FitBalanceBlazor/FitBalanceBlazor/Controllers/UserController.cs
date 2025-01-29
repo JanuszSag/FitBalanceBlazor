@@ -67,4 +67,12 @@ public class UserController(IUserService userService) : ControllerBase
             return BadRequest(response);
         return Ok(response);
     }
+    [HttpPut("assignWeight/{userId}")]
+    public async Task<ActionResult<ServiceResponse<bool>>> AssignWeightToUser(int userId, [FromBody] int weight)
+    {
+        var response = await _userService.AssignWeight(userId, weight);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+    }
 }
