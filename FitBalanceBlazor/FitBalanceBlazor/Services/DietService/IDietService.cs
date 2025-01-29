@@ -9,7 +9,7 @@ public interface IDietService
     Task<ServiceResponse<List<Dieta>>> GetAllDietsByCategoryIdAsync(int categoryId);
     Task<ServiceResponse<Dieta?>> GetDietAsync(int dietId);
     Task<ServiceResponse<bool>> RemoveDietAsync(int dietId);
-    ServiceResponse<bool> AddDiet(DietaDTO diet);
+    Task<ServiceResponse<bool>> AddDiet(DietaDTO diet);
     Task<ServiceResponse<bool>> AddMealsToDiet(int id, List<int> meals);
     Task<ServiceResponse<bool>> UpdateMealsInUserDiet(int dietId, List<int> meals);
     

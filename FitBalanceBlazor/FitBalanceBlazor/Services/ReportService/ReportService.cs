@@ -76,7 +76,7 @@ public class ReportService : IReportService
             id_pomiar = w.id_pomiar,
             data = w.data,
             waga = w.waga,
-            id_uzytkownik = w.id_uzytkownik,
+            id_uzytkownik = w.id_uzytkownik,    
             id_uzytkownikNavigation = w.id_uzytkownikNavigation
         }).Where(w => w.id_uzytkownik == id).ToListAsync();
 

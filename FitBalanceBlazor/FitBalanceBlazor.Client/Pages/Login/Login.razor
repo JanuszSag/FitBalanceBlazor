@@ -18,7 +18,7 @@
 
         <!-- Login -->
         <MudTextField T="string" Label="Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
-                      @bind-Value="login" />
+                      @bind-Value="login" Validation="isValid"/>
 
         <!-- Haslo -->
         <MudTextField T="string" Label="Hasło" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
