@@ -54,8 +54,8 @@ namespace FitBalanceBlazor.Controllers;
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteDiet(int id)
         {
-            var result = _dietService.RemoveDietAsync(id);
-            if(!result.Result.Success)
+            var result = await _dietService.RemoveDietAsync(id);
+            if(!result.Success)
                 return BadRequest(result);
             return Ok(result);
         }
@@ -63,7 +63,7 @@ namespace FitBalanceBlazor.Controllers;
         [HttpPost]
         public async Task<ActionResult> AddDiet(DietaDTO dieta)
         {
-            var result = _dietService.AddDiet(dieta);
+            var result = await _dietService.AddDiet(dieta);
             if(!result.Success)
                 return BadRequest(result);
             return Ok(result);
