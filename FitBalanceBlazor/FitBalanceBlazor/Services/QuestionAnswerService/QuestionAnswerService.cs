@@ -1,6 +1,6 @@
-using System.Data.Entity;
 using ClassLibrary1;
 using FitBalanceBlazor.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitBalanceBlazor.Services.QuestionAnswerService;
 
