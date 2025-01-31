@@ -88,12 +88,6 @@ public class UserService(MyDbContext context) : IUserService
         var response = new ServiceResponse<List<Uzytkownik>>();
 
         var person = await context.Uzytkownik.ToListAsync();
-        if (person is null)
-        {
-            response.Success = false;
-            response.Message = $"Cannot find users";
-            return response;
-        }
 
         response.Data = person;
 

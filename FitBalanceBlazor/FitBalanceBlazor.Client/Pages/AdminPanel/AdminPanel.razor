@@ -1,0 +1,42 @@
+@page "/adminPanel"
+@using ClassLibrary1
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.IdentityModel.Tokens
+
+@inject HttpClient Http
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <PageTitle>Panel administratora</PageTitle>
+        <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>PANEL ADMINISTRATORA</strong></MudText>
+        <MudDataGrid Items="allUsers" Virtualize FixedHeader Bordered Hover Height="700px">
+            <Columns>
+                <PropertyColumn CellStyle="width:5%" Property="x => x.id_uzytkownik" ></PropertyColumn>
+                <PropertyColumn CellStyle="width:30%" Property="x => x.pseudonim" Title="Pseudonim"/>
+                <PropertyColumn CellStyle="width:30%" Property="x => x.email" Title="Email"/>
+                <PropertyColumn CellStyle="width:30%" Property="x => isEmployee(x)" Title="Pracownik"/>
+            </Columns>
+        </MudDataGrid>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    private List<Uzytkownik> allUsers { get; set; }
+    private List<Pracownik> allEmployees { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var allUsersResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Uzytkownik>>>("api/user");
+        allUsers = allUsersResponse!.Data!;
+        var allEmployeesResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Pracownik>>>("api/Employee");
+        allEmployees = allEmployeesResponse!.Data!;
+        StateHasChanged();
+    }
+
+    private string isEmployee(Uzytkownik input)
+    {
+        return allEmployees.Exists(u => u.id_uzytkownik == input.id_uzytkownik)?"Tak":"Nie";
+    }
+
+}
