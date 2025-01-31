@@ -10,7 +10,7 @@
 @inject NavigationManager Navigation
 
 
-<AuthorizeView Roles="Employee">
+<AuthorizeView Roles="Employee, Admin">
   <Authorized>
     
 <PageTitle>Employee</PageTitle>
@@ -52,6 +52,15 @@
                        Href="/allClientDiets">Zobacz</MudButton>
           </MudStack>
         </MudPaper>
+        <AuthorizeView Roles="Admin" Context="AdminContext">
+          <MudPaper Class="pa-40" Style="width: 300px; height: 100px; border: 5px solid rgb(223,243,156);border-radius: 20px;">
+            <MudStack AlignItems="AlignItems.Center" JustifyContent="Center" >
+              Panel administratora
+              <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                         Href="/adminPanel">Zobacz</MudButton>
+            </MudStack>
+          </MudPaper>
+        </AuthorizeView>
     
         <MudPaper Class="pa-40" Style="width: 300px; height:100px; border: 5px solid rgb(223,243,156);border-radius: 20px;">
           <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">

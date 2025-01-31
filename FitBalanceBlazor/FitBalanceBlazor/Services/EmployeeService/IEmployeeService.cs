@@ -5,4 +5,5 @@ namespace FitBalanceBlazor.Services.EmployeeService;
 public interface IEmployeeService
 {
     Task<ServiceResponse<Pracownik>> GetEmployeePracownikAsync(int id);
+    Task<ServiceResponse<List<Pracownik>>> GetAllEmployeesAsync();
 }
