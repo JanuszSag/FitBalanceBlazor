@@ -24,7 +24,7 @@
     <MudGrid>
         <MudItem xs="9">
             <!-- Sekcja widoczna tylko dla pracownika -dodanie nowej diety-->
-            <AuthorizeView Roles="Employee" Context="SecondContext">
+            <AuthorizeView Roles="Employee, Admin" Context="SecondContext">
                     <MudButton Variant="Variant.Filled"
                                Style="width:300px; background:rgb(255,152,107);border-radius: 20px;"
                                Href="/addDiet">
@@ -63,7 +63,7 @@
                             </MudButton>
                             <!-- Sekcja widoczna tylko dla pracownika -modyfikacja lub usuniecie diety-->
 
-                                <AuthorizeView Roles="Employee" Context="ThirdContext">
+                                <AuthorizeView Roles="Employee, Admin" Context="ThirdContext">
 
                                     <MudButton Variant="Variant.Filled"
                                                Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"

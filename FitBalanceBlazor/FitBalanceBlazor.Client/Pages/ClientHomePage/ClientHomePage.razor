@@ -103,12 +103,33 @@
                         </MudItem>
 
                         <!-- Przyciski odejmowania i dodawania wody -->
-                        <MudItem xs="12" Class="text-center mt-4">
+                        <MudItem xs="12" Class="text-center mt-1">
                             <MudButton Style="background-color: #1976D2; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWater">
                                 Dodaj 250 ml
                             </MudButton>
                             <MudButton Style="background-color: #FF5733; color: white; font-size: 1.5rem; margin-left: 10px;" Variant="Variant.Filled" OnClick="@RemoveWater">
                                 Odejmij 250 ml
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                    <MudDivider Class="my-3"/>
+                    <MudGrid>
+                        <!-- Calkowita waga -->
+                        <MudItem xs="12" Class="text-center mt-4">
+                            <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
+                                <h5 style="font-weight: bold;">WAGA</h5>
+                                <MudText Style="color: grey; font-weight: bold;">TOTAL</MudText>
+                                <h1 style="font-size: 3rem;">@totalWeight kg</h1>
+                            </MudPaper>
+                        </MudItem>
+
+                        <!-- Przyciski odejmowania i dodawania wagi -->
+                        <MudItem xs="12" Class="text-center mt-1">
+                            <MudButton Style="background-color: #1976D2; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWeight">
+                                Dodaj 1 kg
+                            </MudButton>
+                            <MudButton Style="background-color: #FF5733; color: white; font-size: 1.5rem; margin-left: 10px;" Variant="Variant.Filled" OnClick="@RemoveWater">
+                                Odejmij 1 kg
                             </MudButton>
                         </MudItem>
                     </MudGrid>
@@ -122,6 +143,7 @@
     [Parameter] public string name { get; set; } = "User";
     private Uzytkownik user;
     private int totalWater = 0;
+    private int totalWeight = 0;
     private JwtSecurityToken jwt { get; set; } 
 
     protected override async Task OnInitializedAsync()
@@ -138,6 +160,8 @@
                 name = user.pseudonim ?? "User";
                 if(user.Wypita_woda.Count>0)
                     totalWater = user.Wypita_woda.LastOrDefault().ilosc ?? 0;
+                if(user.Pomiar_wagi.Count>0)
+                    totalWeight = user.Pomiar_wagi.LastOrDefault().waga ?? 0;
                 StateHasChanged();
             }catch(Exception e)
             {
@@ -151,13 +175,13 @@
         
     }
 
-    private async void AddWater()
+    private async Task AddWater()
     {
         totalWater += 250;
         await Http.PutAsJsonAsync($"api/user/assignWater/{user.id_uzytkownik}", totalWater);
     }
 
-    private async void RemoveWater()
+    private async Task RemoveWater()
     {
         if (totalWater >= 250)
         {
@@ -165,5 +189,20 @@
             await Http.PutAsJsonAsync($"api/user/assignWater/{user.id_uzytkownik}", totalWater);
         }
     }
+
+    private async Task AddWeight()
+    {
+        totalWeight += 1;
+        await Http.PutAsJsonAsync($"api/user/assignWeight/{user.id_uzytkownik}", totalWeight);
+    }
     
+    private async Task RemoveWeight()
+    {
+        if (totalWeight >= 250)
+        {
+            totalWeight -= 250; 
+            await Http.PutAsJsonAsync($"api/user/assignWeight/{user.id_uzytkownik}", totalWeight);
+        }
+    }
+
 }

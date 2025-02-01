@@ -17,7 +17,7 @@
                 <MudText Typo="Typo.subtitle1">Opis: @dieta.opis </MudText>
                 <MudText Typo="Typo.subtitle1">Rodzaj: @rodzaje.FirstOrDefault(r => r.id_rodzaj == @dieta.rodzaj)?.nazwa</MudText>
                 
-                <MudText Typo="Typo.subtitle1">Dania:  @*Class="d-inline" *@
+                <MudText Typo="Typo.subtitle1">Dania: 
                     @foreach (var danie in @dieta.Danie_id_danie)
                     {
                         @dieta.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa.ToString().PadRight(60)
@@ -25,25 +25,6 @@
                 </MudText>
                 
             </MudStack>
-            
-            <AuthorizeView Roles="Employee">
-                <Authorized>
-            <MudStack Row="true" Justify="Justify.SpaceAround">
-                <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled"
-                               Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-right: 100px"
-                               OnClick="() => onChangeDiet(dieta.id_dieta)">
-                        Zmień
-                    </MudButton>
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;margin-left: 100px"
-                               OnClick="snackBarFun">Usuń
-                    </MudButton>
-                </div>
-            </MudStack>
-                </Authorized>
-            </AuthorizeView>
-
-            
         </MudPaper>
     }
 
@@ -62,28 +43,5 @@
         var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");
         dania = MealResponse.Data;
     }
-    // Metoda do przekazywania ID diety do strony zmiany
-    private void onChangeDiet(int id) 
-    {
-        NavigationManager.NavigateTo($"/changeDiet/{id}");
-    }
 
-    // private void ChangePage(string name)
-    // {
-    //     NavigationManager.NavigateTo($"/changeDiet?name={name}");
-    // }
-    
-    //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
-    private void snackBarFun()
-    {
-        bool isSuccess = true;
-        if (isSuccess)
-        {
-            Snackbar.Add("Tutaj bedzie informacja o (nie)powodzeniu update na bazie danych",Severity.Success);
-        }
-        else
-        {
-            Snackbar.Add("Tutaj bedzie informacja o niepowodzeniu update na bazie danych",Severity.Error);
-        }
-    }
 }

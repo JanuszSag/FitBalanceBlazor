@@ -13,6 +13,7 @@ using FitBalanceBlazor.Services.EmployeeService;
 using FitBalanceBlazor.Services.MealService;
 using FitBalanceBlazor.Services.ProductService;
 using FitBalanceBlazor.Services.ProgramService;
+using FitBalanceBlazor.Services.QuestionAnswerService;
 using FitBalanceBlazor.Services.ReportService;
 using FitBalanceBlazor.Services.ReviewService;
 using FitBalanceBlazor.Services.UserService;
@@ -46,6 +47,7 @@ builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IQuestionAnswerService, QuestionAnswerService>();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAuthentication(options =>

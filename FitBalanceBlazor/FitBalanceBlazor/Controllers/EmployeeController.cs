@@ -23,5 +23,14 @@ public class EmployeeController : ControllerBase
             return BadRequest(response);
         return Ok(response);
     }
-    
+
+    [HttpGet]
+    public async Task<ActionResult<List<Pracownik>>> GetPracownik()
+    {
+        var response = await _employeeService.GetAllEmployeesAsync();
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+    }
+
 }

@@ -219,15 +219,13 @@
 
                 <MudStack Spacing="3">
 
-                    <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText Align="Align.Left" Typo="Typo.h5"> @((MarkupString)faq1.Replace(Environment.NewLine, "<br/>")) </MudText>
-                    </MudPaper>
-                    <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText Align="Align.Left" Typo="Typo.h5"> @((MarkupString)faq2.Replace(Environment.NewLine, "<br/>")) </MudText>
-                    </MudPaper>
-                    <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText Align="Align.Left" Typo="Typo.h5" > @((MarkupString)faq3.Replace(Environment.NewLine, "<br/>")) </MudText>
-                    </MudPaper>
+                    @foreach (var pytaniaOdpowiedzi in pytaniaIodpowiedzi)
+                    {
+                        <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
+                            <MudText Align="Align.Left" Typo="Typo.h5">@pytaniaOdpowiedzi.id . @pytaniaOdpowiedzi.pytanie </MudText>
+                            <MudText Align="Align.Left" Typo="Typo.h5">@pytaniaOdpowiedzi.odpowiedz </MudText>
+                        </MudPaper>
+                    }
                 </MudStack>
 
             </MudPaper>
@@ -248,10 +246,6 @@ string textAboutus = $"Cieszymy się, że jesteś z nami!{Environment.NewLine}Fi
 string textServices = "Dla naszych użytkowników oferujemy spersonalizowany program dietetyczny, który jest tworzony na podstawie indywidualnych preferencji i zapytań użytkownika. \n\nDodatkowo zalogowany użytkownik ma możliwość rejestrowania ilości spożywanej w ciągu dnia wody, wyliczania swojego zapotrzebowania kalorycznego oraz przeglądania rankingu najlepszych diet.";
 string textProgram = "Mamy duży wybór zbalansowanych i zdrowych diet";
 string textOurDiets = $"Nasze diety są opracowywane przez najlepszych dietetyków, aby spełniać indywidualne potrzeby naszych klientów.{Environment.NewLine} Dzięki profesjonalnemu podejściu i starannie dobranym składnikom, nasze plany żywieniowe pomagają osiągnąć zamierzone cele zdrowotne i sylwetkowe";
-<!--faq-Frequently Asked Questions-->
-string faq1 = $"1. Czy mogę zamieniać dania?{Environment.NewLine}Tak, można wymieniać pszczególne posiłki na inne. Pod warunkiem, że bedzię on zgodny z zapotrzebowaniem kalorycznym.";
-string faq2 = $"2. Czy mogę zamieniać rodzaj diety?{Environment.NewLine} Tak, w każdym momęcie można zmienić rodzaj diety.";
-string faq3 = $"3. Co w przypadku gdy mam problemy z zalogowaniem?{Environment.NewLine}  W takim przypadku prosimy kontakować się z naszym działem helpdesku poniżej w sekcji Napisz do nas.";
 string textSendEmail = $"Zanim zadasz pytanie sprawdź Q&A. Może jest tam rozwiązanie Twojego problemu.{Environment.NewLine}Jeśli nadal nie znasz odpowiedzi - napisz do nas! Chętnie pomożemy Ci w rozwiązaniu problemów i wyjaśnimy wszelkie wątpliwości :)";
 
 //Metoda sprawdzenia poprawności maila poprzez regex
@@ -275,6 +269,7 @@ public string message { get; set; }
 //opinie
     private List<Opinia> opinie=new List<Opinia>();
     private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>();
+    private List<Pytania_i_odpowiedzi> pytaniaIodpowiedzi = new List<Pytania_i_odpowiedzi>();
     
     protected override async Task OnInitializedAsync()
     {
@@ -284,6 +279,8 @@ public string message { get; set; }
             opinie = test.Data;
             var test2 = await Http.GetFromJsonAsync<ServiceResponse<List<Uzytkownik>>>("api/user");
             uzytkownicy = test2.Data;
+            var test3 = await Http.GetFromJsonAsync<ServiceResponse<List<Pytania_i_odpowiedzi>>>("api/QuestionAnswer");
+            pytaniaIodpowiedzi = test3.Data;
         }
         catch (Exception ex)
         {

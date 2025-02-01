@@ -55,7 +55,7 @@
             </AuthorizeView>
             
             <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
-            <AuthorizeView Roles="Employee">
+            <AuthorizeView Roles="Employee, Admin">
                 <Authorized>
                         <MudNavLink Href="/employee" Style="text-transform: uppercase;color: black;">Panel pracownika</MudNavLink>
                 </Authorized>

@@ -88,12 +88,6 @@ public class UserService(MyDbContext context) : IUserService
         var response = new ServiceResponse<List<Uzytkownik>>();
 
         var person = await context.Uzytkownik.ToListAsync();
-        if (person is null)
-        {
-            response.Success = false;
-            response.Message = $"Cannot find users";
-            return response;
-        }
 
         response.Data = person;
 
@@ -240,6 +234,51 @@ public class UserService(MyDbContext context) : IUserService
 
 
             context.Wypita_woda.Add(todayWater);
+            
+            await context.SaveChangesAsync();
+            response.Data = true;
+            response.Success = true;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Success = false;
+            response.Message = "User not found";
+            return response;
+        }
+    }
+
+    public async Task<ServiceResponse<bool>> AssignWeight(int userId, int weight)
+    {
+        var response = new ServiceResponse<bool>();
+        
+
+        try
+        {
+            var userFound = await context.Uzytkownik.FindAsync(userId);
+
+            foreach (var u in userFound.Pomiar_wagi)
+            {
+                if (u.data.Value == DateOnly.FromDateTime(DateTime.Today))
+                {
+                    u.waga = weight;
+                    await context.SaveChangesAsync();
+                    response.Data = true;
+                    response.Success = true;
+                    return response;
+                }
+            }
+            
+            var todayWeight = new Pomiar_wagi();
+            var weightTotal = context.Pomiar_wagi.Max(x => x.id_pomiar)+1;
+
+            todayWeight.id_pomiar = weightTotal;
+            todayWeight.waga = weight;
+            todayWeight.id_uzytkownik = userId;
+            todayWeight.data = DateOnly.FromDateTime(DateTime.Today);
+
+
+            context.Pomiar_wagi.Add(todayWeight);
             
             await context.SaveChangesAsync();
             response.Data = true;

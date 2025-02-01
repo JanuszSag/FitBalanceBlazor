@@ -20,4 +20,19 @@ public class EmployeeService(MyDbContext context) : IEmployeeService
         response.Success = true;
         return response;
     }
+
+    public async Task<ServiceResponse<List<Pracownik>>> GetAllEmployeesAsync()
+    {
+        var response = new ServiceResponse<List<Pracownik>>();
+        var AllEmployees = await context.Pracownik.ToListAsync();
+        if (AllEmployees is null)
+        {
+            response.Success = false;
+            response.Message = "Cannot find employee.";
+            return response;
+        }
+        response.Data = AllEmployees;
+        response.Success = true;
+        return response;
+    }
 }

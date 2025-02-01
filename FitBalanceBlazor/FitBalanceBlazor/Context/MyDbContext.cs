@@ -36,6 +36,8 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<Przypisana_dieta> Przypisana_dieta { get; set; }
 
+    public virtual DbSet<Pytania_i_odpowiedzi> Pytania_i_odpowiedzi { get; set; }
+
     public virtual DbSet<Raport> Raport { get; set; }
 
     public virtual DbSet<Rodzaj> Rodzaj { get; set; }
@@ -43,8 +45,7 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<Uzytkownik> Uzytkownik { get; set; }
 
     public virtual DbSet<Wypita_woda> Wypita_woda { get; set; }
-
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Adres>(entity =>
@@ -52,10 +53,18 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.id_adres).HasName("Adres_pk");
 
             entity.Property(e => e.id_adres).ValueGeneratedNever();
-            entity.Property(e => e.kod_pocztowy).HasColumnType("text");
-            entity.Property(e => e.miasto).HasColumnType("text");
-            entity.Property(e => e.numer_mieszkania).HasColumnType("text");
-            entity.Property(e => e.ulica).HasColumnType("text");
+            entity.Property(e => e.kod_pocztowy)
+                .HasMaxLength(7)
+                .IsUnicode(false);
+            entity.Property(e => e.miasto)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.numer_mieszkania)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ulica)
+                .HasMaxLength(30)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.id_pracownikNavigation).WithMany(p => p.Adres)
                 .HasForeignKey(d => d.id_pracownik)
@@ -67,8 +76,12 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_danie).HasName("Danie_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_meal");
+
             entity.Property(e => e.id_danie).ValueGeneratedNever();
-            entity.Property(e => e.nazwa).HasColumnType("text");
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(30)
+                .IsUnicode(false);
 
             entity.HasMany(d => d.Dieta_id_dieta).WithMany(p => p.Danie_id_danie)
                 .UsingEntity<Dictionary<string, object>>(
@@ -91,9 +104,17 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_dieta).HasName("Dieta_pk");
 
+            entity.HasIndex(e => e.rodzaj, "index_diet_category");
+
+            entity.HasIndex(e => e.kalorycznosc, "index_kcal");
+
             entity.Property(e => e.id_dieta).ValueGeneratedNever();
-            entity.Property(e => e.nazwa).HasColumnType("text");
-            entity.Property(e => e.opis).HasColumnType("text");
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.opis)
+                .HasMaxLength(200)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.autorNavigation).WithMany(p => p.Dieta)
                 .HasForeignKey(d => d.autor)
@@ -127,7 +148,9 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.id_opinia).HasName("Opinia_pk");
 
             entity.Property(e => e.id_opinia).ValueGeneratedNever();
-            entity.Property(e => e.zawartosc).HasColumnType("text");
+            entity.Property(e => e.zawartosc)
+                .HasMaxLength(200)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.id_dietaNavigation).WithMany(p => p.Opinia)
                 .HasForeignKey(d => d.id_dieta)
@@ -157,10 +180,18 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.id_pracownik).HasName("Pracownik_pk");
 
             entity.Property(e => e.id_pracownik).ValueGeneratedNever();
-            entity.Property(e => e.imie).HasColumnType("text");
-            entity.Property(e => e.nazwisko).HasColumnType("text");
-            entity.Property(e => e.numer_telefonu).HasColumnType("text");
-            entity.Property(e => e.stanowisko).HasColumnType("text");
+            entity.Property(e => e.imie)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.nazwisko)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.numer_telefonu)
+                .HasMaxLength(13)
+                .IsUnicode(false);
+            entity.Property(e => e.stanowisko)
+                .HasMaxLength(20)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Pracownik)
                 .HasForeignKey(d => d.id_uzytkownik)
@@ -172,8 +203,12 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_produkt).HasName("Produkt_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_ingredient");
+
             entity.Property(e => e.id_produkt).ValueGeneratedNever();
-            entity.Property(e => e.nazwa).HasColumnType("text");
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Produkt_Danie>(entity =>
@@ -195,8 +230,12 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_program).HasName("Program_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_program");
+
             entity.Property(e => e.id_program).ValueGeneratedNever();
-            entity.Property(e => e.nazwa).HasColumnType("text");
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Przypisana_dieta>(entity =>
@@ -207,17 +246,14 @@ public partial class MyDbContext : DbContext
 
             entity.HasOne(d => d.id_dietaNavigation).WithMany(p => p.Przypisana_dieta)
                 .HasForeignKey(d => d.id_dieta)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Przypisana_dieta_Dieta");
 
             entity.HasOne(d => d.id_programNavigation).WithMany(p => p.Przypisana_dieta)
                 .HasForeignKey(d => d.id_program)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Przypisana_dieta_Program");
 
             entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Przypisana_dieta)
                 .HasForeignKey(d => d.id_uzytkownik)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Przypisana_dieta_Uzytkownik");
 
             entity.HasMany(d => d.id_danie).WithMany(p => p.id_przypisana_dieta)
@@ -235,6 +271,15 @@ public partial class MyDbContext : DbContext
                     {
                         j.HasKey("id_przypisana_dieta", "id_danie").HasName("Przypisana_dieta_Danie_pk");
                     });
+        });
+
+        modelBuilder.Entity<Pytania_i_odpowiedzi>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("Pytania_i_odpowiedzi_pk");
+
+            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.odpowiedz).IsUnicode(false);
+            entity.Property(e => e.pytanie).IsUnicode(false);
         });
 
         modelBuilder.Entity<Raport>(entity =>
@@ -258,18 +303,32 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_rodzaj).HasName("Rodzaj_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_category");
+
             entity.Property(e => e.id_rodzaj).ValueGeneratedNever();
-            entity.Property(e => e.nazwa).HasColumnType("text");
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Uzytkownik>(entity =>
         {
             entity.HasKey(e => e.id_uzytkownik).HasName("Uzytkownik_pk");
 
+            entity.ToTable(tb =>
+                {
+                    tb.HasTrigger("Tr_WyliczKalorie");
+                    tb.HasTrigger("registration_validation");
+                });
+
             entity.Property(e => e.id_uzytkownik).ValueGeneratedNever();
             entity.Property(e => e.email).IsUnicode(false);
-            entity.Property(e => e.plec).HasColumnType("text");
-            entity.Property(e => e.pseudonim).HasColumnType("text");
+            entity.Property(e => e.plec)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.pseudonim)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Wypita_woda>(entity =>
