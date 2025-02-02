@@ -40,6 +40,7 @@ public class QuestionAnswerService : IQuestionAnswerService
     {
         var response = new ServiceResponse<bool>();
         var pytaniaIodpowiedzi = await _context.Pytania_i_odpowiedzi.FindAsync(id);
+        _context.Pytania_i_odpowiedzi.Remove((await _context.Pytania_i_odpowiedzi.FindAsync(id)));
        
         await _context.SaveChangesAsync();
 
