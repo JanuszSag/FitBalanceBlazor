@@ -10,8 +10,8 @@
 @inject ILocalStorageService LocalStorage
 
 
-@* <AuthorizeView Roles="Employee"> *@
-@* <Authorized> *@
+<AuthorizeView Roles="Employee, Admin">
+<Authorized>
 <PageTitle>Q&AManagment</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Zarządzanie sekcją Q&A</strong></MudText>
 
@@ -43,8 +43,8 @@
         </MudPaper>
 
     }
-@* </Authorized> *@
-@* </AuthorizeView> *@
+</Authorized>
+</AuthorizeView>
     
 @code {
     private List<Pytania_i_odpowiedzi> questionAnswer = new List<Pytania_i_odpowiedzi>();
