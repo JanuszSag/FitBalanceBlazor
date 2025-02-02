@@ -5,6 +5,7 @@ namespace FitBalanceBlazor;
 
 public partial class Opinia
 {
+
     public int id_opinia { get; set; }
 
     public int? ocena { get; set; }
@@ -20,4 +21,5 @@ public partial class Opinia
     public virtual Dieta id_dietaNavigation { get; set; } = null!;
 
     public virtual Uzytkownik id_uzytkownikNavigation { get; set; } = null!;
+   
 }

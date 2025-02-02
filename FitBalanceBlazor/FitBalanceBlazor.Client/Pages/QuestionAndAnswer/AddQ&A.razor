@@ -13,14 +13,14 @@
             <MudCardContent>
                 <!--Sekcja uzupełniania nowych danych-->
                 <MudText Typo="Typo.h6">Pytanie</MudText>
-                <MudTextField @bind-Value="modelAddQA.Question" Label="Należy wprowadzić pytanie" Variant="Variant.Text"></MudTextField>
+                <MudTextField @bind-Value="Question" Label="Należy wprowadzić pytanie" Variant="Variant.Text"></MudTextField>
 
                 <MudText Typo="Typo.h6">Odpowiedź</MudText>
-                <MudTextField @bind-Value="modelAddQA.Answer" Label="Należy wprowadzić odpowiedź" Variant="Variant.Text"></MudTextField>
+                <MudTextField @bind-Value="Answer" Label="Należy wprowadzić odpowiedź" Variant="Variant.Text"></MudTextField>
 
                 <!--Przycisk dodania nowej elementu Q&A-->
                 <div class="d-flex align-center">
-                    <MudButton Button OnClick="() => AddQA(maxId, modelAddQA.Question, modelAddQA.Answer)"
+                    <MudButton Button OnClick="() => AddQA(maxId, Question, Answer)"
                                Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
                         Zapisz nowy element Q&A
                     </MudButton>
@@ -39,17 +39,13 @@
 
 
 @code {
-    AddNewQAForm modelAddQA = new AddNewQAForm();
     bool success;
     int maxId { get; set; }
 
+    public string Question{ get; set; }
+    public string Answer{ get; set; }
 
-    public class AddNewQAForm 
-    {
-        public string Question{ get; set; }
-        public string Answer{ get; set; }
-
-    }
+ 
     //Zapisywanie nowego elementu w bazie
     private PytanieOdpowiedzDTO newQA;
 

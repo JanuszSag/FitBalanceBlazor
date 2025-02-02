@@ -48,12 +48,12 @@ public class ReviewService : IReviewService
     {
         var response = new ServiceResponse<bool>();
         var maxId = _context.Opinia.Select(o => o.id_opinia).Max();
-        if (maxId == 0)
-        {
-            response.Success = false;
-            response.Message = "Review not found";
-            return response;
-        }
+        // if (maxId == 0)
+        // {
+        //     response.Success = false;
+        //     response.Message = "Review not found";
+        //     return response;
+        // }
 
         try
         {
