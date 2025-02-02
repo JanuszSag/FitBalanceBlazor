@@ -43,4 +43,41 @@ public class ReviewService : IReviewService
     {
         return await _context.Opinia.FindAsync(id);
     }
+    //metoda do wstawiania nowych opini do bazy
+    public async Task<ServiceResponse<bool>> AddReviewAsync(Opinia review)
+    {
+        var response = new ServiceResponse<bool>();
+        var maxId = _context.Opinia.Select(o => o.id_opinia).Max();
+        if (maxId == 0)
+        {
+            response.Success = false;
+            response.Message = "Review not found";
+            return response;
+        }
+
+        try
+        {
+            _context.Opinia.Add(new Opinia
+            {
+                id_opinia = maxId + 1,
+                ocena = review.ocena,
+                zawartosc = review.zawartosc,
+                data = review.data,
+                id_uzytkownik = review.id_uzytkownik,
+                id_dieta = review.id_dieta,
+
+            });
+            await _context.SaveChangesAsync();
+
+            response.Success = true;
+            response.Message = "Successfully added review";
+            return response;
+        }
+        catch (Exception e)
+        {
+            response.Success = false;
+            response.Message = e.Message;
+            return response;
+        }
+    }
 }

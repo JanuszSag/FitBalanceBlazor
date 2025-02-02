@@ -29,4 +29,13 @@ public class ReviewController : ControllerBase
     {
         return await _reviewService.GetReviewByIdAsync(id);
     }
+
+    [HttpPost]
+    public async Task<ActionResult> AddReviewAsync(Opinia review)
+    {
+        var response = await _reviewService.AddReviewAsync(review);
+        if (!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+    }
 }
