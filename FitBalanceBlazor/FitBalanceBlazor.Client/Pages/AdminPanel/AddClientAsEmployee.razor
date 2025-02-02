@@ -1,0 +1,47 @@
+@page "/addClientAsEmployee"
+@using MudBlazor
+@using MudBlazor.Components
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@rendermode InteractiveWebAssembly
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+
+
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <MudPaper Elevation="4" Class="d-flex flex-column p-4 mx-auto"
+              Style="background-color: #e4f5ac; border-radius: 8px; width: 70%; min-width: 400px;">
+    <MudText Typo="Typo.h4" Class="mb-4">Dodaj użytkownika jako pracownika</MudText>
+
+    <div Class="d-flex flex-wrap justify-content-between">
+        <!-- Lewa sekcja -->
+        <MudPaper Class="p-3 m-2" Style="background-color: #e4f5ac;">
+            <MudText Typo="Typo.h6" Class="mb-2">Wprowadź dane</MudText>
+            <MudTextField T="string" Label="Imie" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+            <MudTextField T="string" Label="Nazwisko" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+            <MudTextField T="string" Label="Numer telefonu" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+            <!--   <MudSelect T="string" Label="Stanowisko" Variant="Variant.Outlined" Class="mb-2">
+                  <MudSelectItem Value="@Dietetyk">Dietetyk</MudSelectItem>
+                  <MudSelectItem Value="@Helpdesk">Helpdesk</MudSelectItem>
+              </MudSelect>-->
+  
+          </MudPaper>
+   
+           <!-- Prawa sekcja -->
+        <MudPaper Class="p-3 m-2" Style="background-color: #e4f5ac;">
+            <MudText Typo="Typo.h6" Class="mb-2">Wprowadź adres</MudText>
+            <MudTextField T="string" Label="Miasto" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+            <MudTextField T="string" Label="Ulica" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+            <MudTextField T="string" Label="Numer mieszkania" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+            <MudTextField T="string" Label="Kod pocztowy" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+        </MudPaper>
+    </div>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" Style="background-color: #FF9966; color: black; width: 200px;">
+        Dodaj pracownika
+    </MudButton>
+</MudPaper>
+</div>
+@code {
+    
+}
