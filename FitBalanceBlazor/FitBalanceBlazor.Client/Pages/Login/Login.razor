@@ -24,7 +24,7 @@
         <MudTextField T="string" Label="Hasło" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
                       @bind-Value="password" />
         
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Style="background-color: #FF9966; color: black;" Disabled="CheckData()">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Style="background-color: #FF9966; color: black;" OnClick="SignIn">
             Zaloguj
         </MudButton>
 
@@ -50,16 +50,8 @@
     private string login { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Pole hasło jest wymagane.")]
-    [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło może mieć maksymalnie 20 znaków.")]
+    [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
     private string password { get; set; } = string.Empty;
-
-    private bool CheckData()
-    {
-        return string.IsNullOrWhiteSpace(login) || 
-               string.IsNullOrWhiteSpace(password) || 
-               password.Length > 20 || 
-               login.Length > 20;
-    }
 
 
     private void HandleValidSubmit()
