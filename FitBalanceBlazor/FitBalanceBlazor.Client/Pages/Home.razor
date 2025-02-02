@@ -323,8 +323,19 @@ string textSendEmail = $"Zanim zadasz pytanie sprawdź Q&A. Może jest tam rozwi
 
         try
         {
-            newReview = new OpiniaDTO(id_opinia, ocena, zawartosc,  id_uzytkownik);
+            newReview = new OpiniaDTO
+            {
+                id_opinia=id_opinia,
+                ocena=ocena, 
+                zawartosc = zawartosc, 
+                data = DateOnly.FromDateTime(DateTime.Now),
+                id_uzytkownik = id_uzytkownik,
+                id_dieta = 1
+            };
             var response = await Http.PostAsJsonAsync("api/Review", newReview);
+            var test = await Http.GetFromJsonAsync<ServiceResponse<List<Opinia>>>("api/Review");
+            opinie = test.Data;
+            StateHasChanged();
             Snackbar.Add("Dodano opinię", Severity.Success);
             NavigationManager.NavigateTo("/#sectionOpinions");
         }
