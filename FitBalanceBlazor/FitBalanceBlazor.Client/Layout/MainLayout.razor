@@ -14,8 +14,8 @@
                     <MudImage Src="/Images/Logo/logoFB.jpg" Style="width: 80px; height: 70px;" />
                 </MudNavLink>
             <MudNavLink Href="/#sectionStarter" Style="font-size: 20px;"> FitBalance</MudNavLink>
-                <MudSpacer />
-                
+            <MudSpacer />
+            <!--trzeba to usunać -->
                 <MudNavLink Href="/#sectionAboutUs" Style="text-transform: uppercase;color: black;">o nas</MudNavLink>
                 <MudNavLink Href="/#sectionServices" Style="text-transform: uppercase; color: black;">usługi</MudNavLink>
                 <MudNavLink Href="/#sectionProgram" Style="text-transform: uppercase;color: black;">program</MudNavLink>
@@ -57,7 +57,8 @@
             <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
             <AuthorizeView Roles="Employee, Admin">
                 <Authorized>
-                        <MudNavLink Href="/employee" Style="text-transform: uppercase;color: black;">Panel pracownika</MudNavLink>
+                    <MudNavLink Href="/employee" Style="text-transform: uppercase;color: black;">Panel pracownika</MudNavLink>
+                    <MudNavLink Href="/addClientAsEmployee" Style="text-transform: uppercase;color: black;">add</MudNavLink>
                 </Authorized>
             </AuthorizeView>
             
