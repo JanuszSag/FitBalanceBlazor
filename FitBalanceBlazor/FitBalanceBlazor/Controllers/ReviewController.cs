@@ -31,7 +31,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddReviewAsync(Opinia review)
+    public async Task<ActionResult> AddReviewAsync(OpiniaDTO review)
     {
         var response = await _reviewService.AddReviewAsync(review);
         if (!response.Success)

@@ -44,7 +44,7 @@ public class ReviewService : IReviewService
         return await _context.Opinia.FindAsync(id);
     }
     //metoda do wstawiania nowych opini do bazy
-    public async Task<ServiceResponse<bool>> AddReviewAsync(Opinia review)
+    public async Task<ServiceResponse<bool>> AddReviewAsync(OpiniaDTO review)
     {
         var response = new ServiceResponse<bool>();
         var maxId = _context.Opinia.Select(o => o.id_opinia).Max();

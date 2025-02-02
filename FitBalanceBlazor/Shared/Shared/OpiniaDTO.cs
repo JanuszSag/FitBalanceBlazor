@@ -18,5 +18,7 @@ public class OpiniaDTO
         this.id_opinia = id;
         ocena = rate;
         id_uzytkownik = idUzytkownik;
+        DateOnly.FromDateTime(DateTime.Today);
+        id_dieta = 1;
     }
 }
