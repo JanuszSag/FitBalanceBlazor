@@ -1,4 +1,4 @@
-using FitBalanceBlazor.Models;
+using ClassLibrary1;
 using FitBalanceBlazor.Services.ReviewService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +16,26 @@ public class ReviewController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<List<Opinia>>> GetReviews()
+    public async Task<ActionResult<ServiceResponse<List<Opinia>>>> GetReviews()
     {
-        return await _reviewService.GetAllReviewsAsync();
+        var response = await _reviewService.GetAllReviewsAsync();
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Opinia>> GetReview(int id)
     {
         return await _reviewService.GetReviewByIdAsync(id);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> AddReviewAsync(OpiniaDTO review)
+    {
+        var response = await _reviewService.AddReviewAsync(review);
+        if (!response.Success)
+            return BadRequest(response);
+        return Ok(response);
     }
 }

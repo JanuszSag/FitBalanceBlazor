@@ -1,148 +1,208 @@
 @page "/clientHomePage"
+@using System.IdentityModel.Tokens.Jwt
+@using System.Runtime.InteropServices
+@using System.Security.Claims
+@using Blazored.LocalStorage
+@using ClassLibrary1
+@using Microsoft.IdentityModel.JsonWebTokens
 @using MudBlazor
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@inject HttpClient Http
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager Navigation
 
-<MudGrid>
-    <!-- Górna część strony z obrazkiem powitalnym -->
-    <MudGrid>
-        <MudItem xs="12">
-            <MudPaper Class="pa-4 rounded" Style="position: relative; text-align: center;">
-                <MudImage Src="/Images/ClientHomePage/ClientHomePageImage.png"
-                          Alt="Welcome image"
-                          Class="img-fluid rounded"
-                          Style="width: 100%; height: auto;" />
-                <!-- Tekst na zdjęciu -->
-                <div Style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: black; font-size: 2rem; font-weight: bold;">
-                    WITAJ, IMIĘ
-                </div>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
-
-    <!-- Sekcja z przyciskami na dole obrazka powitalnego -->
-    <MudItem xs="12" Class="mt-4">
+@rendermode InteractiveWebAssembly
+<AuthorizeView>
+    <Authorized>
         <MudGrid>
-            <MudItem xs="2">
-                <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
-                    <MudCardContent>
-                        <h6>Twój indywidualny program dietetyczny</h6>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/myDiet">Zobacz</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-            <MudItem xs="2">
-                <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
-                    <MudCardContent>
-                        <h6>Wszystkie diety</h6>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/allDiets">Zobacz</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-            <MudItem xs="2">
-                <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
-                    <MudCardContent>
-                        <h6>Twoje dane</h6>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/informationAboutPersonalData">Zobacz</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-            <MudItem xs="2">
-                <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
-                    <MudCardContent>
-                        <h6>Wyliczanie kkal</h6>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/caloryCount">Zobacz</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-            <MudItem xs="2">
-                <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
-                    <MudCardContent>
-                        <h6>Raport</h6>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/raport">Zobacz</MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-        </MudGrid>
-    </MudItem>
+            <!-- Górna część strony z obrazkiem powitalnym -->
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudPaper Class="pa-4 rounded" Style="position: relative; text-align: center;">
+                        <MudImage Src="/Images/ClientHomePage/ClientHomePageImage.png"
+                                  Alt="Welcome image"
+                                  Class="img-fluid rounded"
+                                  Style="width: 100%; height: auto;" />
+                        <!-- Tekst na zdjęciu -->
+                        <div Style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: black; font-size: 2rem; font-weight: bold;">
+                            WITAJ, @name
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
 
-    <!-- Sekcja z ilością wypitej wody -->
-    <MudPaper Class="pa-4 rounded" Style="border: 2px solid #00BFFF; border-radius: 20px;">
-        <MudGrid>
-            <!-- Lewa część z informacją o całkowitej ilości wody -->
-            <MudItem xs="3">
-                <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
-                    <h5 style="font-weight: bold;">WODA</h5>
-                    <MudText Style="color: grey; font-weight: bold;">TOTAL</MudText>
-                    <h1 style="font-size: 3rem;">@totalWater ml</h1>
-                </MudPaper>
-            </MudItem>
-
-            <!-- Prawa część ze szklankami -->
-            <MudItem xs="9">
-                <MudText Style="font-weight: bold;">Wskaż, ile wody wypiłeś dzisiaj</MudText>
-                <MudGrid Class="mt-4">
-                    @for (int i = 0; i < totalCups; i++)
-                    {
-                        <MudItem xs="1">
-                            <MudButton Variant="Variant.Text" Style="min-width: 0; padding: 0;" OnClick="@(() => ToggleCup(i))">
-                                <MudIcon Icon="@GetCupIcon(i)" 
-                                         Size="Size.Large" 
-                                         Style="@($"color: {GetCupColor(i)};")" />
-                            </MudButton>
-                        </MudItem>
-                    }
+            <!-- Sekcja z przyciskami -->
+            <MudItem xs="12" Class="mt-4">
+                <MudGrid>
+                    <MudItem xs="2">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                            <MudCardContent>
+                                <h6>Twój indywidualny program dietetyczny</h6>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/myDiet">Zobacz</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                            <MudCardContent>
+                                <h6>Wszystkie diety</h6>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/allClientDiets">Zobacz</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                            <MudCardContent>
+                                <h6>Twoje dane</h6>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/informationAboutPersonalData">Zobacz</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                            <MudCardContent>
+                                <h6>Wyliczanie kkal</h6>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/caloryCount">Zobacz</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                            <MudCardContent>
+                                <h6>Raport</h6>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/raport">Zobacz</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
                 </MudGrid>
             </MudItem>
+
+            <!-- Sekcja z wyswietleniem wody -->
+            <MudItem xs="12" Class="mt-4">
+                <MudPaper Class="pa-4 rounded" Style="border: 2px solid #00BFFF; border-radius: 20px;">
+                    <MudGrid>
+                        <!-- Calkowita ilosc wody -->
+                        <MudItem xs="12" Class="text-center">
+                            <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
+                                <h5 style="font-weight: bold;">WODA</h5>
+                                <MudText Style="color: grey; font-weight: bold;">TOTAL</MudText>
+                                <h1 style="font-size: 3rem;">@totalWater ml</h1>
+                            </MudPaper>
+                        </MudItem>
+
+                        <!-- Przyciski odejmowania i dodawania wody -->
+                        <MudItem xs="12" Class="text-center mt-1">
+                            <MudButton Style="background-color: #1976D2; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWater">
+                                Dodaj 250 ml
+                            </MudButton>
+                            <MudButton Style="background-color: #FF5733; color: white; font-size: 1.5rem; margin-left: 10px;" Variant="Variant.Filled" OnClick="@RemoveWater">
+                                Odejmij 250 ml
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                    <MudDivider Class="my-3"/>
+                    <MudGrid>
+                        <!-- Calkowita waga -->
+                        <MudItem xs="12" Class="text-center mt-4">
+                            <MudPaper Class="pa-4" Style="background-color: #E0FFB3; border-radius: 15px; text-align: center;">
+                                <h5 style="font-weight: bold;">WAGA</h5>
+                                <MudText Style="color: grey; font-weight: bold;">TOTAL</MudText>
+                                <h1 style="font-size: 3rem;">@totalWeight kg</h1>
+                            </MudPaper>
+                        </MudItem>
+
+                        <!-- Przyciski odejmowania i dodawania wagi -->
+                        <MudItem xs="12" Class="text-center mt-1">
+                            <MudButton Style="background-color: #1976D2; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWeight">
+                                Dodaj 1 kg
+                            </MudButton>
+                            <MudButton Style="background-color: #FF5733; color: white; font-size: 1.5rem; margin-left: 10px;" Variant="Variant.Filled" OnClick="@RemoveWater">
+                                Odejmij 1 kg
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
         </MudGrid>
-    </MudPaper>
-</MudGrid>
+    </Authorized>
+</AuthorizeView>
 
 @code {
+    [Parameter] public string name { get; set; } = "User";
+    private Uzytkownik user;
     private int totalWater = 0;
-    private int totalCups = 7; 
-    private bool[] cupFilled; 
+    private int totalWeight = 0;
+    private JwtSecurityToken jwt { get; set; } 
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        cupFilled = new bool[totalCups];
+        try
+        {
+            try
+            {
+                var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+                jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+                var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+                var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
+                user = userResponse.Data;
+                name = user.pseudonim ?? "User";
+                if(user.Wypita_woda.Count>0)
+                    totalWater = user.Wypita_woda.LastOrDefault().ilosc ?? 0;
+                if(user.Pomiar_wagi.Count>0)
+                    totalWeight = user.Pomiar_wagi.LastOrDefault().waga ?? 0;
+                StateHasChanged();
+            }catch(Exception e)
+            {
+                Navigation.NavigateTo("/");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
     }
 
-    private void ToggleCup(int index)
+    private async Task AddWater()
     {
-        if (index >= 0 && index < cupFilled.Length)
+        totalWater += 250;
+        await Http.PutAsJsonAsync($"api/user/assignWater/{user.id_uzytkownik}", totalWater);
+    }
+
+    private async Task RemoveWater()
+    {
+        if (totalWater >= 250)
         {
-            cupFilled[index] = !cupFilled[index];
-            
-            totalWater = cupFilled.Count(c => c) * 250;
-            
-            StateHasChanged();
+            totalWater -= 250; 
+            await Http.PutAsJsonAsync($"api/user/assignWater/{user.id_uzytkownik}", totalWater);
         }
     }
 
-    private string GetCupIcon(int index)
+    private async Task AddWeight()
     {
-        if (index >= 0 && index < cupFilled.Length)
+        totalWeight += 1;
+        await Http.PutAsJsonAsync($"api/user/assignWeight/{user.id_uzytkownik}", totalWeight);
+    }
+    
+    private async Task RemoveWeight()
+    {
+        if (totalWeight >= 250)
         {
-            return cupFilled[index] ? Icons.Material.Filled.LocalDrink : Icons.Material.Outlined.LocalDrink;
+            totalWeight -= 250; 
+            await Http.PutAsJsonAsync($"api/user/assignWeight/{user.id_uzytkownik}", totalWeight);
         }
-        return Icons.Material.Outlined.LocalDrink;
     }
 
-    private string GetCupColor(int index)
-    {
-        if (index >= 0 && index < cupFilled.Length)
-        {
-            return cupFilled[index] ? "#1976D2" : "#000000"; 
-        }
-        return "#000000"; 
-    }
 }

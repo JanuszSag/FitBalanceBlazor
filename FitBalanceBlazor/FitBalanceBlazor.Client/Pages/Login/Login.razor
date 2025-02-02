@@ -1,6 +1,14 @@
 @page "/login"
 @using MudBlazor
 @using System.ComponentModel.DataAnnotations
+@using Blazored.LocalStorage
+@using ClassLibrary1
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background-color: #e4f5ac; border-radius: 20px;">
     <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="HandleValidSubmit">
@@ -10,13 +18,13 @@
 
         <!-- Login -->
         <MudTextField T="string" Label="Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
-                      @bind-Value="userLogin.Login" For="@(() => userLogin.Login)" />
+                      @bind-Value="login" Validation="isValid"/>
 
         <!-- Haslo -->
         <MudTextField T="string" Label="Hasło" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
-                      @bind-Value="userLogin.Password" For="@(() => userLogin.Password)" />
+                      @bind-Value="password" />
         
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Style="background-color: #FF9966; color: black;">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" Style="background-color: #FF9966; color: black;" OnClick="SignIn">
             Zaloguj
         </MudButton>
 
@@ -36,23 +44,48 @@
     private MudForm form;
     private bool isValid;
     private string errorMessage = string.Empty;
-    
-    private UserLogin userLogin = new();
-    
+
+    [Required(ErrorMessage = "Pole login jest wymagane.")]
+    [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
+    private string login { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Pole hasło jest wymagane.")]
+    [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
+    private string password { get; set; } = string.Empty;
+
+
     private void HandleValidSubmit()
     {
-        Console.WriteLine("Zalogowano: " + userLogin.Login);
+        Console.WriteLine("Zalogowano: " + login);
     }
 
-    
-    public class UserLogin
+
+    public async Task SignIn()
     {
-        [Required(ErrorMessage = "Pole login jest wymagane.")]
-        [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
-        public string Login { get; set; } = string.Empty;
+        var test = new LoginModel();
+        test.Email = login;
+        test.Password = password;
+        
+        Console.WriteLine(test.Email);
+        
+        var result = await Http.PostAsJsonAsync("api/auth/login", test);
+        var content = await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+        if (content.Success)
+        {
+            errorMessage = string.Empty;
 
-        [Required(ErrorMessage = "Pole hasło jest wymagane.")]
-        [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
-        public string Password { get; set; } = string.Empty;
+            await LocalStorage.SetItemAsStringAsync("authToken", content.Data??"Error");
+            Console.WriteLine(content.Data);
+            Console.WriteLine("Test");
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            
+            
+            NavigationManager.NavigateTo("http://localhost:5131/clientHomePage");
+        }
+        else
+        {
+            errorMessage = content.Message;
+        }
     }
+
 }

@@ -1,10 +1,16 @@
 ﻿@page "/"
 @using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.Components.Authorization
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 @using System.ComponentModel.DataAnnotations
-@using FitBalanceBlazor.Models
+@using System.Data
+@using System.IdentityModel.Tokens.Jwt
+@using Blazored.LocalStorage
+@using ClassLibrary1
 @inject HttpClient Http
+@inject ILocalStorageService LocalStorage
  
 <PageTitle>Home</PageTitle>
 
@@ -78,8 +84,8 @@
                 <MudItem xs="8">
                     <MudGrid>
                         <MudItem xs="6">
-                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
-                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesMyDiet.png" Alt="MyDietImage"  Class="rounded-lg"/>
+                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;height: 44vh">
+                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesMyDietv2.png" Alt="MyDietImage"  Class="rounded-lg"/>
                             </MudPaper>
                         </MudItem>
 
@@ -90,14 +96,14 @@
                         </MudItem>
                         
                         <MudItem xs="6">
-                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 41vh">
-                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesRaport.png" Alt="ReportImage"  Class="rounded-lg"/>
+                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 44vh">
+                                <MudImage Fluid="true" Src="/Images/HomePage/Reports.png" Alt="ReportImage"  Class="rounded-lg"/>
                             </MudPaper>
                         </MudItem>
                         
                         <MudItem xs="6">
-                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 41vh">
-                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesWater.png" Alt="WaterImage"  Class="rounded-lg" />
+                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 44vh">
+                                <MudImage Fluid="true" Src="/Images/HomePage/ServicesWaterv2.png" Alt="WaterImage"  Class="rounded-lg" />
                             </MudPaper>
                         </MudItem>
                     </MudGrid>
@@ -110,7 +116,7 @@
     <!--Sekcja wyboru programu-->
     <div id="sectionProgram">
         <MudStack>
-            <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>wybierz swoj program</strong></MudText>
+            <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Programy</strong></MudText>
             <MudStack Spacing="3" Justify="Justify.SpaceAround">
 
                 <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
@@ -165,17 +171,27 @@
                         <MudText Align="Align.Left" Typo="Typo.h4"><strong> Lista diet dla gości</strong></MudText>
                         <div class="d-flex align-center">
                             <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                                       Href="/allGuestDiets">Zobacz</MudButton><!--tu raczej powinno byc przekierowanie do tej strony nie dla pracownika (czyli bez możliwości zmiany i usuwania diety-->
+                                       Href="/allGuestDiets">Zobacz</MudButton>
                         </div>
                     </MudPaper>
 
                     <!-- Sekcja wyboru dania do zmieny -->
                     <MudPaper Class="pa-3" Style="background:rgb(223,243,156);border-radius: 20px;">
                         <MudText Align="Align.Left" Typo="Typo.h4"><strong> Lista diet tylko dla zalogowanych użytkowników</strong></MudText>
-                        <div class="d-flex align-center">
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                                       Href="/login">Zaloguj się</MudButton>
-                        </div>
+                        <AuthorizeView>
+                            <Authorized>
+                                <div class="d-flex align-center">
+                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                               Href="/AllClientDiets">Zobacz</MudButton>
+                                </div>
+                            </Authorized>
+                            <NotAuthorized>
+                                <div class="d-flex align-center">
+                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                               Href="/login">Zaloguj się</MudButton>
+                                </div>
+                            </NotAuthorized>
+                        </AuthorizeView>
                     </MudPaper>
                 </MudStack>
             </MudItem>
@@ -185,17 +201,33 @@
     <!--Sekcja opinii-->
     <div id="sectionOpinions">
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>opinie</strong></MudText>
-        <MudTable Items="@opinie">
-            <RowTemplate>
+        <MudStack>
+            @foreach (var opinia in opinie)
+            {
                 <MudPaper Class="pa-10 my-4" Style="background:rgb(223,243,156);border-radius: 25px;margin-left: 30px; margin-right: 30px;">
-                    <MudTd DataLabel="Autor">@context.id_uzytkownik</MudTd><!--pseudonim-->
-                    <MudRating SelectedValue="@context.ocena" Size="Size.Medium"/>
-                    <MudTd DataLabel="Opis">@context.zawartosc</MudTd>
+                    <MudText Align="Align.Left" Typo="Typo.h5">Autor: @uzytkownicy.FirstOrDefault(u=>u.id_uzytkownik==opinia.id_uzytkownik)?.pseudonim</MudText> 
+                    <MudRating ReadOnly="true" SelectedValue="@opinia.ocena.Value" Size="Size.Medium"/>
+                    <MudText Align="Align.Left" Typo="Typo.h5">Opis: @opinia.zawartosc</MudText>
                 </MudPaper>
-
-            </RowTemplate>
-        </MudTable>
+            }
+        
+            <AuthorizeView>
+                <Authorized>
+                    @* <MudPaper Class="pa-2" Style="border: 2px solid black;border-radius: 10px;"> *@
+                    <MudPaper Class="pa-10 my-4" Style="border: 5px solid rgb(223,243,156);border-radius: 10px;margin-left: 30px; margin-right: 30px;">
+                        <MudText Align="Align.Left" Typo="Typo.h5"><strong>Oceń sam!</strong></MudText>
+                        <MudRating SelectedValue="@rate" SelectedValueChanged="@AddRate"></MudRating>
+                        <MudTextField @bind-Value="ContentText" Label="Należy wprowadzić zawartość" Variant="Variant.Text"></MudTextField>
+                        <MudButton Button OnClick="() => AddReview(maxId, rate, ContentText, userId)"
+                                   Variant="Variant.Filled" Class="mt-3" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
+                            Zatwierdź
+                        </MudButton>
+                    </MudPaper>
+                </Authorized>
+            </AuthorizeView>
+        </MudStack>
     </div>
+    
 
     <!--Sekcja Q&A-->
     <div id="sectionQ&A">
@@ -208,78 +240,62 @@
 
                 <MudStack Spacing="3">
 
-                    <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText > @((MarkupString)faq1.Replace(Environment.NewLine, "<br/>")) </MudText>
-                    </MudPaper>
-                    <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText > @((MarkupString)faq2.Replace(Environment.NewLine, "<br/>")) </MudText>
-                    </MudPaper>
-                    <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
-                        <MudText > @((MarkupString)faq3.Replace(Environment.NewLine, "<br/>")) </MudText>
-                    </MudPaper>
+                    @foreach (var pytaniaOdpowiedzi in pytaniaIodpowiedzi)
+                    {
+                        <MudPaper Class="pa-10" Style="background:white;border-radius: 20px;">
+                            <MudText Align="Align.Left" Typo="Typo.h5">@pytaniaOdpowiedzi.id . @pytaniaOdpowiedzi.pytanie </MudText>
+                            <MudText Align="Align.Left" Typo="Typo.h5">@pytaniaOdpowiedzi.odpowiedz </MudText>
+                        </MudPaper>
+                    }
                 </MudStack>
 
             </MudPaper>
 
         </MudStack>
-
-        <MudStack>
-            <MudPaper Class="pa-10" Style="margin-left: 30px; margin-right: 30px;">
+    </div>
+    <div id="sectionContact">
                 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>napisz do nas</strong></MudText>
-                <MudText > @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
-                <MudText Typo="Typo.h6">E-mail:</MudText>
-                <MudTextField ShrinkLabel @bind-Value="email" Label="E-mail" Variant="Variant.Outlined"
-                              For="@(() => email)"Immediate="true"Error="@(!IsCorectEmail(email))"ErrorText="Nieprawidłowy adres email"></MudTextField>
-                <MudText Typo="Typo.h6">Treść wiadomości:</MudText>
-                <MudTextField ShrinkLabel @bind-Value="message" Label="Treść wiadomości" Variant="Variant.Outlined"Error="@string.IsNullOrEmpty(message)"ErrorText="Wpisz treść mail"></MudTextField>
-                <div class="d-flex align-center">
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               @onclick="SnackBarEmail">Wyślij</MudButton>
-                </div>
-            </MudPaper>
-        </MudStack>
+                <MudText Align="Align.Center" Typo="Typo.h5"> @((MarkupString)textSendEmail.Replace(Environment.NewLine, "<br/>")) </MudText>
+                <MudText Align="Align.Center" Typo="Typo.h5">Nasz adres email:<strong> FitBalance@mail.com</strong></MudText>
     </div>
 
 </MudStack>
 
 @code
 {
-string textAboutus = $"Cieszymy się, że jesteś z nami!{Environment.NewLine}FitBalance to portal dietetyczny dla każdego. Z nami zrzucisz zbędne kilogramy, dorzucisz brakujące kilogramy albo utrzymasz wagę w zdrowy sposób. Zależy nam na twoim zdrowiu i dobrym samopoczuciu dlatego nasi specjaliści przygotowali wiele zbilansowanych diet od wegańskich opcji przez keto aż po bezglutenowych, które możesz modyfikować. Nie tylko znajdziesz dietę dla siebie, a również lepiej zaplanujesz swoja przygodę ze zdrowiem za pomocą kalkulatora zapotrzebowania kalorycznego oraz miarki wypitej wody. Jesteśmy chętni się dla Ciebie udoskonalać dlatego masz możliwość wystawiania opinii na temat diet.\nMotywacją do stworzenia naszej aplikacji jest brak na rynku narzędzia, które by skutecznie\u00a0 łączył ze sobą aspekty planowania posiłków, monitorowania kaloryczności oraz ilości wody wypitej danego dnia.";
+    private Uzytkownik user { get; set; }
+    private JwtSecurityToken jwt { get; set; }
+    private int userId { get; set; }
+
+
+    string textAboutus = $"Cieszymy się, że jesteś z nami!{Environment.NewLine}FitBalance to portal dietetyczny dla każdego. Z nami zrzucisz zbędne kilogramy, dorzucisz brakujące kilogramy albo utrzymasz wagę w zdrowy sposób. Zależy nam na twoim zdrowiu i dobrym samopoczuciu dlatego nasi specjaliści przygotowali wiele zbilansowanych diet od wegańskich opcji przez keto aż po bezglutenowych, które możesz modyfikować. Nie tylko znajdziesz dietę dla siebie, a również lepiej zaplanujesz swoja przygodę ze zdrowiem za pomocą kalkulatora zapotrzebowania kalorycznego oraz miarki wypitej wody. Jesteśmy chętni się dla Ciebie udoskonalać dlatego masz możliwość wystawiania opinii na temat diet.\nMotywacją do stworzenia naszej aplikacji jest brak na rynku narzędzia, które by skutecznie\u00a0 łączył ze sobą aspekty planowania posiłków, monitorowania kaloryczności oraz ilości wody wypitej danego dnia.";
 string textServices = "Dla naszych użytkowników oferujemy spersonalizowany program dietetyczny, który jest tworzony na podstawie indywidualnych preferencji i zapytań użytkownika. \n\nDodatkowo zalogowany użytkownik ma możliwość rejestrowania ilości spożywanej w ciągu dnia wody, wyliczania swojego zapotrzebowania kalorycznego oraz przeglądania rankingu najlepszych diet.";
 string textProgram = "Mamy duży wybór zbalansowanych i zdrowych diet";
 string textOurDiets = $"Nasze diety są opracowywane przez najlepszych dietetyków, aby spełniać indywidualne potrzeby naszych klientów.{Environment.NewLine} Dzięki profesjonalnemu podejściu i starannie dobranym składnikom, nasze plany żywieniowe pomagają osiągnąć zamierzone cele zdrowotne i sylwetkowe";
-<!--faq-Frequently Asked Questions-->
-string faq1 = $"1. Czy mogę zamieniać dania?{Environment.NewLine}Tak, można wymieniać pszczególne posiłki na inne. Pod warunkiem, że bedzię on zgodny z zapotrzebowaniem kalorycznym.";
-string faq2 = $"2. Czy mogę zamieniać rodzaj diety?{Environment.NewLine} Tak, w każdym momęcie można zmienić rodzaj diety.";
-string faq3 = $"3. Co w przypadku gdy mam problemy z zalogowaniem?{Environment.NewLine}  W takim przypadku prosimy kontakować się z naszym działem helpdesku poniżej w sekcji Napisz do nas.";
 string textSendEmail = $"Zanim zadasz pytanie sprawdź Q&A. Może jest tam rozwiązanie Twojego problemu.{Environment.NewLine}Jeśli nadal nie znasz odpowiedzi - napisz do nas! Chętnie pomożemy Ci w rozwiązaniu problemów i wyjaśnimy wszelkie wątpliwości :)";
 
-//Metoda sprawdzenia poprawności maila poprzez regex
-public string email { get; set; }
-
-private bool IsCorectEmail(string email)
-{
-    if (string.IsNullOrWhiteSpace(email))
-    {
-        return false;
-    }
-
-    var regexEmail = new System.Text.RegularExpressions.Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
-        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-    return regexEmail.IsMatch(email);
-}
-
-public string message { get; set; }
-
-
 //opinie
-    private List<Opinia> opinie;
-   
+    private List<Opinia> opinie=new List<Opinia>();
+    private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>();
+    private List<Pytania_i_odpowiedzi> pytaniaIodpowiedzi = new List<Pytania_i_odpowiedzi>();
+    
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            opinie = await Http.GetFromJsonAsync<List<Opinia>>("api/Review");
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
+            user = userResponse.Data;
+            userId = user.id_uzytkownik;
+            
+            var test = await Http.GetFromJsonAsync<ServiceResponse<List<Opinia>>>("api/Review");
+            opinie = test.Data;
+            var test2 = await Http.GetFromJsonAsync<ServiceResponse<List<Uzytkownik>>>("api/user");
+            uzytkownicy = test2.Data;
+            var test3 = await Http.GetFromJsonAsync<ServiceResponse<List<Pytania_i_odpowiedzi>>>("api/QuestionAnswer");
+            pytaniaIodpowiedzi = test3.Data;
         }
         catch (Exception ex)
         {
@@ -287,15 +303,36 @@ public string message { get; set; }
         }
     }
 
-//snackbar-wyswietla krotkie i tymczasowe wiadomosci
-    void SnackBarEmail()
+    public string ContentText { get; set; }
+    private OpiniaDTO newReview;
+    int maxId { get; set; }
+    private int rate = 0;
+
+    private void AddRate(int newRate)
     {
-        if(IsCorectEmail(email)& !string.IsNullOrEmpty(message)){
-            Snackbar.Add("Wysłano pomyslnie maila!", Severity.Success);
-        }
-        else
+        rate = newRate;
+    }
+
+    private async Task AddReview(int id_opinia, int ocena,string? zawartosc,int id_uzytkownik)
+    {
+        if (zawartosc is null)
         {
-            Snackbar.Add("Należy wprowadzic poprawny mail adres i treść wiadomości", Severity.Error); 
+            Snackbar.Add("Należy uzupełnić poole \"zawartość\"");
+            return;
+        }
+
+        try
+        {
+            newReview = new OpiniaDTO(id_opinia, ocena, zawartosc,  id_uzytkownik);
+            var response = await Http.PostAsJsonAsync("api/Review", newReview);
+            Snackbar.Add("Dodano opinię", Severity.Success);
+            NavigationManager.NavigateTo("/#sectionOpinions");
+        }
+        catch(Exception e)
+        {
+            Snackbar.Add("Nie udało się dodać opini, spróbuj ponownie.",Severity.Error);
         }
     }
+
+
 }

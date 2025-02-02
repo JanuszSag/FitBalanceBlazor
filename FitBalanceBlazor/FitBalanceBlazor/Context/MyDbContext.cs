@@ -36,6 +36,8 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<Przypisana_dieta> Przypisana_dieta { get; set; }
 
+    public virtual DbSet<Pytania_i_odpowiedzi> Pytania_i_odpowiedzi { get; set; }
+
     public virtual DbSet<Raport> Raport { get; set; }
 
     public virtual DbSet<Rodzaj> Rodzaj { get; set; }
@@ -43,11 +45,7 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<Uzytkownik> Uzytkownik { get; set; }
 
     public virtual DbSet<Wypita_woda> Wypita_woda { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=(LocalDb)\\MSSQLLocalDB; Initial Catalog=FitBalance");
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Adres>(entity =>
@@ -55,8 +53,21 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.id_adres).HasName("Adres_pk");
 
             entity.Property(e => e.id_adres).ValueGeneratedNever();
+            entity.Property(e => e.kod_pocztowy)
+                .HasMaxLength(7)
+                .IsUnicode(false);
+            entity.Property(e => e.miasto)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.numer_mieszkania)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ulica)
+                .HasMaxLength(30)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.id_pracownikNavigation).WithMany(p => p.Adres)
+                .HasForeignKey(d => d.id_pracownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Adres_Pracownik");
         });
@@ -65,7 +76,12 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_danie).HasName("Danie_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_meal");
+
             entity.Property(e => e.id_danie).ValueGeneratedNever();
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(30)
+                .IsUnicode(false);
 
             entity.HasMany(d => d.Dieta_id_dieta).WithMany(p => p.Danie_id_danie)
                 .UsingEntity<Dictionary<string, object>>(
@@ -88,13 +104,25 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_dieta).HasName("Dieta_pk");
 
+            entity.HasIndex(e => e.rodzaj, "index_diet_category");
+
+            entity.HasIndex(e => e.kalorycznosc, "index_kcal");
+
             entity.Property(e => e.id_dieta).ValueGeneratedNever();
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.opis)
+                .HasMaxLength(200)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.autorNavigation).WithMany(p => p.Dieta)
+                .HasForeignKey(d => d.autor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Dieta_Pracownik");
 
             entity.HasOne(d => d.rodzajNavigation).WithMany(p => p.Dieta)
+                .HasForeignKey(d => d.rodzaj)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Dieta_Rodzaj");
 
@@ -120,12 +148,17 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.id_opinia).HasName("Opinia_pk");
 
             entity.Property(e => e.id_opinia).ValueGeneratedNever();
+            entity.Property(e => e.zawartosc)
+                .HasMaxLength(200)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.id_dietaNavigation).WithMany(p => p.Opinia)
+                .HasForeignKey(d => d.id_dieta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Opinia_Dieta");
 
             entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Opinia)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Opinia_Uzytkownik");
         });
@@ -137,6 +170,7 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.id_pomiar).ValueGeneratedNever();
 
             entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Pomiar_wagi)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Pomiar_Wagi_Uzytkownik");
         });
@@ -146,8 +180,21 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.id_pracownik).HasName("Pracownik_pk");
 
             entity.Property(e => e.id_pracownik).ValueGeneratedNever();
+            entity.Property(e => e.imie)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.nazwisko)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.numer_telefonu)
+                .HasMaxLength(13)
+                .IsUnicode(false);
+            entity.Property(e => e.stanowisko)
+                .HasMaxLength(20)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Pracownik)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Pracownik_Uzytkownik");
         });
@@ -156,7 +203,12 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_produkt).HasName("Produkt_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_ingredient");
+
             entity.Property(e => e.id_produkt).ValueGeneratedNever();
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Produkt_Danie>(entity =>
@@ -164,10 +216,12 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => new { e.id_produkt, e.id_danie }).HasName("Produkt_Danie_pk");
 
             entity.HasOne(d => d.id_danieNavigation).WithMany(p => p.Produkt_Danie)
+                .HasForeignKey(d => d.id_danie)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Table_19_Danie");
 
             entity.HasOne(d => d.id_produktNavigation).WithMany(p => p.Produkt_Danie)
+                .HasForeignKey(d => d.id_produkt)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Table_19_Produkt");
         });
@@ -176,7 +230,12 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_program).HasName("Program_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_program");
+
             entity.Property(e => e.id_program).ValueGeneratedNever();
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Przypisana_dieta>(entity =>
@@ -186,15 +245,15 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.id_przypisana_dieta).ValueGeneratedNever();
 
             entity.HasOne(d => d.id_dietaNavigation).WithMany(p => p.Przypisana_dieta)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasForeignKey(d => d.id_dieta)
                 .HasConstraintName("Przypisana_dieta_Dieta");
 
             entity.HasOne(d => d.id_programNavigation).WithMany(p => p.Przypisana_dieta)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasForeignKey(d => d.id_program)
                 .HasConstraintName("Przypisana_dieta_Program");
 
             entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Przypisana_dieta)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .HasConstraintName("Przypisana_dieta_Uzytkownik");
 
             entity.HasMany(d => d.id_danie).WithMany(p => p.id_przypisana_dieta)
@@ -214,6 +273,15 @@ public partial class MyDbContext : DbContext
                     });
         });
 
+        modelBuilder.Entity<Pytania_i_odpowiedzi>(entity =>
+        {
+            entity.HasKey(e => e.id).HasName("Pytania_i_odpowiedzi_pk");
+
+            entity.Property(e => e.id).ValueGeneratedNever();
+            entity.Property(e => e.odpowiedz).IsUnicode(false);
+            entity.Property(e => e.pytanie).IsUnicode(false);
+        });
+
         modelBuilder.Entity<Raport>(entity =>
         {
             entity.HasKey(e => e.id_raport).HasName("Raport_pk");
@@ -221,10 +289,12 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.id_raport).ValueGeneratedNever();
 
             entity.HasOne(d => d.dietaNavigation).WithMany(p => p.Raport)
+                .HasForeignKey(d => d.dieta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Raport_Dieta");
 
             entity.HasOne(d => d.uzytkownikNavigation).WithMany(p => p.Raport)
+                .HasForeignKey(d => d.uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Raport_Uzytkownik");
         });
@@ -233,14 +303,32 @@ public partial class MyDbContext : DbContext
         {
             entity.HasKey(e => e.id_rodzaj).HasName("Rodzaj_pk");
 
+            entity.HasIndex(e => e.nazwa, "index_name_category");
+
             entity.Property(e => e.id_rodzaj).ValueGeneratedNever();
+            entity.Property(e => e.nazwa)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Uzytkownik>(entity =>
         {
             entity.HasKey(e => e.id_uzytkownik).HasName("Uzytkownik_pk");
 
+            entity.ToTable(tb =>
+                {
+                    tb.HasTrigger("Tr_WyliczKalorie");
+                    tb.HasTrigger("registration_validation");
+                });
+
             entity.Property(e => e.id_uzytkownik).ValueGeneratedNever();
+            entity.Property(e => e.email).IsUnicode(false);
+            entity.Property(e => e.plec)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.pseudonim)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Wypita_woda>(entity =>
@@ -250,6 +338,7 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.id_wypita_woda).ValueGeneratedNever();
 
             entity.HasOne(d => d.id_uzytkownikNavigation).WithMany(p => p.Wypita_woda)
+                .HasForeignKey(d => d.id_uzytkownik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Wypita_Woda_Uzytkownik");
         });

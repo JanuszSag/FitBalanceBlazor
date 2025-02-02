@@ -1,12 +1,12 @@
 @page "/changeMeal"
-using System.Net;
-using FitBalanceBlazor;
-using Microsoft.AspNetCore.Components.Web;
-using MudBlazor;
-using System.ComponentModel.DataAnnotations;
-using FitBalanceBlazor.Models;
+@using System.IdentityModel.Tokens.Jwt
+@using Blazored.LocalStorage
+@using ClassLibrary1
+@using FitBalanceBlazor.Client.Pages.ChangeMeal
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject IDialogService DialogService
 
 <PageTitle>Change diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>zmiana posilku</strong></MudText>
@@ -23,30 +23,22 @@ using FitBalanceBlazor.Models;
 
             <!-- Sekcja wyboru dania -->
             <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                <MudText Typo="Typo.h6">Która pozycję chcesz zmienić?</MudText>
+                <MudText Typo="Typo.h6">Dostępne dania</MudText>
                 <MudForm>
-                    <MudRadioGroup @bind-Value="selectedMeal">
-                        <MudStack>
-                            @if (currentDiet?.Danie_id_danie != null && currentDiet.Danie_id_danie.Any())
-                            {
-                                @foreach (var danie in currentDiet.Danie_id_danie)
-                                {
-                                    <MudRadio Value="@danie.nazwa" Color="Color.Primary">@danie.nazwa</MudRadio>
-                                }
-                            }
-                            else
-                            {
-                                <MudText Typo="Typo.body2">Brak dostępnych dań w tej diecie.</MudText>
-                            }
-                        </MudStack>
-                    </MudRadioGroup>
+                    <MudSelect T="string" Label="Dania" MultiSelection @bind-Value="value" @bind-SelectedValues="options">
+                        @foreach (var meal in dania)
+                        {
+                            <MudSelectItem T="string" Value="@meal.nazwa">@meal.nazwa</MudSelectItem>
+                        }
+                    </MudSelect>
                 </MudForm>
                 <div class="d-flex align-center">
-                    <MudText Class="ml-4">Wybrana opcja: @selectedMeal</MudText>
-                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                               OnClick="SubmitChange">
+                    <MudButton Variant="Variant.Filled"
+                               Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                               OnClick="ShowDialog">
                         Zatwierdź
                     </MudButton>
+
                 </div>
             </MudPaper>
         </MudStack>
@@ -61,15 +53,42 @@ using FitBalanceBlazor.Models;
 </MudGrid>
 
 @code {
-    private Dieta currentDiet; 
-    private string selectedMeal; 
+    private Dieta currentDiet;
+    private Uzytkownik user;
+    private JwtSecurityToken jwt { get; set; }
+    private List<Danie> dania = new List<Danie>();
+    private List<Danie> selectedMeal;
+    public Dieta selectedDiet { get; set; }
+    private string value = "Brak przypisanych dań";
+    private IEnumerable<string> options { get; set; } = new HashSet<string>();
+    private List<int> mealsId { get; set; } = new List<int>();
+    private List<Danie> currentMeals { get; set; } = new List<Danie>();
+    private string SelectedOption { get; set; } = string.Empty;
+
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            /*var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");*/
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/diet/{claim.Value}"); //zmienić na claim.id
+            user = userResponse.Data;
+
+
+            var DietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"http://localhost:5131/api/Diet/{user.Przypisana_dieta.ToList()[0].id_dieta}");
+            selectedDiet = DietResponse.Data;
+            var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("http://localhost:5131/api/Meal");
+            dania = MealResponse.Data;
+            var currentMealResponse = await Http.GetFromJsonAsync<ServiceResponse<Przypisana_dieta>>($"api/Meal/assigned/{user.id_uzytkownik}");
+            currentMeals = currentMealResponse.Data.id_danie as List<Danie>;
+
+
             // Trzeba zamieniac ID
-            currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/1");
+            var currentDietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"api/Diet/{selectedDiet.id_dieta}");
+            currentDiet = currentDietResponse.Data;
 
             if (currentDiet == null)
             {
@@ -79,6 +98,15 @@ using FitBalanceBlazor.Models;
             {
                 Console.WriteLine("No meals found for this diet.");
             }
+
+            foreach (var d in currentMeals)
+            {
+
+                options = options.Concat(new HashSet<string>() { d.nazwa });
+
+            }
+
+            StateHasChanged();
         }
         catch (Exception ex)
         {
@@ -86,16 +114,57 @@ using FitBalanceBlazor.Models;
         }
     }
 
-    private void SubmitChange()
+
+    private async Task Submit()
     {
-        if (!string.IsNullOrEmpty(selectedMeal))
+        try
         {
-            Console.WriteLine($"Selected meal to change: {selectedMeal}");
-            NavigationManager.NavigateTo($"/changeCertainMeal?mealName={selectedMeal}");
+            foreach (var o in options.ToArray())
+            {
+                Console.WriteLine(o);
+                mealsId.Add(dania.Find(d => d.nazwa.Equals(o)).id_danie);
+            }
+
+            await Http.PutAsJsonAsync($"api/Diet/UpdateMealsInDiet/{user.Przypisana_dieta.ToList()[0].id_przypisana_dieta}", (mealsId));
+            mealsId.Clear();
         }
-        else
+        catch (Exception e)
         {
-            Console.WriteLine("No meal selected.");
+            Console.WriteLine(e);
+        }
+
+    }
+
+    private async Task ShowDialog()
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            Console.WriteLine("Nie wybrano żadnego dania.");
+            return;
+        }
+
+        await Submit();
+
+        var parameters = new DialogParameters
+        {
+            ["SelectedOption"] = SelectedOption
+        };
+
+        var options = new DialogOptions
+        {
+            CloseButton = false,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = DialogService.Show<ChangeMealDialog>("Zmiana Dania", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Console.WriteLine($"Dialog confirmed: {SelectedOption}");
+            NavigationManager.NavigateTo("/myDiet");
         }
     }
+
 }

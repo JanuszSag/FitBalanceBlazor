@@ -1,47 +1,53 @@
 @page "/registration"
 @using System.ComponentModel.DataAnnotations
+@using System.Net
+@using ClassLibrary1
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
 
 <MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background:rgb(223,243,156); border-radius: 20px;">
     <MudText Typo="Typo.h4" Class="mb-4" Align="Align.Center">Zarejestruj się</MudText>
 
     <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="HandleValidSubmit">
         <!-- Login -->
-        <MudTextField Label="Login*" @bind-Value="userRegistration.Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
-                      For="@(() => userRegistration.Login)" />
+        <MudTextField Label="Pseudonim*" @bind-Value="Login" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+                      For="@(() => userRegistration.Username)" />
 
         <!-- Email -->
-        <MudTextField Label="E-mail*" @bind-Value="userRegistration.Email" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+        <MudTextField Label="E-mail*" @bind-Value="Email" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
                       For="@(() => userRegistration.Email)" />
 
         <!-- Data urodzenia -->
-        <MudTextField Label="Data urodzenia*" @bind-Value="userRegistration.BirthDate" InputType="InputType.Date" Variant="Variant.Outlined" Class="mb-3"
-                      For="@(() => userRegistration.BirthDate)" />
+        <MudDatePicker Label="Data urodzenia*" @bind-Date="BirthDate" Variant="Variant.Outlined" Class="mb-3"/>
 
         <!-- Płeć -->
-        <MudSelect Label="Płeć" @bind-Value="userRegistration.Gender" Variant="Variant.Outlined" Class="mb-3" For="@(() => userRegistration.Gender)">
+        <MudSelect Label="Płeć" @bind-Value="Gender" Variant="Variant.Outlined" Class="mb-3" For="@(() => userRegistration.Gender)">
             <MudSelectItem Value=@("Mężczyzna")>Mężczyzna</MudSelectItem>
             <MudSelectItem Value=@("Kobieta")>Kobieta</MudSelectItem>
             <MudSelectItem Value=@("Inne")>Inne</MudSelectItem>
         </MudSelect>
 
         <!-- Wzrost -->
-        <MudTextField Label="Wzrost (cm)" @bind-Value="userRegistration.Height" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+        <MudTextField Label="Wzrost (cm)" @bind-Value="Height" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
                       For="@(() => userRegistration.Height)" />
 
         <!-- Waga -->
-        <MudTextField Label="Waga (kg)" @bind-Value="userRegistration.Weight" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+        <MudTextField Label="Waga (kg)" @bind-Value="Weight" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
                       For="@(() => userRegistration.Weight)" />
 
         <!-- Hasło -->
-        <MudTextField Label="Hasło*" @bind-Value="userRegistration.Password" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
+        <MudTextField Label="Hasło*" @bind-Value="Password" InputType="InputType.Password" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"
                       For="@(() => userRegistration.Password)" />
 
         <!-- Akceptacja regulaminu -->
-        <MudCheckBox @bind-Checked="userRegistration.AcceptTerms" T="bool" Class="mb-3" For="@(() => userRegistration.AcceptTerms)">
+        <MudCheckBox @bind-Checked="AcceptTerms" T="bool" Class="mb-3" For="@(() => AcceptTerms)" ValueChanged="@(() => acceptingTerms())">
             Akceptuję regulamin portalu *
         </MudCheckBox>
         
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" FullWidth="true" OnClick="Register">
             Załóż konto
         </MudButton>
         
@@ -55,45 +61,78 @@
     private string errorMessage = string.Empty;
 
     
-    private UserRegistration userRegistration = new();
+    private RegisterModel userRegistration = new();
 
     
     private void HandleValidSubmit()
     {
         Console.WriteLine("Form submitted successfully!");
-        Console.WriteLine($"Login: {userRegistration.Login}, Email: {userRegistration.Email}");
+        Console.WriteLine($"Login: {userRegistration.Username}, Email: {userRegistration.Email}");
         
-    }
+    }   
 
     
-    public class UserRegistration
-    {
-        [Required(ErrorMessage = "Pole login jest wymagane.")]
-        [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]
+
+        [Required(ErrorMessage = "Pole login jest wymagane.")]//dziala
+        [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")]//dziala
         public string Login { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Pole e-mail jest wymagane.")]
-        [EmailAddress(ErrorMessage = "Nieprawidłowy format e-mail.")]
+        [Required(ErrorMessage = "Pole e-mail jest wymagane.")]//dziala
+        [EmailAddress(ErrorMessage = "Nieprawidłowy format e-mail.")]//dziala
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Data urodzenia jest wymagana.")]
-        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Data urodzenia jest wymagana.")]//dziala
+        [DataType(DataType.DateTime)]
         public DateTime? BirthDate { get; set; }
 
-        [Required(ErrorMessage = "Pole płeć jest wymagane.")]
+        [Required(ErrorMessage = "Pole płeć jest wymagane.")]//dziala
         public string Gender { get; set; } = string.Empty;
 
-        [Range(50, 250, ErrorMessage = "Wzrost musi być między 50 a 250 cm.")]
-        public int? Height { get; set; }
+        [Range(50, 250, ErrorMessage = "Wzrost musi być między 50 a 250 cm.")]//dziala
+        public int Height { get; set; }
 
-        [Range(10, 300, ErrorMessage = "Waga musi być między 10 a 300 kg.")]
-        public int? Weight { get; set; }
+        [Range(10, 300, ErrorMessage = "Waga musi być między 10 a 300 kg.")]//dziala
+        public int Weight { get; set; }
 
-        [Required(ErrorMessage = "Pole hasło jest wymagane.")]
-        [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")]
+        [Required(ErrorMessage = "Pole hasło jest wymagane.")]//dziala
+        [StringLength(20, ErrorMessage = "Haslo może mieć maksymalnie 20 znaków.")]//nie dziala
         public string Password { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Musisz zaakceptować regulamin.")]
+        [Required(ErrorMessage = "Musisz zaakceptować regulamin.")]//dziala
         public bool AcceptTerms { get; set; }
-    }
+
+        private async void Register()
+        {
+            if (!AcceptTerms)
+            {
+                errorMessage = "Nie zaakceptowano regulaminu";
+                return;
+            }
+
+            userRegistration.Username = Login;
+            userRegistration.Email = Email;
+            userRegistration.Height = Height;
+            userRegistration.Weight = Weight;
+            userRegistration.Gender = Gender;
+            userRegistration.Birthday = BirthDate;
+            userRegistration.Password = Password;
+
+            var response = await Http.PostAsJsonAsync("api/auth/register",userRegistration);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                NavigationManager.NavigateTo("http://localhost:5131/Login");
+            }
+            else
+            {
+                Snackbar.Add("Rejestracja nie powiodła się, spróbuj ponownie!",Severity.Error);
+            }
+            
+        }
+
+        private void acceptingTerms()
+        {
+            AcceptTerms = !AcceptTerms;
+        }
+
 }

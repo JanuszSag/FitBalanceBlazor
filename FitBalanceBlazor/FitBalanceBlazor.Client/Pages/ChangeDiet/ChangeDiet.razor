@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 
 @using System.ComponentModel.DataAnnotations
-@using FitBalanceBlazor.Models
+@using ClassLibrary1
 @inject HttpClient Http
 
 <PageTitle>Change diet</PageTitle>
@@ -13,31 +13,30 @@
 
 <EditForm Model="@modelChangeDiet" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator/>
+    @if (selectedDiet is not null)
+    {
+      
     <MudGrid>
         <MudItem xs="6">
             <!-- Sekcja nazwy zmienianej diety -->
             <MudStack Spacing="3">
                 <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                    <MudText Typo="Typo.h6">Dieta do zmieny:@selectedDiet?.nazwa</MudText>   <!--dodanie z bazy albo jakoś inaczej zapamiętany wybór poprzedniej strony-->
+                    <MudText Typo="Typo.h6">Dieta do zmieny:@selectedDiet?.nazwa</MudText>  
                 </MudPaper>
 
                 <!-- Sekcja wyboru dania do zmieny -->
                 <MudPaper Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-                    <MudText Typo="Typo.h6">Które danie chcesz zmienić?</MudText>
-                    <MudForm>
-                        <MudRadioGroup @bind-Value="modelChangeDiet.SelectedOption">
-                            <MudStack>
-                                @foreach (var danie in selectedDiet.Danie_id_danie)
-                                {
-                                    <MudRadio Value="@danie.nazwa"> @selectedDiet.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa</MudRadio>
-                                }
-                            </MudStack>
-                        </MudRadioGroup>
-                    </MudForm>
+                    <MudSelect T="string" Label="Dania" MultiSelection @bind-Value="value" @bind-SelectedValues="options">
+                        @foreach (var meal in dania)
+                        {
+                            <MudSelectItem T="string" Value="@meal.nazwa">@meal.nazwa</MudSelectItem>
+                        }
+                    </MudSelect>
                     <div class="d-flex align-center">
                         <MudText Class="ml-4">Wybrana opcja: @modelChangeDiet.SelectedOption</MudText>
                         <MudButton ButtonType="ButtonType.Submit"
-                                   Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;">
+                                   Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                   OnClick="Submit">
                             Zatwierdź
                         </MudButton>
                     </div>
@@ -52,61 +51,73 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-
+  
+    }
 </EditForm>
 
 @code {
-// Model formularza, Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
-ChangeDietForm modelChangeDiet = new ChangeDietForm();
-bool success;
+    // Model formularza, Klasa "ChangeDietForm" gdzie przechowywane są informację wprowadzone do formularza
+    ChangeDietForm modelChangeDiet = new ChangeDietForm();
+    bool success;
+    private string value = "Brak przypisanych dań";
+    private IEnumerable<string> options { get; set; } = new HashSet<string>();
+    private List<int> mealsId { get; set; } = [];
 
-public class ChangeDietForm
-{
-// Wymagania formularza required-wymagany
-[Required(ErrorMessage = "Należy wybrać pozycję.")]
-public string SelectedOption { get; set; }
-}
 
-// Metoda sprawdzająca poprawność danych - czy nie są puste
-private bool ModelIsValid()
-{
-return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
-}
-
-// Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
-private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
-{
-if (ModelIsValid())
-{
-success = true;
-// NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
-    NavigationManager.NavigateTo($"/changeDiet/changeMealInDiet?DietId={DietId}&SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
     
-}
-else
-{ 
-    success = false; 
-} 
-StateHasChanged();
-}
+    public class ChangeDietForm
+    {
+    // Wymagania formularza required-wymagany
+    [Required(ErrorMessage = "Należy wybrać pozycję.")]
+    public string SelectedOption { get; set; }
+    }
+    
+    // Metoda sprawdzająca poprawność danych - czy nie są puste
+    private bool ModelIsValid()
+    {
+    return !string.IsNullOrEmpty(modelChangeDiet.SelectedOption);
+    }
+    
+    // Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
+    private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
+    {
 
-// Nazwa diety ze strony AllGuestDiets
-[Parameter] public int DietId { get; set; }
-private Dieta selectedDiet;
+    StateHasChanged();
+    }
+    
+    // Nazwa diety ze strony AllGuestDiets
+    [Parameter] public int DietId { get; set; }
+    public Dieta selectedDiet { get; set; }
+    
+    // Obsługa enpionta
+    private List<Danie> dania =new List<Danie>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        var DietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"http://localhost:5131/api/Diet/{DietId}");
+        selectedDiet = DietResponse.Data;
+        var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("http://localhost:5131/api/Meal");
+        dania = MealResponse.Data;
 
-// Obsługa enpionta
-private List<Danie> dania =new List<Danie>();
+        foreach (var d in selectedDiet.Danie_id_danie)
+        {
+            options = options.Concat(new HashSet<string>(){d.nazwa});
+        }
+        
+        StateHasChanged();
+    }
 
-protected override async Task OnInitializedAsync()
-{ 
-    try
-{ 
-    selectedDiet = await Http.GetFromJsonAsync<Dieta>($"api/Diet/{DietId}"); 
-    dania = await Http.GetFromJsonAsync<List<Danie>>("api/Meal");
-}
-    catch (Exception ex)
-{
-    Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
-}
-}
+    private async void Submit()
+    {
+        foreach (var o in options.ToArray())
+        {
+            Console.WriteLine(o);
+            mealsId.Add(dania.Find(d => d.nazwa.Equals(o)).id_danie);
+        }
+        await Http.PutAsJsonAsync($"api/Diet/UpdateMeals/{DietId}",mealsId);
+        NavigationManager.NavigateTo("http://localhost:5131/allClientDiets");
+    }
+
 }

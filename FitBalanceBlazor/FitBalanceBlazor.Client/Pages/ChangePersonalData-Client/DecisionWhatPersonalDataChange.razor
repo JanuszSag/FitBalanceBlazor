@@ -1,94 +1,197 @@
-@page "/informationAboutPersonalData/decisionWhatPersonalDataChange"
-@inject NavigationManager NavigationManager
-@using System.ComponentModel.DataAnnotations
-@using FitBalanceBlazor.Models
-@inject HttpClient Http
+@page "/informationAboutPersonalData/decisionWhatPersonalDataChange" 
+@inject NavigationManager NavigationManager 
+@using System.ComponentModel.DataAnnotations 
+@using System.IdentityModel.Tokens.Jwt 
+@inject HttpClient Http 
+@using Blazored.LocalStorage 
+@using ClassLibrary1 
+@inject ILocalStorageService LocalStorage 
 
+<PageTitle>Decision What Personal Data Change</PageTitle> 
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"> 
+    <strong>Zmiana danych osobowych</strong> 
+</MudText> 
 
-<PageTitle>Decision What Personal Data Change</PageTitle>
-<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>Zmiana danych osobowych</strong></MudText>
+<MudGrid> 
+    <MudItem xs="6"> 
+        <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px; height: auto;"> 
+            <MudCardContent> 
+                <MudStack Spacing="5"> 
+                    <MudText Align="Align.Left" Typo="Typo.h4"><strong>Edytuj dane </strong></MudText> 
 
-<MudGrid>
-    <MudItem xs="6">
-        <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
-            <MudCardContent>
-                <!-- Sekcja opis -->
-                <MudStack Spacing="5">
-                    <MudText Align="Align.Left" Typo="Typo.h4"><strong>Którą informacje chcesz edytować? </strong></MudText>
-                    <MudText Align="Align.Left" Typo="Typo.h4">trzeba zrobic endpoint dla uzytkownika </MudText>
-                        <MudRadioGroup @bind-Value="modelChangeData.SelectedOption">
-                            <MudStack>
-                                @* @foreach (var danie in selectedDiet.Danie_id_danie) *@
-                                @* { *@
-                                @* <MudRadio Value="@danie.nazwa"> @selectedDiet.Danie_id_danie.FirstOrDefault(d=> d.id_danie == danie.id_danie)?.nazwa</MudRadio> *@
-                                @* }  ZROBIĆ DLA UŻYTKOWNIKA*@
-                            </MudStack>
-                        </MudRadioGroup>
-                </MudStack>
-                <MudButton ButtonType="ButtonType.Submit"
-                           Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"
-                           Href="/informationAboutPersonalData/decisionWhatPersonalDataChange/ChangePersonalData">
-                    Zatwierdź
-                </MudButton>
-            </MudCardContent>
-        </MudCard>
-    </MudItem>
+                    <EditForm @ref="form" Model="this" OnValidSubmit="Submit"> 
+                        <!-- Login --> 
+                        <MudTextField Label="Login" @bind-Value="Nickname" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
+                                      For="@(() => Nickname)" /> 
+                        <ValidationMessage For="@(() => Nickname)" /> 
 
-    <!-- Sekcja grafiki -->
-    <MudItem xs="6">
-        <MudCard Style="width:100%; position: relative;">
-            <MudImage Fluid="true" Src="/Images/PersonalData/DataImage.png" Alt="Image" Class="rounded-lg"/>
-        </MudCard>
-    </MudItem>
-</MudGrid>
-@code {
-    
-// Model formularza, Klasa "ChangeDataForm" gdzie przechowywane są informację wprowadzone do formularza
-    ChangeDataForm modelChangeData = new ChangeDataForm();
-    bool success;
+                        <!-- Email --> 
+                        <MudTextField Label="E-mail" @bind-Value="Email" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
+                                      For="@(() => Email)" /> 
+                        <ValidationMessage For="@(() => Email)" /> 
 
-    public class ChangeDataForm
-    {
-// Wymagania formularza required-wymagany
-        [Required(ErrorMessage = "Należy wybrać opcję.")]
-        public string SelectedOption { get; set; }
-    }
+                        <!-- Data urodzenia --> 
+                        <MudDatePicker Label="Data urodzenia" @bind-Date="BirthDate" Variant="Variant.Outlined" Class="mb-3" /> 
+                        <ValidationMessage For="@(() => BirthDate)" /> 
 
-// Metoda sprawdzająca poprawność danych - czy nie są puste
-    private bool ModelIsValid()
-    {
-        return !string.IsNullOrEmpty(modelChangeData.SelectedOption);
-    }
+                        <!-- Płeć --> 
+                        <MudSelect Label="Płeć" @bind-Value="Gender" Variant="Variant.Outlined" Class="mb-3"> 
+                            <MudSelectItem Value=@("Mężczyzna")>Mężczyzna</MudSelectItem> 
+                            <MudSelectItem Value=@("Kobieta")>Kobieta</MudSelectItem> 
+                            <MudSelectItem Value=@("Inne")>Inne</MudSelectItem> 
+                        </MudSelect> 
+                        <ValidationMessage For="@(() => Gender)" /> 
 
-// Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony
-    private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy.
-    {
-        if (ModelIsValid())
-        {
-            success = true;
-// NavigationManager.NavigateTo($"/changeDiet/changeIngredientsInDiet?SelectedOption={Uri.EscapeDataString(modelChangeDiet.SelectedOption)}");
-            NavigationManager.NavigateTo($"//informationAboutPersonalData/decisionWhatPersonalDataChange&SelectedOption={Uri.EscapeDataString(modelChangeData.SelectedOption)}");
-    
-        }
-        else
-        { 
-            success = false; 
-        } 
-        StateHasChanged();
-    }
-    //Obsługa endpointów
-    private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>();
-    
-    protected override async Task OnInitializedAsync()
+                        <!-- Wzrost --> 
+                        <MudTextField Label="Wzrost (cm)" @bind-Value="Height" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
+                                      For="@(() => Height)" /> 
+                        <ValidationMessage For="@(() => Height)" /> 
+
+                        <!-- Waga --> 
+                        <MudTextField Label="Waga (kg)" @bind-Value="Weight" Variant="Variant.Outlined" Class="mb-3" FullWidth="true" 
+                                      For="@(() => Weight)" /> 
+                        <ValidationMessage For="@(() => Weight)" /> 
+
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Style="width: auto;background:rgb(255,152,107);border-radius: 20px;"> 
+                            Zatwierdź 
+                        </MudButton> 
+                    </EditForm> 
+                </MudStack> 
+            </MudCardContent> 
+        </MudCard> 
+    </MudItem> 
+
+    <MudItem xs="6"> 
+        <MudCard Style="width:100%; position: relative;"> 
+            <MudImage Fluid="true" Src="/Images/PersonalData/DataImage.png" Alt="Image" Class="rounded-lg"/> 
+        </MudCard> 
+    </MudItem> 
+</MudGrid> 
+
+@code { 
+    private EditForm form; 
+    private bool isValid; 
+     
+     public int UserId { get; set; } 
+     private Uzytkownik user; 
+     private JwtSecurityToken jwt { get; set; }  
+     
+    [StringLength(20, ErrorMessage = "Login może mieć maksymalnie 20 znaków.")] 
+    public string Nickname { get; set; }  
+     
+    [EmailAddress(ErrorMessage = "Nieprawidłowy format e-mail.")] 
+    public string Email { get; set; }  
+
+    [DataType(DataType.Date)] 
+    public DateTime? BirthDate { get; set; } 
+
+    public string Gender { get; set; }  
+
+    [Range(50, 250, ErrorMessage = "Wzrost musi być między 50 a 250 cm.")] 
+    public int Height { get; set; } 
+
+    [Range(10, 300, ErrorMessage = "Waga musi być między 10 a 300 kg.")] 
+    public int Weight { get; set; } 
+     
+    [StringLength(20, MinimumLength = 5, ErrorMessage = "Hasło musi mieć od 5 do 20 znaków.")] 
+    public string Password { get; set; } 
+
+   
+    // Metoda wywoływana po zatwierdzeniu poprawności formularza, przekazuje parametry do kolejnej strony 
+    private void OnValidSubmit(EditContext context) // EditContext to klasa w ASP.NET Core Blazor, która jest używana do zarządzania stanem i walidacją formularzy. 
     { 
-        try
+        StateHasChanged(); 
+    } 
+    //Obsługa endpointów 
+    private List<Uzytkownik> uzytkownicy=new List<Uzytkownik>(); 
+     
+    protected override async Task OnInitializedAsync() 
+    {  
+        try 
+        {  
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken"); 
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText); 
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")); 
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}"); 
+            user = userResponse.Data;
+            UserId = user.id_uzytkownik;
+         
+            Nickname = user.pseudonim; 
+            Email = user.email; 
+            BirthDate = user.data_urodzenia.HasValue  
+                ? new DateTime(user.data_urodzenia.Value.Year, user.data_urodzenia.Value.Month, user.data_urodzenia.Value.Day)  
+                : (DateTime?)null; 
+            Gender = user.plec; 
+            Height = (int)user.wzrost; 
+            Weight = (int)user.waga; 
+             
+        } 
+        catch (Exception ex) 
         { 
-            // uzytkownicy = await Http.GetFromJsonAsync<List<Uzytkownik>("api/");//dodac api
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}");
-        }
-    }
+            Console.WriteLine($"Błąd podczas pobierania danych: {ex.Message}"); 
+        } 
+    } 
 
-}
+    // private async void Submit() 
+    // { 
+    //      
+    //     var user = new Uzytkownik() 
+    //     { 
+    //         id_uzytkownik = UserId, 
+    //         pseudonim = Nickname, 
+    //         email = Email, 
+    //         data_urodzenia = DateOnly.FromDateTime((DateTime)BirthDate!), 
+    //         plec = Gender, 
+    //         wzrost = Height, 
+    //         waga = Weight 
+    //     }; 
+    //     // await Http.PutAsJsonAsync("Api/user/", user); 
+    //     // 
+    //     // NavigationManager.NavigateTo("/informationAboutPersonalData"); 
+    //      
+    //     var response = await Http.PutAsJsonAsync("api/user",user); 
+    // 
+    //     if (response.IsSuccessStatusCode) 
+    //     { 
+    //         NavigationManager.NavigateTo("/informationAboutPersonalData"); 
+    //     } 
+    // } 
+    private async void Submit() 
+    { 
+        try 
+        { 
+            // Pobranie bieżących danych użytkownika z bazy 
+            var currentUser = await Http.GetFromJsonAsync<Uzytkownik>($"api/user/{UserId}"); 
+
+            // Aktualizacja tylko zmienionych pól 
+            var updatedUser = new Uzytkownik 
+            { 
+                id_uzytkownik = UserId, 
+                pseudonim = string.IsNullOrWhiteSpace(Nickname) ? currentUser.pseudonim : Nickname, 
+                email = string.IsNullOrWhiteSpace(Email) ? currentUser.email : Email, 
+                data_urodzenia = BirthDate.HasValue  
+                    ? DateOnly.FromDateTime(BirthDate.Value)  
+                    : currentUser.data_urodzenia, 
+                plec = string.IsNullOrWhiteSpace(Gender) ? currentUser.plec : Gender, 
+                wzrost = Height == 0 ? currentUser.wzrost : Height, 
+                waga = Weight == 0 ? currentUser.waga : Weight, 
+            }; 
+
+            var response = await Http.PutAsJsonAsync("api/user", updatedUser); 
+
+            if (response.IsSuccessStatusCode) 
+            { 
+                NavigationManager.NavigateTo("/informationAboutPersonalData"); 
+            } 
+            else 
+            { 
+                Console.WriteLine("Błąd podczas aktualizacji danych."); 
+            } 
+        } 
+        catch (Exception ex) 
+        { 
+            Console.WriteLine($"Błąd: {ex.Message}"); 
+        } 
+    } 
+
+} 

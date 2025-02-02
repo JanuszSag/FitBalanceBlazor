@@ -1,12 +1,12 @@
 @page "/myDiet"
-using System.Net;
-using FitBalanceBlazor;
-using Microsoft.AspNetCore.Components.Web;
-using MudBlazor;
-using System.ComponentModel.DataAnnotations
-using FitBalanceBlazor.Models
+@using System.IdentityModel.Tokens.Jwt
+@using Blazored.LocalStorage
+@using ClassLibrary1
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+
+@rendermode InteractiveWebAssembly
 
 <PageTitle>My Diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>moja dieta</strong></MudText>
@@ -19,9 +19,9 @@ using FitBalanceBlazor.Models
         </MudPaper>
 
         <MudPaper Class="pa-3 mt-2" Style="background:rgb(223,243,156);border-radius: 20px;">
-            @foreach (var danie in currentDiet.Danie_id_danie)
+            @foreach (var danie in currentMeals)
             {
-                <MudText Typo="Typo.body1">@danie.nazwa: @danie.nazwa</MudText>
+                <MudText Typo="Typo.body1">@danie.nazwa</MudText>
             }
             <MudText Typo="Typo.body2" Class="mt-3"><strong>Nie odpowiada Ci któraś pozycja?</strong></MudText>
             <MudButton Variant="Variant.Filled" Style="background:rgb(255,152,107);border-radius: 20px;" Href="/changeMeal">
@@ -37,11 +37,34 @@ using FitBalanceBlazor.Models
 </MudGrid>
 
 @code {
-    private Dieta currentDiet;
+    public Dieta currentDiet { get; set; } = new Dieta();
+    private List<Danie> currentMeals { get; set; } = new List<Danie>();
+    private Uzytkownik user;
+    private JwtSecurityToken jwt { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
-        // zmienic tu zeby byla informacja o poprawnej diecie przypisanej uzytkownikowi
-        currentDiet = await Http.GetFromJsonAsync<Dieta>("api/Diet/3");
+        try
+        {
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/diet/{claim.Value}"); //zmienić na claim.id
+
+            user = userResponse.Data;
+
+            // zmienic tu zeby byla informacja o poprawnej diecie przypisanej uzytkownikowi
+            var currentDietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"api/Diet/{user.Przypisana_dieta.ToList()[0].id_dieta}");
+            currentDiet = currentDietResponse.Data;
+            var currentMealResponse = await Http.GetFromJsonAsync<ServiceResponse<Przypisana_dieta>>($"api/Meal/assigned/{user.id_uzytkownik}");
+            currentMeals = currentMealResponse.Data.id_danie as List<Danie>;
+            
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
     }
 }
