@@ -30,4 +30,22 @@ public class QuestionAnswerController : ControllerBase
     {
         return await _questionAnswerService.GetQuestionAnswerById(id);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<ServiceResponse<bool>>> DeleteQuestionAnswer(int id)
+    {
+        var response = await _questionAnswerService.DeleteQuestionAnswerAsync(id);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> AddQuestionAnswer(Pytania_i_odpowiedzi pytaniaIOdpowiedzi)
+    {
+        var response = await _questionAnswerService.AddQuestionAnswerAsync(pytaniaIOdpowiedzi);
+        if(!response.Success)
+            return BadRequest(response);
+        return Ok(response);
+    }
 }
