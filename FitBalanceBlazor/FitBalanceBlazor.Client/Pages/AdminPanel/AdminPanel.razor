@@ -1,7 +1,11 @@
 @page "/adminPanel"
+@using System.IdentityModel.Tokens.Jwt
+@using Blazored.LocalStorage
 @using ClassLibrary1
 @using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.IdentityModel.Tokens
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
 
 @inject HttpClient Http
 <AuthorizeView Roles="Admin">
@@ -13,7 +17,32 @@
                 <PropertyColumn CellStyle="width:5%" Property="x => x.id_uzytkownik" ></PropertyColumn>
                 <PropertyColumn CellStyle="width:30%" Property="x => x.pseudonim" Title="Pseudonim"/>
                 <PropertyColumn CellStyle="width:30%" Property="x => x.email" Title="Email"/>
-                <PropertyColumn CellStyle="width:30%" Property="x => isEmployee(x)" Title="Pracownik"/>
+                <PropertyColumn CellStyle="width:5%; text-align:center" Property='x => (isEmployee(x)?"Tak":"Nie")' Title="Pracownik"/>
+                <TemplateColumn CellClass="width:25%" Title="Akcje">
+                    <CellTemplate Context="CellContext">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mx-2" 
+                                   OnClick="() => EditData(CellContext.Item.id_uzytkownik)"
+                                   Style="background-color: gray; color: black; width: auto;">
+                            Edytuj Dane
+                        </MudButton>
+                        @if (!isEmployee(CellContext.Item))
+                        {
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mx-2" 
+                                       OnClick="() => AddEmployee(CellContext.Item.id_uzytkownik)"
+                                       Style="background-color: green; color: black; width: auto;">
+                                Dodaj pracownika
+                            </MudButton>
+                        }
+                        @if (isEmployee(CellContext.Item) && CellContext.Item.id_uzytkownik!=user.id_uzytkownik)
+                        {
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mx-1" 
+                                       OnClick="() => RemoveEmployee(CellContext.Item.id_uzytkownik)"
+                                       Style="background-color: darkred; color: black; width: auto;">
+                                Usuń pracownika
+                            </MudButton>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
             </Columns>
         </MudDataGrid>
     </Authorized>
@@ -23,10 +52,19 @@
 @code {
     private List<Uzytkownik> allUsers { get; set; }
     private List<Pracownik> allEmployees { get; set; }
+    private Uzytkownik user { get; set; }
+    private JwtSecurityToken jwt { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        
+        var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+        jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+        var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+        var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
+        user = userResponse.Data;
+        
         var allUsersResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Uzytkownik>>>("api/user");
         allUsers = allUsersResponse!.Data!;
         var allEmployeesResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Pracownik>>>("api/Employee");
@@ -34,9 +72,33 @@
         StateHasChanged();
     }
 
-    private string isEmployee(Uzytkownik input)
+    private bool isEmployee(Uzytkownik input)
     {
-        return allEmployees.Exists(u => u.id_uzytkownik == input.id_uzytkownik)?"Tak":"Nie";
+        return allEmployees.Exists(u => u.id_uzytkownik == input.id_uzytkownik);
+    }
+
+    private void AddEmployee(int id)
+    {
+        Navigation.NavigateTo($"/addClientAsEmployee/{id}");
+    }
+
+    private async void RemoveEmployee(int id)
+    {
+        var deleteEmp = await Http.DeleteAsync($"api/Employee/{id}");
+        if (deleteEmp.IsSuccessStatusCode)
+        {
+            Snackbar.Add("Usunięto pracownika",Severity.Success);
+        }
+
+        else
+        {
+            Snackbar.Add("Nie udało się usunąć pracownika", Severity.Error);
+        }
+    }
+
+    private void EditData(int id)
+    {
+        Navigation.NavigateTo($"/EditUserData/{id}");
     }
 
 }

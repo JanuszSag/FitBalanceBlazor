@@ -1,11 +1,14 @@
-@page "/addClientAsEmployee"
+@page "/addClientAsEmployee/{id}"
 @using MudBlazor
 @using MudBlazor.Components
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @rendermode InteractiveWebAssembly
 @using Blazored.LocalStorage
+@using ClassLibrary1
+@using Microsoft.IdentityModel.Tokens
 @inject ILocalStorageService LocalStorage
+@inject ISnackbar Snackbar
 
 
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
@@ -15,33 +18,146 @@
 
     <div Class="d-flex flex-wrap justify-content-between">
         <!-- Lewa sekcja -->
-        <MudPaper Class="p-3 m-2" Style="background-color: #e4f5ac;">
+        <MudPaper Class="p-3 m-2 flex-auto text-center" Style="background-color: #e4f5ac; text-align: center">
             <MudText Typo="Typo.h6" Class="mb-2">Wprowadź dane</MudText>
-            <MudTextField T="string" Label="Imie" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
-            <MudTextField T="string" Label="Nazwisko" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
-            <MudTextField T="string" Label="Numer telefonu" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
-            <!--   <MudSelect T="string" Label="Stanowisko" Variant="Variant.Outlined" Class="mb-2">
-                  <MudSelectItem Value="@Dietetyk">Dietetyk</MudSelectItem>
-                  <MudSelectItem Value="@Helpdesk">Helpdesk</MudSelectItem>
-              </MudSelect>-->
+            <MudTextField @bind-Value="Firstname" T="string" Label="Imie" Variant="Variant.Outlined" Class="m-3" FullWidth="true"/>
+            <MudTextField @bind-Value="Lastname" T="string" Label="Nazwisko" Variant="Variant.Outlined" Class="m-3" FullWidth="true"/>
+            <MudTextField @bind-Value="Tel" T="string" Label="Numer telefonu" Variant="Variant.Outlined" Class="m-3" FullWidth="true"/>
+            <MudSelect @bind-Value="Position" T="string" Label="Stanowisko" Variant="Variant.Outlined" Class="mbl-2">
+                @foreach (var x in stanowiska)
+                {
+                    <MudSelectItem Value="x">@x</MudSelectItem>    
+                }
+            </MudSelect>
   
           </MudPaper>
    
            <!-- Prawa sekcja -->
-        <MudPaper Class="p-3 m-2" Style="background-color: #e4f5ac;">
+        <MudPaper Class="p-3 m-2 flex-auto" Style="background-color: #e4f5ac; text-align: center">
             <MudText Typo="Typo.h6" Class="mb-2">Wprowadź adres</MudText>
-            <MudTextField T="string" Label="Miasto" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
-            <MudTextField T="string" Label="Ulica" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
-            <MudTextField T="string" Label="Numer mieszkania" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
-            <MudTextField T="string" Label="Kod pocztowy" Variant="Variant.Outlined" Class="mb-3" FullWidth="true"/>
+            <MudTextField @bind-Value="City" T="string" Label="Miasto" Variant="Variant.Outlined" Class="m-3" FullWidth="true"/>
+            <MudTextField @bind-Value="Street" T="string" Label="Ulica" Variant="Variant.Outlined" Class="m-3" FullWidth="true"/>
+            <MudTextField @bind-Value="HomeNumber" T="string" Label="Numer mieszkania" Variant="Variant.Outlined" Class="m-3" FullWidth="true"/>
+            <MudTextField @bind-Value="PostalCode" T="string" Label="Kod pocztowy" Variant="Variant.Outlined" Class="m-3" FullWidth="true"/>
         </MudPaper>
     </div>
 
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" Style="background-color: #FF9966; color: black; width: 200px;">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" 
+               Style="background-color: #FF9966; color: black; width: 200px;" OnClick="() => AddEmployee()">
         Dodaj pracownika
     </MudButton>
 </MudPaper>
 </div>
 @code {
+    [Parameter] public string id { get; set; }
     
+    private string Firstname { get; set; }
+    private string Lastname { get; set; }
+    private string Tel { get; set; }
+    private string Position { get; set; }
+    
+    private string City { get; set; }
+    private string Street { get; set; }
+    private string HomeNumber { get; set; }
+    private string PostalCode { get; set; }
+    
+    private List<Pracownik> AllEmployees { get; set; }
+    private List<Adres> AllAddresses { get; set; }
+    private Uzytkownik User { get; set; }
+
+    private string[] stanowiska =
+    {
+        "Dietetyk", "Osoba help-desk"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var AllEmployeesResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Pracownik>>>("api/Employee");
+        AllEmployees = AllEmployeesResponse.Data;
+        var AllAddressesResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Adres>>>("api/Employee/Addresses");
+        AllAddresses = AllAddressesResponse.Data;
+        var UserResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{id}");
+        User = UserResponse.Data;
+    }
+
+    private async void AddEmployee()
+    {
+        try
+        {
+            var validation = true;
+            if (Firstname.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole imie jest puste",Severity.Error);
+                validation = false;
+            }
+            if (Lastname.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole nazwisko jest puste",Severity.Error);
+                validation = false;
+            }
+            if (Tel.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole Numer telefonu jest puste",Severity.Error);
+                validation = false;
+            }
+            if (Position.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole Stanowisko jest puste",Severity.Error);
+                validation = false;
+            }
+            if (City.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole Miasto jest puste",Severity.Error);
+                validation = false;
+            }
+            if (Firstname.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole Ulica jest puste",Severity.Error);
+                validation = false;
+            }
+            if (Firstname.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole Numer mieszkania jest puste",Severity.Error);
+                validation = false;
+            }
+            if (Firstname.IsNullOrEmpty())
+            {
+                Snackbar.Add("Pole Kod pocztowy jest puste",Severity.Error);
+                validation = false;
+            }
+
+            if (!validation) return;
+
+        
+            var Employee = new Pracownik()
+            {
+                id_pracownik = AllEmployees.Max(x => x.id_pracownik)+1,
+                imie = Firstname,
+                nazwisko = Lastname,
+                numer_telefonu = Tel,
+                stanowisko = Position,
+                id_uzytkownik = Int32.Parse(id)
+            };
+            var Adress = new Adres()
+            {
+                id_adres = AllAddresses.Max(x => x.id_adres)+1,
+                id_pracownik = Employee.id_pracownik,
+                miasto = City,
+                ulica = Street,
+                numer_mieszkania = HomeNumber,
+                kod_pocztowy = PostalCode
+            };
+            var sendEmployee = await Http.PostAsJsonAsync("api/Employee", Employee);
+            var sendAdress = await Http.PostAsJsonAsync("api/Employee/Address", Adress);
+            Employee.Adres.Add(Adress);
+            var updateEmployee = await Http.PutAsJsonAsync($"api/Employee", Employee);
+            NavigationManager.NavigateTo("/adminPanel");
+        }
+        catch (Exception e)
+        {
+            throw;
+        }
+    }
+
 }
