@@ -7,6 +7,9 @@
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 
+<AuthorizeView Roles="Employee, Admin">
+    <Authorized>
+
 <PageTitle>Add diet</PageTitle>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie diety</strong></MudText>
     <MudGrid>
@@ -68,9 +71,11 @@
             </MudCard>
         </MudItem>
     </MudGrid>
-    
 
-@code {
+    </Authorized>
+</AuthorizeView>
+
+    @code {
 //Model formularza,Klasa "AddNewDietForm" gdzie przechowywane są informację wprowadzone do formularza
 AddNewDietForm modelAddDiet = new AddNewDietForm();
 bool success;
