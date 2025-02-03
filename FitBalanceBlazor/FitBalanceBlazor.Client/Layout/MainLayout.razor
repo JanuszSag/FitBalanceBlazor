@@ -46,6 +46,14 @@
                         <MudMenuItem>
                             <MudNavLink Href="/informationAboutPersonalData">Moje dane</MudNavLink>
                         </MudMenuItem>
+
+                        <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
+                        <AuthorizeView Roles="Employee, Admin" Context="SecondContext">
+                            <Authorized>
+                                <MudNavLink Href="/employee">Panel pracownika</MudNavLink>
+                            </Authorized>
+                        </AuthorizeView>
+                        
                     </MudMenu>
                 </Authorized>    
                 <NotAuthorized>
@@ -53,12 +61,6 @@
                 </NotAuthorized>
             </AuthorizeView>
             
-            <!-- Panel pracownika (widoczny tylko dla uprawnionych) -->
-            <AuthorizeView Roles="Employee, Admin">
-                <Authorized>
-                    <MudNavLink Href="/employee" Style="text-transform: uppercase;color: black;">Panel pracownika</MudNavLink>
-                </Authorized>
-            </AuthorizeView>
             
                 <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle"/>
             </MudStack>
