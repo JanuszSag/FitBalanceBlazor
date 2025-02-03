@@ -140,7 +140,8 @@ public class EmployeeService(MyDbContext context) : IEmployeeService
         try
         {
             var foundEmployee = await context.Pracownik.Include(x => x.Adres).FirstOrDefaultAsync(x => x.id_uzytkownik == id);
-            DeleteAddressAsync(foundEmployee.Adres.ToList()[0].id_adres);
+            if(foundEmployee.Adres.Count!=0)
+                await DeleteAddressAsync(foundEmployee.Adres.ToList()[0].id_adres);
             context.Pracownik.Remove(foundEmployee);
             await context.SaveChangesAsync();
             response.Success = true;
