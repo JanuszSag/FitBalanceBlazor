@@ -37,9 +37,9 @@
             <MudItem xs="12" Class="mt-4">
                 <MudGrid>
                     <MudItem xs="2">
-                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black; width: 200px; height: 130px;">
                             <MudCardContent>
-                                <h6>Twój indywidualny program dietetyczny</h6>
+                                <h6 style="font-size: 16px; font-weight: bold;">Twój indywidualny program dietetyczny</h6>
                             </MudCardContent>
                             <MudCardActions>
                                 <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/myDiet">Zobacz</MudButton>
@@ -47,9 +47,9 @@
                         </MudCard>
                     </MudItem>
                     <MudItem xs="2">
-                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black; width: 200px; height: 130px;">
                             <MudCardContent>
-                                <h6>Wszystkie diety</h6>
+                                <h6 style="font-size: 16px; font-weight: bold;">Wszystkie diety</h6>
                             </MudCardContent>
                             <MudCardActions>
                                 <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/allClientDiets">Zobacz</MudButton>
@@ -57,9 +57,9 @@
                         </MudCard>
                     </MudItem>
                     <MudItem xs="2">
-                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black; width: 200px; height: 130px;">
                             <MudCardContent>
-                                <h6>Twoje dane</h6>
+                                <h6 style="font-size: 16px; font-weight: bold;">Twoje dane</h6>
                             </MudCardContent>
                             <MudCardActions>
                                 <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/informationAboutPersonalData">Zobacz</MudButton>
@@ -67,9 +67,9 @@
                         </MudCard>
                     </MudItem>
                     <MudItem xs="2">
-                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black; width: 200px; height: 130px;">
                             <MudCardContent>
-                                <h6>Wyliczanie kkal</h6>
+                                <h6 style="font-size: 16px; font-weight: bold;">Wyliczanie kkal</h6>
                             </MudCardContent>
                             <MudCardActions>
                                 <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/caloryCount">Zobacz</MudButton>
@@ -77,9 +77,9 @@
                         </MudCard>
                     </MudItem>
                     <MudItem xs="2">
-                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black;">
+                        <MudCard Class="rounded-card" Style="border: 2px solid #DFF39C; background-color: white; color: black; width: 200px; height: 130px;">
                             <MudCardContent>
-                                <h6>Raport</h6>
+                                <h6 style="font-size: 16px; font-weight: bold;">Raport</h6>
                             </MudCardContent>
                             <MudCardActions>
                                 <MudButton Style="background-color: #FF986B; color: white;" Variant="Variant.Filled" Href="/raport">Zobacz</MudButton>
@@ -104,10 +104,11 @@
 
                         <!-- Przyciski odejmowania i dodawania wody -->
                         <MudItem xs="12" Class="text-center mt-1">
-                            <MudButton Style="background-color: #1976D2; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWater">
+                            <MudButton Style="background-color: #FF9966; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWater">
                                 Dodaj 250 ml
                             </MudButton>
                             <MudButton Style="background-color: #FF5733; color: white; font-size: 1.5rem; margin-left: 10px;" Variant="Variant.Filled" OnClick="@RemoveWater">
+
                                 Odejmij 250 ml
                             </MudButton>
                         </MudItem>
@@ -125,10 +126,11 @@
 
                         <!-- Przyciski odejmowania i dodawania wagi -->
                         <MudItem xs="12" Class="text-center mt-1">
-                            <MudButton Style="background-color: #1976D2; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWeight">
+                            <MudButton Style="background-color: #FF9966; color: white; font-size: 1.5rem;" Variant="Variant.Filled" OnClick="@AddWeight">
                                 Dodaj 1 kg
                             </MudButton>
                             <MudButton Style="background-color: #FF5733; color: white; font-size: 1.5rem; margin-left: 10px;" Variant="Variant.Filled" OnClick="@RemoveWeight">
+
                                 Odejmij 1 kg
                             </MudButton>
                         </MudItem>
