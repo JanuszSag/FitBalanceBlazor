@@ -21,7 +21,7 @@
         <MudPaper Class="pa-10" Style="background:rgb(223,243,156);border-radius: 20px; margin-left: 30px; margin-right: 30px;height: 500px">
 
             <MudGrid AlignItems="center">
-                <MudItem xs="6">
+                <MudItem xs="6" >
                     <MudStack Spacing="3">
                         <MudText Align="Align.Left" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>fit</strong></MudText>
                         <MudText Align="Align.Left" Typo="Typo.h2" Style="text-transform: uppercase;"><strong>balance</strong></MudText>
@@ -31,8 +31,8 @@
                     </MudStack>
                 </MudItem>
 
-                <MudItem xs="6">
-                    <MudImage Src="/Images/HomePage/StarterDish.png" Alt="StarterDishImage" Class="rounded-lg" Height="650" />
+                <MudItem xs="6" Class="d-flex align-center" Style="height: 600px;">
+                    <MudImage Src="/Images/HomePage/StarterDish.png" Alt="StarterDishImage" Class="rounded-lg" Height="800" Width="700" />
                 </MudItem>
 
             </MudGrid>
@@ -90,7 +90,7 @@
                         </MudItem>
 
                         <MudItem xs="6">
-                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px;">
+                            <MudPaper Class="d-flex align-center justify-center" Style="border: 5px solid rgb(123,195,218);border-radius: 20px; height: 44vh">
                                 <MudImage Fluid="true" Src="/Images/HomePage/ServicesCountKcal.png" Alt="KcalImage"  Class="rounded-lg"/>
                             </MudPaper>
                         </MudItem>
@@ -122,7 +122,7 @@
                 <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong> Utrata wagi</strong></MudText>
                     <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
-                    <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                    <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px; margin-top: 20px; "
                                Href="/programLoseWeight">Zobacz
                     </MudButton>
                 </MudPaper>
@@ -130,7 +130,7 @@
                 <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Urzymanie wagi</strong></MudText>
                     <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
-                    <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                    <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px; margin-top: 20px;"
                                Href="/programKeepWeight">Zobacz
                     </MudButton>
                 </MudPaper>
@@ -138,7 +138,7 @@
                 <MudPaper Class="pa-20" Style="background:rgb(223,243,156);border-radius: 20px;margin-left: 30px; margin-right: 30px;">
                     <MudText Align="Align.Left" Typo="Typo.h4"><strong>Zwiększenie wagi</strong></MudText>
                     <MudText Align="Align.Left" Typo="Typo.h5" >@textProgram </MudText>
-                    <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px;"
+                    <MudButton Variant="Variant.Filled" Style="width:150px; background:rgb(255,152,107);border-radius: 20px; margin-top: 20px;"
                                Href="/programForUnderweight">Zobacz
                     </MudButton>
                 </MudPaper>
@@ -170,7 +170,7 @@
                     <MudPaper Class="pa-3" Style="background:rgb(223,243,156);border-radius: 20px;">
                         <MudText Align="Align.Left" Typo="Typo.h4"><strong> Lista diet dla gości</strong></MudText>
                         <div class="d-flex align-center">
-                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                            <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px; margin-top: 20px;"
                                        Href="/allGuestDiets">Zobacz</MudButton>
                         </div>
                     </MudPaper>
@@ -181,13 +181,13 @@
                         <AuthorizeView>
                             <Authorized>
                                 <div class="d-flex align-center">
-                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px; margin-top: 20px;"
                                                Href="/AllClientDiets">Zobacz</MudButton>
                                 </div>
                             </Authorized>
                             <NotAuthorized>
                                 <div class="d-flex align-center">
-                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
+                                    <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px; margin-top: 20px;"
                                                Href="/login">Zaloguj się</MudButton>
                                 </div>
                             </NotAuthorized>
