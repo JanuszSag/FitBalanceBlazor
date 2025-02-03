@@ -74,7 +74,6 @@
     {
         //nowa instacja uri, która reprezentuje aktualny URL
         var uri = new Uri(NavigationManager.Uri);
-        //System.Web.HttpUtility-analizuje ciąg zapytania części URL po znaku "?" i zwraca kolekcję par klucz-wartość.
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
         DietId = int.Parse(query["DietId"] ?? "0");
 

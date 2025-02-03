@@ -10,6 +10,7 @@
 @inject HttpClient Http
 <AuthorizeView Roles="Admin">
     <Authorized>
+        <div style="border: 4px solid #e4f5ac; padding: 20px; border-radius: 15px;">
         <PageTitle>Panel administratora</PageTitle>
         <MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>PANEL ADMINISTRATORA</strong></MudText>
         <MudDataGrid Items="allUsers" Virtualize FixedHeader Bordered Hover Height="700px">
@@ -22,14 +23,14 @@
                     <CellTemplate Context="CellContext">
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mx-2" 
                                    OnClick="() => EditData(CellContext.Item.id_uzytkownik)"
-                                   Style="background-color: gray; color: black; width: auto;">
+                                   Style="background-color: #e4f5ac; color: black; width: 150px; height: 50px; border-radius: 20px;">
                             Edytuj Dane
                         </MudButton>
                         @if (!isEmployee(CellContext.Item))
                         {
                             <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mx-2" 
                                        OnClick="() => AddEmployee(CellContext.Item.id_uzytkownik)"
-                                       Style="background-color: green; color: black; width: auto;">
+                                       Style="background-color: #FF9966; color: black; width: 150px; height: 50px; border-radius: 20px;">
                                 Dodaj pracownika
                             </MudButton>
                         }
@@ -37,7 +38,7 @@
                         {
                             <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mx-1" 
                                        OnClick="() => RemoveEmployee(CellContext.Item.id_uzytkownik)"
-                                       Style="background-color: darkred; color: black; width: auto;">
+                                       Style="background-color: #FF5454; color: black; width: 150px; height: 50px; border-radius: 20px;">
                                 Usuń pracownika
                             </MudButton>
                         }
@@ -45,6 +46,7 @@
                 </TemplateColumn>
             </Columns>
         </MudDataGrid>
+        </div>
     </Authorized>
 </AuthorizeView>
 
