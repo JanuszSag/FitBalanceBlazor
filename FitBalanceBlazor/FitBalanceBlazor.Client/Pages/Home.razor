@@ -2,10 +2,15 @@
 @using System.Text.RegularExpressions
 @using Microsoft.AspNetCore.Components.Authorization
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 @using System.ComponentModel.DataAnnotations
+@using System.Data
+@using System.IdentityModel.Tokens.Jwt
+@using Blazored.LocalStorage
 @using ClassLibrary1
 @inject HttpClient Http
+@inject ILocalStorageService LocalStorage
  
 <PageTitle>Home</PageTitle>
 
@@ -166,7 +171,7 @@
                         <MudText Align="Align.Left" Typo="Typo.h4"><strong> Lista diet dla gości</strong></MudText>
                         <div class="d-flex align-center">
                             <MudButton Variant="Variant.Filled" Style="width: 150px;background:rgb(255,152,107);border-radius: 20px;"
-                                       Href="/allGuestDiets">Zobacz</MudButton><!--tu raczej powinno byc przekierowanie do tej strony nie dla pracownika (czyli bez możliwości zmiany i usuwania diety-->
+                                       Href="/allGuestDiets">Zobacz</MudButton>
                         </div>
                     </MudPaper>
 
@@ -205,8 +210,23 @@
                     <MudText Align="Align.Left" Typo="Typo.h5">Opis: @opinia.zawartosc</MudText>
                 </MudPaper>
             }
+        
+            <AuthorizeView>
+                <Authorized>
+                    <MudPaper Class="pa-10 my-4" Style="border: 5px solid rgb(223,243,156);border-radius: 10px;margin-left: 30px; margin-right: 30px;">
+                        <MudText Align="Align.Left" Typo="Typo.h5"><strong>Oceń sam!</strong></MudText>
+                        <MudRating SelectedValue="@rate" SelectedValueChanged="@AddRate"></MudRating>
+                        <MudTextField @bind-Value="ContentText" Label="Należy wprowadzić zawartość" Variant="Variant.Text"></MudTextField>
+                        <MudButton Button OnClick="() => AddReview(maxId, rate, ContentText, userId)"
+                                   Variant="Variant.Filled" Class="mt-3" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
+                            Dodaj opinię
+                        </MudButton>
+                    </MudPaper>
+                </Authorized>
+            </AuthorizeView>
         </MudStack>
     </div>
+    
 
     <!--Sekcja Q&A-->
     <div id="sectionQ&A">
@@ -242,29 +262,16 @@
 
 @code
 {
-string textAboutus = $"Cieszymy się, że jesteś z nami!{Environment.NewLine}FitBalance to portal dietetyczny dla każdego. Z nami zrzucisz zbędne kilogramy, dorzucisz brakujące kilogramy albo utrzymasz wagę w zdrowy sposób. Zależy nam na twoim zdrowiu i dobrym samopoczuciu dlatego nasi specjaliści przygotowali wiele zbilansowanych diet od wegańskich opcji przez keto aż po bezglutenowych, które możesz modyfikować. Nie tylko znajdziesz dietę dla siebie, a również lepiej zaplanujesz swoja przygodę ze zdrowiem za pomocą kalkulatora zapotrzebowania kalorycznego oraz miarki wypitej wody. Jesteśmy chętni się dla Ciebie udoskonalać dlatego masz możliwość wystawiania opinii na temat diet.\nMotywacją do stworzenia naszej aplikacji jest brak na rynku narzędzia, które by skutecznie\u00a0 łączył ze sobą aspekty planowania posiłków, monitorowania kaloryczności oraz ilości wody wypitej danego dnia.";
+    private Uzytkownik user { get; set; }
+    private JwtSecurityToken jwt { get; set; }
+    private int userId { get; set; }
+
+
+    string textAboutus = $"Cieszymy się, że jesteś z nami!{Environment.NewLine}FitBalance to portal dietetyczny dla każdego. Z nami zrzucisz zbędne kilogramy, dorzucisz brakujące kilogramy albo utrzymasz wagę w zdrowy sposób. Zależy nam na twoim zdrowiu i dobrym samopoczuciu dlatego nasi specjaliści przygotowali wiele zbilansowanych diet od wegańskich opcji przez keto aż po bezglutenowych, które możesz modyfikować. Nie tylko znajdziesz dietę dla siebie, a również lepiej zaplanujesz swoja przygodę ze zdrowiem za pomocą kalkulatora zapotrzebowania kalorycznego oraz miarki wypitej wody. Jesteśmy chętni się dla Ciebie udoskonalać dlatego masz możliwość wystawiania opinii na temat diet.\nMotywacją do stworzenia naszej aplikacji jest brak na rynku narzędzia, które by skutecznie\u00a0 łączył ze sobą aspekty planowania posiłków, monitorowania kaloryczności oraz ilości wody wypitej danego dnia.";
 string textServices = "Dla naszych użytkowników oferujemy spersonalizowany program dietetyczny, który jest tworzony na podstawie indywidualnych preferencji i zapytań użytkownika. \n\nDodatkowo zalogowany użytkownik ma możliwość rejestrowania ilości spożywanej w ciągu dnia wody, wyliczania swojego zapotrzebowania kalorycznego oraz przeglądania rankingu najlepszych diet.";
 string textProgram = "Mamy duży wybór zbalansowanych i zdrowych diet";
 string textOurDiets = $"Nasze diety są opracowywane przez najlepszych dietetyków, aby spełniać indywidualne potrzeby naszych klientów.{Environment.NewLine} Dzięki profesjonalnemu podejściu i starannie dobranym składnikom, nasze plany żywieniowe pomagają osiągnąć zamierzone cele zdrowotne i sylwetkowe";
 string textSendEmail = $"Zanim zadasz pytanie sprawdź Q&A. Może jest tam rozwiązanie Twojego problemu.{Environment.NewLine}Jeśli nadal nie znasz odpowiedzi - napisz do nas! Chętnie pomożemy Ci w rozwiązaniu problemów i wyjaśnimy wszelkie wątpliwości :)";
-
-//Metoda sprawdzenia poprawności maila poprzez regex
-public string email { get; set; }
-
-private bool IsCorectEmail(string email)
-{
-    if (string.IsNullOrWhiteSpace(email))
-    {
-        return false;
-    }
-
-    var regexEmail = new System.Text.RegularExpressions.Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
-        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-    return regexEmail.IsMatch(email);
-}
-
-public string message { get; set; }
-
 
 //opinie
     private List<Opinia> opinie=new List<Opinia>();
@@ -275,6 +282,13 @@ public string message { get; set; }
     {
         try
         {
+            var TokenText = await LocalStorage.GetItemAsStringAsync("authToken");
+            jwt = new JwtSecurityTokenHandler().ReadJwtToken(TokenText);
+            var claim = jwt.Claims.First(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
+            var userResponse = await Http.GetFromJsonAsync<ServiceResponse<Uzytkownik>>($"api/user/{claim.Value}");
+            user = userResponse.Data;
+            userId = user.id_uzytkownik;
+            
             var test = await Http.GetFromJsonAsync<ServiceResponse<List<Opinia>>>("api/Review");
             opinie = test.Data;
             var test2 = await Http.GetFromJsonAsync<ServiceResponse<List<Uzytkownik>>>("api/user");
@@ -288,15 +302,47 @@ public string message { get; set; }
         }
     }
 
-//snackbar-wyswietla krotkie i tymczasowe wiadomosci
-    // void SnackBarEmail()
-    // {
-    //     if(IsCorectEmail(email)& !string.IsNullOrEmpty(message)){
-    //         Snackbar.Add("Wysłano pomyslnie maila!", Severity.Success);
-    //     }
-    //     else
-    //     {
-    //         Snackbar.Add("Należy wprowadzic poprawny mail adres i treść wiadomości", Severity.Error); 
-    //     }
-    // }
+    public string ContentText { get; set; }
+    private OpiniaDTO newReview;
+    int maxId { get; set; }
+    private int rate = 0;
+
+    private void AddRate(int newRate)
+    {
+        rate = newRate;
+    }
+
+    private async Task AddReview(int id_opinia, int ocena,string? zawartosc,int id_uzytkownik)
+    {
+        if (zawartosc is null)
+        {
+            Snackbar.Add("Należy uzupełnić poole \"zawartość\"");
+            return;
+        }
+
+        try
+        {
+            newReview = new OpiniaDTO
+            {
+                id_opinia=id_opinia,
+                ocena=ocena, 
+                zawartosc = zawartosc, 
+                data = DateOnly.FromDateTime(DateTime.Now),
+                id_uzytkownik = id_uzytkownik,
+                id_dieta = 1
+            };
+            var response = await Http.PostAsJsonAsync("api/Review", newReview);
+            var test = await Http.GetFromJsonAsync<ServiceResponse<List<Opinia>>>("api/Review");
+            opinie = test.Data;
+            StateHasChanged();
+            Snackbar.Add("Dodano opinię", Severity.Success);
+            NavigationManager.NavigateTo("/#sectionOpinions");
+        }
+        catch(Exception e)
+        {
+            Snackbar.Add("Nie udało się dodać opini, spróbuj ponownie.",Severity.Error);
+        }
+    }
+
+
 }

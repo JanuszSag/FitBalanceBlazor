@@ -37,7 +37,8 @@
     {
         var wszytskieDietyResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Dieta>>>("api/Diet");
         var wszytskieDiety = wszytskieDietyResponse.Data;
-        //Wyswietla tylko pierwsze diety z wszytskich rodzajów - co 6 dlatego Index%6==0 i ogranicza liczbę wyświtlanych diet Take(ograniczenie)
+        
+        //Wyswietla tylko pierwsze diety z wszytskich rodzajów - co 6 dlatego Index%6==0 i ogranicza liczbę wyświetlanych diet Take(ograniczenie)
         diety = wszytskieDiety.Where((Item,Index)=>Index%6==0).Take(3).ToList();
         rodzaje = await Http.GetFromJsonAsync<List<Rodzaj>>("api/Category");
         var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("api/Meal");

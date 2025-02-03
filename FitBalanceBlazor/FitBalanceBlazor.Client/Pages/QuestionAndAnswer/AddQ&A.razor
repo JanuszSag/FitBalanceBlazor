@@ -1,0 +1,90 @@
+@page "/addQ&A";
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@using ClassLibrary1
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+<AuthorizeView Roles="Employee, Admin">
+    <Authorized>
+<PageTitle>Add Q&A</PageTitle>
+<MudText Align="Align.Center" Typo="Typo.h1" Style="text-transform: uppercase;"><strong>dodawanie elementu Q&A</strong></MudText>
+    <MudGrid>
+        <MudItem xs="6">
+            <MudCard Class="pa-3" Style="width:100%;background:rgb(223,243,156);border-radius: 20px;">
+                <MudCardContent>
+                    <!--Sekcja uzupełniania nowych danych-->
+                    <MudText Typo="Typo.h6">Pytanie</MudText>
+                    <MudTextField @bind-Value="Question" Label="Należy wprowadzić pytanie" Variant="Variant.Text"></MudTextField>
+
+                    <MudText Typo="Typo.h6">Odpowiedź</MudText>
+                    <MudTextField @bind-Value="Answer" Label="Należy wprowadzić odpowiedź" Variant="Variant.Text"></MudTextField>
+
+                    <!--Przycisk dodania nowej elementu Q&A-->
+                    <div class="d-flex align-center">
+                        <MudButton Button OnClick="() => AddQA(maxId, Question, Answer)"
+                                   Variant="Variant.Filled" Style="width: 300px;background:rgb(255,152,107);border-radius: 20px;">
+                            Zapisz nowy element Q&A
+                        </MudButton>
+                    </div>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <!-- Sekcja grafiki -->
+        <MudItem xs="4">
+
+            <MudCard Style="width:100%; position: relative;">
+                <MudImage Fluid="true" Src="/Images/QuestionAnswer/QAImage.png" Alt="QAImage"  />
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    bool success;
+    int maxId { get; set; }
+
+    public string Question{ get; set; }
+    public string Answer{ get; set; }
+
+ 
+    //Zapisywanie nowego elementu w bazie
+    private PytanieOdpowiedzDTO newQA;
+
+    private async Task AddQA(int id,string? question, string? answer)
+    {
+        if (question is null && answer is null)
+        {
+            Snackbar.Add("Należy uzupełnić pola \"pytanie\" i \"odpowiedź\"",Severity.Error);
+            return;
+        }
+        if (question is null)
+        {
+            Snackbar.Add("Należy uzupełnić pole \"pytanie\" jest puste",Severity.Error);
+            return;
+        }
+        if (answer is null)
+        {
+            Snackbar.Add("Należy uzupełnić pole \"odpowiedź\" jest puste",Severity.Error);
+            return;
+        }
+        try
+        {   
+            newQA = new PytanieOdpowiedzDTO(id, question,answer);
+            var response = await Http.PostAsJsonAsync("api/QuestionAnswer", newQA);
+            
+            //wyswietlanie snackbaru-krótkiej wiadomości o powodzeniu lub nie danej operacji
+            Snackbar.Add("Dodano nowy element Q&A do bazy",Severity.Success);
+            NavigationManager.NavigateTo($"/Q&AManagment");
+    
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add("Nie udało się dodać nowego elementu Q&A do bazy danych",Severity.Error);
+        }
+    }
+    
+}

@@ -21,7 +21,8 @@
                       For="@(() => userRegistration.Email)" />
 
         <!-- Data urodzenia -->
-        <MudDatePicker Label="Data urodzenia*" @bind-Date="BirthDate" Variant="Variant.Outlined" Class="mb-3"/>
+        <MudDatePicker Label="Data urodzenia*" @bind-Date="BirthDate" MaxDate="DateTime.Today"
+                       Variant="Variant.Outlined" Class="mb-3"/>
 
         <!-- Płeć -->
         <MudSelect Label="Płeć" @bind-Value="Gender" Variant="Variant.Outlined" Class="mb-3" For="@(() => userRegistration.Gender)">

@@ -21,5 +21,5 @@ public partial class Pracownik
 
     public virtual ICollection<Dieta> Dieta { get; set; } = new List<Dieta>();
 
-    public virtual Uzytkownik id_uzytkownikNavigation { get; set; } = null!;
+    public virtual Uzytkownik id_uzytkownikNavigation { get; set; } = null;
 }

@@ -11,3 +11,4 @@ public partial class Pytania_i_odpowiedzi
 
     public string odpowiedz { get; set; } = null!;
 }
+
