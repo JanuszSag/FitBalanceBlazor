@@ -4,11 +4,13 @@
 @using Blazored.LocalStorage
 @using ClassLibrary1
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.IdentityModel.Tokens
 
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar Snackbar
 
 <MudPaper Elevation="2" Class="pa-4" Style="max-width: 400px; margin: auto; background-color: #e4f5ac; border-radius: 20px;">
     <MudForm @ref="form" IsValid="@isValid" OnValidSubmit="HandleValidSubmit">
@@ -63,13 +65,47 @@
     public async Task SignIn()
     {
         var test = new LoginModel();
-        test.Email = login;
-        test.Password = password;
+        test.login = login;
+        test.password = password;
+        isValid = true;
+
+        if (login.Length > 40)
+        {
+            isValid = false;
+            Snackbar.Add("Login może mieć maksymalnie 40 znaków.");
+        }
         
-        Console.WriteLine(test.Email);
+        if (login.IsNullOrEmpty())
+        {
+            isValid = false;
+            Snackbar.Add("Pole login jest wymagane.");
+        }
+        
+        if (password.Length > 20 || password.Length<3)
+        {
+            isValid = false;
+            Snackbar.Add("Hasło musi mieć od 3 do 20 znaków.");
+        }
+        
+        if (password.IsNullOrEmpty())
+        {
+            isValid = false;
+            Snackbar.Add("Pole hasło jest wymagane.");
+        }
+
+        if (!isValid)
+            return;
+            
+        Console.WriteLine(test.login);
         
         var result = await Http.PostAsJsonAsync("api/auth/login", test);
+
         var content = await result.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+        if (content.Data.IsNullOrEmpty())
+        {
+            Snackbar.Add("Błędny mail lub hasło", Severity.Error);
+            return;
+        }
         if (content.Success)
         {
             errorMessage = string.Empty;

@@ -22,14 +22,14 @@ public class AuthService(MyDbContext context, IConfiguration configuration)
     public async Task<ServiceResponse<string>> Login(LoginModel loginModel)
     {
         var response = new ServiceResponse<string>();
-        var account = context.Uzytkownik.FirstOrDefaultAsync(x => x.email == loginModel.Email).Result;
+        var account = context.Uzytkownik.FirstOrDefaultAsync(x => x.email == loginModel.login).Result;
         
         if (account is null)
         {
             response.Success = false;
             response.Message = "User not found";
         }
-        else if (!CheckPassword(loginModel.Password,account.haslo_hashed, account.haslo_salt))
+        else if (!CheckPassword(loginModel.password,account.haslo_hashed, account.haslo_salt))
         {
             response.Success = false;
             response.Message = "Wrong password";
