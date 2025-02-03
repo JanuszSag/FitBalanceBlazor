@@ -88,6 +88,11 @@
         if (deleteEmp.IsSuccessStatusCode)
         {
             Snackbar.Add("Usunięto pracownika",Severity.Success);
+            var allUsersResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Uzytkownik>>>("api/user");
+            allUsers = allUsersResponse!.Data!;
+            var allEmployeesResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Pracownik>>>("api/Employee");
+            allEmployees = allEmployeesResponse!.Data!;
+            StateHasChanged();
         }
 
         else
