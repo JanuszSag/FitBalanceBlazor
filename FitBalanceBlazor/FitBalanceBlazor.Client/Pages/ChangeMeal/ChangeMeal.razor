@@ -78,9 +78,9 @@
             user = userResponse.Data;
 
 
-            var DietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"http://localhost:5131/api/Diet/{user.Przypisana_dieta.ToList()[0].id_dieta}");
+            var DietResponse = await Http.GetFromJsonAsync<ServiceResponse<Dieta>>($"/api/Diet/{user.Przypisana_dieta.ToList()[0].id_dieta}");
             selectedDiet = DietResponse.Data;
-            var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("http://localhost:5131/api/Meal");
+            var MealResponse = await Http.GetFromJsonAsync<ServiceResponse<List<Danie>>>("/api/Meal");
             dania = MealResponse.Data;
             var currentMealResponse = await Http.GetFromJsonAsync<ServiceResponse<Przypisana_dieta>>($"api/Meal/assigned/{user.id_uzytkownik}");
             currentMeals = currentMealResponse.Data.id_danie as List<Danie>;

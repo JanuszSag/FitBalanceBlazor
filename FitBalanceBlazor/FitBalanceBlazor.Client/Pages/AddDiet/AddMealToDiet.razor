@@ -78,7 +78,7 @@
     private async void AddMeal()
     {
         var response = await Http.PutAsJsonAsync($"api/Diet/UpdateMeals/{Id_diet}", (ListOfMeals));
-        NavigationManager.NavigateTo("http://localhost:5131/AllClientDiets");
+        NavigationManager.NavigateTo("/AllClientDiets");
     }
     
     private List<Danie> dania=new List<Danie>();
